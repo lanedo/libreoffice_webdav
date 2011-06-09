@@ -1,0 +1,1 @@
+The LibreOffice Menubar extension adds support for the globalmenu which is used in Ubuntu's Unity desktop environment.

@@ -1,0 +1,130 @@
+<?xml version='1.0' encoding='UTF-8'?>
+
+<oor:component-data
+ oor:name="Addons"
+ oor:package="org.openoffice.Office"
+ xmlns:oor="http://openoffice.org/2001/registry"
+ xmlns:xs="http://www.w3.org/2001/XMLSchema"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+  <node oor:name="AddonUI">
+
+    <node oor:name="OfficeMenuBarMerging">
+      <node oor:name="com.lanedo.webdavui" oor:op="replace">
+	<node oor:name="S1" oor:op="replace">
+	  <prop oor:name="MergePoint">
+	    <value>.uno:PickList\.uno:SaveAll</value>
+	  </prop>
+	  <prop oor:name="MergeCommand">
+	    <value>AddBefore</value>
+	  </prop>
+	  <prop oor:name="MergeFallback">
+	    <value>AddPath</value>
+	  </prop>
+
+	  <node oor:name="MenuItems">
+	    <node oor:name="M1" oor:op="replace">
+	      <prop oor:name="Title">
+		<value xml:lang="en-US">~WebDAV</value>
+	      </prop>
+
+	      <node oor:name="Submenu">
+
+		<node oor:name="M1" oor:op="replace">
+		  <prop oor:name="URL" oor:type="xs:string">
+		    <value>com.lanedo.webdavui:TestAction</value>
+		  </prop>
+		  <prop oor:name="ImageIdentifier" oor:type="xs:string">
+		    <value/>
+		  </prop>
+		  <prop oor:name="Target" oor:type="xs:string">
+		    <value>_self</value>
+		  </prop>
+		  <prop oor:name="Title" oor:type="xs:string">
+		    <value xml:lang="en-US">~Test Action</value>
+		  </prop>
+		</node>
+
+		<node oor:name="M2" oor:op="replace">
+		  <prop oor:name="URL" oor:type="xs:string">
+		    <value>.uno:HelpIndex</value>
+		  </prop>
+		  <prop oor:name="Title" oor:type="xs:string">
+		    <value xml:lang="en-US">Test Help Item</value>
+		  </prop>
+		</node>
+
+	      </node>
+
+	    </node>
+	  </node>
+
+	</node>
+      </node>
+    </node>
+
+    <node oor:name="OfficeToolbarMerging">
+      <node oor:name="com.lanedo.webdavui" oor:op="replace">
+	<node oor:name="T1" oor:op="replace">
+	  <prop oor:name="MergeToolBar">
+	    <value>standardbar</value>
+	  </prop>
+	  <prop oor:name="MergePoint">
+	    <value>.uno:Open</value>
+	  </prop>
+	  <prop oor:name="MergeCommand">
+	    <value>AddAfter</value>
+	  </prop>
+	  <prop oor:name="MergeFallback">
+	    <value>AddLast</value>
+	  </prop>
+	  <prop oor:name="MergeContext">
+	    <value/>
+	  </prop>
+	  <node oor:name="ToolBarItems">
+
+	    <node oor:name="B1" oor:op="replace">
+	      <prop oor:name="URL" oor:type="xs:string">
+		<value>com.lanedo.webdavui:TestAction</value>
+	      </prop>
+	      <prop oor:name="ImageIdentifier" oor:type="xs:string">
+		<value/>
+	      </prop>
+	      <prop oor:name="Title" oor:type="xs:string">
+		<value xml:lang="en-US">~Test Action</value>
+	      </prop>
+	    </node>
+
+	    <node oor:name="B2" oor:op="replace">
+	      <prop oor:name="URL">
+		<value>.uno:CloseDoc</value>
+	      </prop>
+	      <prop oor:name="Title">
+		<value>Test Close Document</value>
+	      </prop>
+	    </node>
+
+	  </node>
+	</node>
+      </node>
+    </node>
+
+    <node oor:name="Images">
+      <node oor:name="com.lanedo.webdavui.testaction.images" oor:op="replace">
+	<prop oor:name="URL" oor:type="xs:string">
+          <value>com.lanedo.webdavui:TestAction</value>
+        </prop>
+        <node oor:name="UserDefinedImages">
+          <prop oor:name="ImageSmallURL">
+	    <value>%origin%/images/test-icon-small.png</value>
+          </prop>
+          <prop oor:name="ImageBigURL">
+            <value>%origin%/images/test-icon-big.png</value>
+          </prop>
+        </node>
+      </node>
+    </node>
+
+  </node>
+
+</oor:component-data>

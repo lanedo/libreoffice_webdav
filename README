@@ -1,0 +1,11 @@
+WebDAVUI - Sharing, browsing and deleting files
+=================================================
+
+This extension can be built with the LibreOffice SDK.
+
+1. On Ubuntu, install libreoffice-dev.
+2. Setup the SDK: /usr/lib/libreoffice/basis3.3/sdk/setsdkenv_unix
+3. ./waf configure
+4. ./waf build
+5. sudo ./waf install
+

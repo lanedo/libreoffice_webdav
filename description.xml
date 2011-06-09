@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<description
+    xmlns="http://openoffice.org/extensions/description/2006"
+    xmlns:d="http://openoffice.org/extensions/description/2006"
+    xmlns:xlink="http://www.w3.org/1999/xlink">
+
+  <version value="0.0.1" />
+
+  <identifier value="com.lanedo.webdavui" />
+
+  <display-name>
+    <name lang="en">Sharing files through WebDAV</name>
+  </display-name>
+
+  <publisher>
+    <name xlink:href="http://www.lanedo.com/libreoffice.html" lang="en">Lanedo</name>
+  </publisher>
+
+  <platform value="all" />
+
+  <dependencies>
+    <OpenOffice.org-minimal-version value="3.0" d:name="OpenOffice.org 3.0" />
+  </dependencies>
+
+  <icon>
+    <default xlink:href="images/test-icon-big.png" />
+    <high-contrast xlink:href="images/test-icon-big.png" />
+  </icon>
+
+</description>
+
