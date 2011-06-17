@@ -45,7 +45,7 @@
 #include <com/sun/star/awt/WindowAttribute.hpp>
 #include <com/sun/star/awt/XMessageBox.hpp>
 
-#include <cstdio> // for puts
+#include <cstdio> // TEMPORARY: for puts
 
 using rtl::OUString;
 using namespace com::sun::star::uno;
@@ -98,6 +98,8 @@ WindowAttribute::CLOSEABLE;
   */
 void SAL_CALL Addon::initialize( const Sequence< Any >& aArguments ) throw ( Exception, RuntimeException)
 {
+    puts ("Addon class initialized");
+
     Reference < XFrame > xFrame;
     if ( aArguments.getLength() )
     {
@@ -229,6 +231,8 @@ sal_Bool SAL_CALL Addon_supportsService( const ::rtl::OUString& ServiceName )
 Sequence< ::rtl::OUString > SAL_CALL Addon_getSupportedServiceNames()
     throw (RuntimeException)
 {
+    puts ("In Addon_getSupportedServiceNames()");
+
     Sequence < ::rtl::OUString > aRet(1);
     ::rtl::OUString* pArray = aRet.getArray();
 
@@ -240,6 +244,7 @@ Sequence< ::rtl::OUString > SAL_CALL Addon_getSupportedServiceNames()
 Reference< XInterface > SAL_CALL Addon_createInstance( const Reference< XMultiServiceFactory > & rSMgr)
     throw (Exception)
 {
+    puts ("In Addon_createInstance");
     return (cppu::OWeakObject*) new Addon( rSMgr );
 }
 
