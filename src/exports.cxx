@@ -1,16 +1,17 @@
 /*
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
- * 
- * A LibreOffice extension to send the menubar structure through DBusMenu
  *
- * Copyright 2011 Canonical, Ltd.
+ * A LibreOffice extension to implement WebDAV features
+ *
+ * Copyright 2011 Lanedo GmbH
  * Authors:
- *     Alberto Ruiz <alberto.ruiz@codethink.co.uk>
+ *     Christian Dywan
+ *     Michael Natterer
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the the GNU Lesser General Public License version 3, as published by the Free
  * Software Foundation.
- * 
+ *
  * This program is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranties of MERCHANTABILITY,
  * SATISFACTORY QUALITY or FITNESS FOR A PARTICULAR PURPOSE.  See the applicable
@@ -34,14 +35,13 @@
 #include <com/sun/star/lang/XSingleServiceFactory.hpp>
 #endif
 
-#include "DesktopJob.hxx"
-#include "FrameJob.hxx"
+#include "webdavuiinterceptor.hxx"
 
 namespace css = ::com::sun::star;
 
-static void writeInfo(const css::uno::Reference< css::registry::XRegistryKey >& xRegistryKey       ,
+static void writeInfo(const css::uno::Reference< css::registry::XRegistryKey >& xRegistryKey,
                       const char*                                               pImplementationName,
-                      const char*                                               pServiceName       )
+                      const char*                                               pServiceName)
 {
     ::rtl::OUStringBuffer sKey(256);
     sKey.append     (::rtl::OUString::createFromAscii(pImplementationName));
@@ -53,15 +53,15 @@ static void writeInfo(const css::uno::Reference< css::registry::XRegistryKey >& 
 
 extern "C"
 {
-SAL_DLLPUBLIC_EXPORT void SAL_CALL component_getImplementationEnvironment(const sal_Char**        ppEnvTypeName,
-                                                                                 uno_Environment** /*ppEnv*/        )
+SAL_DLLPUBLIC_EXPORT void SAL_CALL component_getImplementationEnvironment(const sal_Char**  ppEnvTypeName,
+                                                                          uno_Environment** /*ppEnv*/)
 {
     *ppEnvTypeName = CPPU_CURRENT_LANGUAGE_BINDING_NAME;
 }
 
 
 SAL_DLLPUBLIC_EXPORT sal_Bool SAL_CALL component_writeInfo(void* pServiceManager,
-                                                            void* pRegistryKey   )
+                                                           void* pRegistryKey)
 {
     if (!pRegistryKey)
         return sal_False;
@@ -70,9 +70,11 @@ SAL_DLLPUBLIC_EXPORT sal_Bool SAL_CALL component_writeInfo(void* pServiceManager
     {
         css::uno::Reference< css::registry::XRegistryKey > xKey(reinterpret_cast< css::registry::XRegistryKey* >(pRegistryKey), css::uno::UNO_QUERY);
 
+#if 0
         writeInfo( xKey, DESKTOPJOB_IMPLEMENTATION_NAME, DESKTOPJOB_SERVICE_NAME);
         writeInfo( xKey, FRAMEJOB_IMPLEMENTATION_NAME, FRAMEJOB_SERVICE_NAME);
-        
+#endif
+
         return sal_True;
     }
     catch(const css::registry::InvalidRegistryException&)
@@ -81,9 +83,9 @@ SAL_DLLPUBLIC_EXPORT sal_Bool SAL_CALL component_writeInfo(void* pServiceManager
     return sal_False;
 }
 
-SAL_DLLPUBLIC_EXPORT void* SAL_CALL component_getFactory(const sal_Char* pImplName      ,
-                                                                void*     pServiceManager,
-                                                                void*     /*pRegistryKey*/  )
+SAL_DLLPUBLIC_EXPORT void* SAL_CALL component_getFactory(const sal_Char* pImplName,
+                                                         void*     pServiceManager,
+                                                         void*     /*pRegistryKey*/)
 {
     if ( !pServiceManager || !pImplName )
         return 0;
@@ -92,6 +94,7 @@ SAL_DLLPUBLIC_EXPORT void* SAL_CALL component_getFactory(const sal_Char* pImplNa
     css::uno::Reference< css::lang::XMultiServiceFactory >  xSMGR     (reinterpret_cast< css::lang::XMultiServiceFactory* >(pServiceManager), css::uno::UNO_QUERY);
     ::rtl::OUString                                         sImplName = ::rtl::OUString::createFromAscii(pImplName);
 
+#if 0
     if (sImplName.equalsAscii(DESKTOPJOB_IMPLEMENTATION_NAME))
     {
         css::uno::Sequence< ::rtl::OUString > lNames(1);
@@ -104,6 +107,7 @@ SAL_DLLPUBLIC_EXPORT void* SAL_CALL component_getFactory(const sal_Char* pImplNa
         lNames[0] = ::rtl::OUString::createFromAscii(FRAMEJOB_IMPLEMENTATION_NAME);
         xFactory = ::cppu::createSingleFactory(xSMGR, sImplName,  FrameJob_createInstance, lNames);
     }
+#endif
 
 
     if (!xFactory.is())

@@ -2,10 +2,11 @@
 <!DOCTYPE manifest:manifest PUBLIC "-//OpenOffice.org//DTD Manifest 1.0//EN" "Manifest.dtd">
 <manifest:manifest xmlns:manifest="http://openoffice.org/2001/manifest">
   <manifest:file-entry manifest:media-type="application/vnd.sun.star.configuration-data"
-                       manifest:full-path="Jobs.xcu"/>
-  <manifest:file-entry manifest:media-type="application/vnd.sun.star.configuration-data"
                        manifest:full-path="Addons.xcu"/>
+  <manifest:file-entry manifest:media-type="application/vnd.sun.star.configuration-data"
+                       manifest:full-path="ProtocolHandler.xcu"/>
   <manifest:file-entry manifest:media-type="application/vnd.sun.star.uno-component;type=native;platform=@PLATFORM@"
                        manifest:full-path="@PLATFORM@/@COMPONENT@"/>
-    <manifest:file-entry manifest:full-path="package-description.txt" manifest:media-type="application/vnd.sun.star.package-bundle-description"/>
+  <manifest:file-entry manifest:media-type="application/vnd.sun.star.package-bundle-description"
+		       manifest:full-path="package-description.txt"/>
 </manifest:manifest>

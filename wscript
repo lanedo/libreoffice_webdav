@@ -2,7 +2,7 @@ import Options
 import Utils
 import platform
 
-APPNAME='webdav-sharing'
+APPNAME='webdavui'
 VERSION='0.1.0'
 
 #-- OPTIONS --
@@ -38,25 +38,6 @@ def configure(conf):
 	conf.env['OFFAPI_RDB'] = conf.find_file('offapi.rdb',
 	                                        path_list=[Options.options.LO_PREFIX + '/basis3.3/program'],
 	                                        mandatory=True)
-
-	conf.check_cfg(package='gio-2.0', uselib_store='GIO',
-	               atleast_version='2.26.0', args='--cflags --libs',
-	               mandatory=True)
-
-	conf.check_cfg(package='dbusmenu-glib-0.4', uselib_store='DBUSMENU',
-	               atleast_version='0.3.99', args='--cflags --libs')	               
-	conf.check_cfg(package='dbusmenu-gtk-0.4', uselib_store='DBUSMENUGTK',
-	               atleast_version='0.3.99', args='--cflags --libs')
-	conf.check_cfg(package='gtk+-2.0', uselib_store='GTK',
-	               atleast_version='2.24.1', args='--cflags --libs')
-	conf.check_cfg(package='atk', uselib_store='ATK',
-	               atleast_version='1.33.6', args='--cflags --libs')
-	conf.check_cfg(package='gdk-pixbuf-2.0', uselib_store='GDKPIXBUF',
-	               atleast_version='2.23.0', args='--cflags --libs')
-	conf.check_cfg(package='gdk-2.0', uselib_store='GDK',
-	               atleast_version='2.24.1', args='--cflags --libs')	               
-	conf.check_cfg(package='x11', uselib_store='X11', args='--cflags --libs')
-	conf.check_cfg(package='xproto', uselib_store='XPROTO', args='--cflags --libs')
 
 def cppumaker (bld):
 	"""
@@ -97,6 +78,7 @@ def cppumaker (bld):
 				"com.sun.star.frame.XControlNotificationListener",
 				"com.sun.star.frame.XDispatch",
 				"com.sun.star.frame.XDispatchProvider",
+				"com.sun.star.frame.XDispatchProviderInterception",
 				"com.sun.star.frame.XDispatchHelper",
 				"com.sun.star.frame.XFrame",
 				"com.sun.star.frame.XFrameActionListener",
@@ -154,6 +136,8 @@ def build(bld):
 	includes = ['/usr/include/libreoffice']
 	
 	includes.append (cppumaker (bld))
+
+	print includes
 	
 	env = bld.env.copy()
 	pattern = env['cxxshlib_PATTERN']
@@ -171,15 +155,10 @@ def build(bld):
 	else:
 		lo_platform = "Linux_x86"
 
-	bld.shlib(source=['src/DesktopJob.cxx',
-	                  'src/FrameJob.cxx',
-	                  'src/exports.cxx',
-	                  'src/FrameHelper.cxx',
-	                  'src/AwtKeyToDbusmenuString.cxx',
-	                  'src/MenuItemInfo.cxx',
-	                  'src/MenuItemStatusListener.cxx'],
+	bld.shlib(source=['src/component.cxx',
+			  'src/addon.cxx'],
 	          target=target,
-	          uselib=['SALLIB', 'CPPULIB', 'CPPUHELPERLIB', 'GIO', 'DBUSMENU', 'DBUSMENUGTK', 'GDKPIXBUF', 'GTK', 'GDK', 'ATK', 'X11', 'XPROTO'],
+	          uselib=['SALLIB', 'CPPULIB', 'CPPUHELPERLIB' ],
 	          includes=includes,
 	          defines=['UNX', 'SAL_UNX', 'CPPU_ENV=gcc3'],
 	          install_path='%s/share/extensions/%s/%s' % (Options.options.LO_PREFIX, target, lo_platform),
