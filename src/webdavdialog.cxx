@@ -304,7 +304,17 @@ void WebDAVDialog::dumpDAVListing (void)
                 mxMSF->createInstance (OUString::createFromAscii ("com.sun.star.task.InteractionHandler")), UNO_QUERY);
     fileAccess->setInteractionHandler (interactionHandler);
 
-    Sequence< rtl::OUString > entries = fileAccess->getFolderContents (url, false);
+    Sequence< rtl::OUString > entries;
+
+    try
+    {
+        entries = fileAccess->getFolderContents (url, false);
+    }
+    catch ( ... ) /* FIXME: Need proper exception handling here */
+    {
+        puts ("Caught exception accessing folder.");
+        return;
+    }
 
     const OUString *stringArray = entries.getConstArray ();
     sal_Int32 n = entries.getLength ();
