@@ -41,8 +41,6 @@
 #include <com/sun/star/lang/XServiceInfo.hpp>
 #include <cppuhelper/implbase4.hxx>
 
-#define IMPLEMENTATION_NAME "com.lanedo.webdavui"
-
 namespace com
 {
     namespace sun
@@ -53,13 +51,11 @@ namespace com
             {
                 class XFrame;
             }
-            namespace awt
-            {
-                class XToolkit;
-            }
         }
     }
 }
+
+#define IMPLEMENTATION_NAME "com.lanedo.webdavui"
 
 class Addon : public cppu::WeakImplHelper4
 <
@@ -72,7 +68,6 @@ class Addon : public cppu::WeakImplHelper4
 private:
     ::com::sun::star::uno::Reference< ::com::sun::star::lang::XMultiServiceFactory > mxMSF;
     ::com::sun::star::uno::Reference< ::com::sun::star::frame::XFrame > mxFrame;
-    ::com::sun::star::uno::Reference< ::com::sun::star::awt::XToolkit > mxToolkit;
 
 public:
     Addon( const ::com::sun::star::uno::Reference< ::com::sun::star::lang::XMultiServiceFactory > &rxMSF)

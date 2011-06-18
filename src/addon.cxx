@@ -34,16 +34,13 @@
  *************************************************************************/
 
 #include "addon.hxx"
+#include "webdavdialog.hxx"
+
 #include <osl/diagnose.h>
 #include <rtl/ustring.hxx>
 #include <com/sun/star/lang/XMultiServiceFactory.hpp>
 #include <com/sun/star/beans/PropertyValue.hpp>
 #include <com/sun/star/frame/XFrame.hpp>
-#include <com/sun/star/frame/XController.hpp>
-#include <com/sun/star/awt/XToolkit.hpp>
-#include <com/sun/star/awt/XWindowPeer.hpp>
-#include <com/sun/star/awt/WindowAttribute.hpp>
-#include <com/sun/star/awt/XMessageBox.hpp>
 
 #include <cstdio> // TEMPORARY: for puts
 
@@ -60,38 +57,6 @@ using com::sun::star::util::URL;
 
 
 /**
-  * Show a message box with the UNO based toolkit
-  */
-static void ShowMessageBox( const Reference< XToolkit >& rToolkit, const Reference< XFrame >& rFrame, const OUString& aTitle, const OUString& aMsgText )
-{
-    if ( rFrame.is() && rToolkit.is() )
-    {
-        // describe window properties.
-        WindowDescriptor                aDescriptor;
-        aDescriptor.Type              = WindowClass_MODALTOP;
-        aDescriptor.WindowServiceName = OUString( RTL_CONSTASCII_USTRINGPARAM( "infobox" ));
-        aDescriptor.ParentIndex       = -1;
-        aDescriptor.Parent            = Reference< XWindowPeer >( rFrame->getContainerWindow(), UNO_QUERY );
-        aDescriptor.Bounds            = Rectangle(0,0,300,200);
-        aDescriptor.WindowAttributes  = WindowAttribute::BORDER |
-WindowAttribute::MOVEABLE |
-WindowAttribute::CLOSEABLE;
-
-        Reference< XWindowPeer > xPeer = rToolkit->createWindow( aDescriptor );
-        if ( xPeer.is() )
-        {
-            Reference< XMessageBox > xMsgBox( xPeer, UNO_QUERY );
-            if ( xMsgBox.is() )
-            {
-                xMsgBox->setCaptionText( aTitle );
-                xMsgBox->setMessageText( aMsgText );
-                xMsgBox->execute();
-            }
-        }
-    }
-}
-
-/**
   * Called by the Office framework.
   * One-time initialization. We have to store the context information
   * given, like the frame we are bound to, into our members.
@@ -106,11 +71,6 @@ void SAL_CALL Addon::initialize( const Sequence< Any >& aArguments ) throw ( Exc
         aArguments[0] >>= xFrame;
         mxFrame = xFrame;
     }
-
-    // Create the toolkit to have access to it later
-    mxToolkit = Reference< XToolkit >( mxMSF->createInstance(
-                                        OUString( RTL_CONSTASCII_USTRINGPARAM(
-                                            "com.sun.star.awt.Toolkit" ))), UNO_QUERY );
 }
 
 /**
@@ -152,21 +112,17 @@ void SAL_CALL Addon::dispatch( const URL&                        aURL,
     {
         if ( aURL.Path.compareToAscii( "TestAction" ) == 0 )
         {
-            ShowMessageBox( mxToolkit, mxFrame,
-                            OUString( RTL_CONSTASCII_USTRINGPARAM( "Lanedo WebDAV UI" )),
-                            OUString( RTL_CONSTASCII_USTRINGPARAM( "TestAction activated" )) );
+            puts ("TestAction");
+            WebDAVDialog *dialog = new WebDAVDialog (mxMSF, mxFrame);
+            dialog->show ();
         }
         else if ( aURL.Path.compareToAscii( "TestAction2" ) == 0 )
         {
-            ShowMessageBox( mxToolkit, mxFrame,
-                            OUString( RTL_CONSTASCII_USTRINGPARAM( "Lanedo WebDAV UI" )),
-                            OUString( RTL_CONSTASCII_USTRINGPARAM( "TestAction 2 activated" )) );
+            puts ("TestAction2");
         }
         else if ( aURL.Path.compareToAscii( "Help" ) == 0 )
         {
-            ShowMessageBox( mxToolkit, mxFrame,
-                            OUString( RTL_CONSTASCII_USTRINGPARAM( "About Lanedo WebDAV UI" )),
-                            OUString( RTL_CONSTASCII_USTRINGPARAM( "Some Help Text" )) );
+            puts ("Help");
         }
     }
 }

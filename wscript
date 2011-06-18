@@ -156,7 +156,8 @@ def build(bld):
 		lo_platform = "Linux_x86"
 
 	bld.shlib(source=['src/component.cxx',
-			  'src/addon.cxx'],
+			  'src/addon.cxx',
+			  'src/webdavdialog.cxx'],
 	          target=target,
 	          uselib=['SALLIB', 'CPPULIB', 'CPPUHELPERLIB' ],
 	          includes=includes,
