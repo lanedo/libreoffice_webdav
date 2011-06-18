@@ -119,7 +119,7 @@ void WebDAVDialog::createDialog (void)
     dialogProps->setPropertyValue(OUString::createFromAscii("PositionX"), makeAny (100));
     dialogProps->setPropertyValue(OUString::createFromAscii("PositionY"), makeAny (100));
     dialogProps->setPropertyValue(OUString::createFromAscii("Width"), makeAny (150));
-    dialogProps->setPropertyValue(OUString::createFromAscii("Height"), makeAny (100));
+    dialogProps->setPropertyValue(OUString::createFromAscii("Height"), makeAny (250));
     dialogProps->setPropertyValue(OUString::createFromAscii("Title"),
             makeAny (OUString::createFromAscii("Runtime Dialog Demo")));
 
@@ -208,14 +208,14 @@ void WebDAVDialog::createDialog (void)
 
     buttonProps2->setPropertyValue(OUString::createFromAscii("PositionX"), makeAny (70));
     buttonProps2->setPropertyValue(OUString::createFromAscii("PositionY"), makeAny (70));
-    buttonProps2->setPropertyValue(OUString::createFromAscii("Width"), makeAny (75));
+    buttonProps2->setPropertyValue(OUString::createFromAscii("Width"), makeAny (70));
     buttonProps2->setPropertyValue(OUString::createFromAscii("Height"), makeAny (14));
     buttonProps2->setPropertyValue(OUString::createFromAscii("Name"),
                                   makeAny (OUString::createFromAscii("Button2")));
     buttonProps2->setPropertyValue(OUString::createFromAscii("TabIndex"), makeAny((short)2));
 
     buttonProps2->setPropertyValue(OUString::createFromAscii("Label"),
-                                  makeAny (OUString::createFromAscii("List URL contents on stdout")));
+                                  makeAny (OUString::createFromAscii("List contents of URL")));
 
     /* Add button to container */
     container->insertByName (OUString::createFromAscii("Button2"),
@@ -229,6 +229,31 @@ void WebDAVDialog::createDialog (void)
     Reference< XButton > buttonControl2 (buttonObject2, UNO_QUERY);
 
     buttonControl2->addActionListener (actionListener);
+
+    /* Create an edit model for a text field outputting WebDAV contents */
+    outputEntryModel =
+        dialogMSF->createInstance(OUString::createFromAscii("com.sun.star.awt.UnoControlEditModel"));
+
+    Reference< XPropertySet > entryProps2 (outputEntryModel, UNO_QUERY);
+
+    entryProps2->setPropertyValue(OUString::createFromAscii("PositionX"), makeAny (10));
+    entryProps2->setPropertyValue(OUString::createFromAscii("PositionY"), makeAny (90));
+    entryProps2->setPropertyValue(OUString::createFromAscii("Width"), makeAny (130));
+    entryProps2->setPropertyValue(OUString::createFromAscii("Height"), makeAny (150));
+    entryProps2->setPropertyValue(OUString::createFromAscii("HScroll"), makeAny (true));
+    entryProps2->setPropertyValue(OUString::createFromAscii("VScroll"), makeAny (true));
+    entryProps2->setPropertyValue(OUString::createFromAscii("MultiLine"), makeAny (true));
+    entryProps2->setPropertyValue(OUString::createFromAscii("ReadOnly"), makeAny (true));
+    entryProps2->setPropertyValue(OUString::createFromAscii("Name"),
+                                 makeAny (OUString::createFromAscii("OutputEntry")));
+    entryProps2->setPropertyValue(OUString::createFromAscii("Text"),
+                                 makeAny (OUString::createFromAscii("(content listing will appear here)")));
+    entryProps2->setPropertyValue(OUString::createFromAscii("TabIndex"),makeAny((short)3));
+
+    /* Add entry to container */
+    container->insertByName (OUString::createFromAscii ("OutputEntry"),
+                             makeAny (outputEntryModel));
+
 }
 
 void WebDAVDialog::show (void)
@@ -306,6 +331,7 @@ void WebDAVDialog::dumpDAVListing (void)
 
     Sequence< rtl::OUString > entries;
 
+    /* Now try to access the folder */
     try
     {
         entries = fileAccess->getFolderContents (url, false);
@@ -316,12 +342,19 @@ void WebDAVDialog::dumpDAVListing (void)
         return;
     }
 
+    /* Process the output */
+    OUString outputEntryBuffer;
     const OUString *stringArray = entries.getConstArray ();
     sal_Int32 n = entries.getLength ();
     for (sal_Int32 i = 0; i < n; i++)
     {
-        printf ("  %s\n", OUStringToOString (stringArray[i], RTL_TEXTENCODING_UTF8).getStr ());
+        outputEntryBuffer += stringArray[i];
+        outputEntryBuffer += OUString::createFromAscii ("\n");
     }
 
-    puts ("\nEnd of listing.");
+    outputEntryBuffer += OUString::createFromAscii ("--End of listing");
+
+    Reference< XPropertySet > entryProps2 (outputEntryModel, UNO_QUERY);
+    entryProps2->setPropertyValue (OUString::createFromAscii ("Text"),
+                                   makeAny (outputEntryBuffer));
 }

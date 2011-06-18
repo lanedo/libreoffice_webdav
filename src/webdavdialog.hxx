@@ -16,6 +16,7 @@ private:
 
     css::uno::Reference< css::uno::XInterface > dialog;
     css::uno::Reference< css::uno::XInterface > locationEntryModel;
+    css::uno::Reference< css::uno::XInterface > outputEntryModel;
 
     void createDialog (void);
 
