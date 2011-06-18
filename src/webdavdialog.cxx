@@ -48,8 +48,23 @@ public:
     {
         puts ("action performed");
 
-        /* FIXME: Is this okay with regard to threading, etc. ? */
-        owner->showMessageBox ();
+        /* Obtain the name of the control the event originated from */
+        Reference< XControl > control (rEvent.Source, UNO_QUERY);
+        Reference< XControlModel > controlModel = control->getModel ();
+        Reference< XPropertySet > controlProps (controlModel, UNO_QUERY);
+        css::uno::Any aValue = controlProps->getPropertyValue (OUString::createFromAscii ("Name"));
+        OUString controlName;
+        aValue >>= controlName;
+
+        if (controlName.equalsAscii ("Button1"))
+        {
+            /* FIXME: Is this okay with regard to threading, etc. ? */
+            owner->showMessageBox ();
+        }
+        else if (controlName.equalsAscii ("Button2"))
+        {
+            puts ("Button2 clicked!");
+        }
     }
 };
 
@@ -156,6 +171,8 @@ void WebDAVDialog::createDialog (void)
     Reference< XInterface > buttonObject =
         controlContainer->getControl (OUString::createFromAscii ("Button1"));
     Reference< XButton > buttonControl (buttonObject, UNO_QUERY);
+
+    /* and connect it to our action listener */
     Reference< XActionListener > actionListener =
         static_cast< XActionListener *> (new WebDAVDialogActionListener (this));
     buttonControl->addActionListener (actionListener);
@@ -181,6 +198,15 @@ void WebDAVDialog::createDialog (void)
     /* Add button to container */
     container->insertByName (OUString::createFromAscii("Button2"),
                              makeAny (buttonModel2));
+
+    /* Get the button control through the control container
+     * (note that above we only created its model).
+     */
+    Reference< XInterface > buttonObject2 =
+        controlContainer->getControl (OUString::createFromAscii ("Button2"));
+    Reference< XButton > buttonControl2 (buttonObject2, UNO_QUERY);
+
+    buttonControl2->addActionListener (actionListener);
 }
 
 void WebDAVDialog::show (void)
