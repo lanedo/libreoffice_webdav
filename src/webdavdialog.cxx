@@ -145,6 +145,26 @@ void WebDAVDialog::createDialog (void)
     /* Create a container for the controls within the dialog */
     Reference< XNameContainer > container (dialogModel, UNO_QUERY);
 
+    /* Create an edit model for a text field */
+    locationEntryModel =
+        dialogMSF->createInstance(OUString::createFromAscii("com.sun.star.awt.UnoControlEditModel"));
+
+    Reference< XPropertySet > entryProps (locationEntryModel, UNO_QUERY);
+
+    entryProps->setPropertyValue(OUString::createFromAscii("PositionX"), makeAny (10));
+    entryProps->setPropertyValue(OUString::createFromAscii("PositionY"), makeAny (40));
+    entryProps->setPropertyValue(OUString::createFromAscii("Width"), makeAny (130));
+    entryProps->setPropertyValue(OUString::createFromAscii("Height"), makeAny (16));
+    entryProps->setPropertyValue(OUString::createFromAscii("Name"),
+                                 makeAny (OUString::createFromAscii("LocationEntry")));
+    entryProps->setPropertyValue(OUString::createFromAscii("Text"),
+                                 makeAny (OUString::createFromAscii("http://localhost/dav/")));
+    entryProps->setPropertyValue(OUString::createFromAscii("TabIndex"),makeAny((short)0));
+
+    /* Add entry to container */
+    container->insertByName (OUString::createFromAscii ("LocationEntry"),
+                             makeAny (locationEntryModel));
+
     /* Create a button model and set properties */
     Reference< XInterface > buttonModel =
         dialogMSF->createInstance(OUString::createFromAscii("com.sun.star.awt.UnoControlButtonModel"));
@@ -157,7 +177,7 @@ void WebDAVDialog::createDialog (void)
     buttonProps->setPropertyValue(OUString::createFromAscii("Height"), makeAny (14));
     buttonProps->setPropertyValue(OUString::createFromAscii("Name"),
                                   makeAny (OUString::createFromAscii("Button1")));
-    buttonProps->setPropertyValue(OUString::createFromAscii("TabIndex"),makeAny((short)0));
+    buttonProps->setPropertyValue(OUString::createFromAscii("TabIndex"),makeAny((short)1));
 
     buttonProps->setPropertyValue(OUString::createFromAscii("Label"),
                                   makeAny (OUString::createFromAscii("Show Dialog")));
@@ -192,7 +212,7 @@ void WebDAVDialog::createDialog (void)
     buttonProps2->setPropertyValue(OUString::createFromAscii("Height"), makeAny (14));
     buttonProps2->setPropertyValue(OUString::createFromAscii("Name"),
                                   makeAny (OUString::createFromAscii("Button2")));
-    buttonProps2->setPropertyValue(OUString::createFromAscii("TabIndex"), makeAny((short)1));
+    buttonProps2->setPropertyValue(OUString::createFromAscii("TabIndex"), makeAny((short)2));
 
     buttonProps2->setPropertyValue(OUString::createFromAscii("Label"),
                                   makeAny (OUString::createFromAscii("List URL contents on stdout")));
@@ -256,7 +276,14 @@ void WebDAVDialog::showMessageBox (void)
 
 void WebDAVDialog::dumpDAVListing (void)
 {
-    puts ("Accessing WebDAV server ...");
+    /* Get text from our location entry */
+    Reference< XPropertySet > entryProps (locationEntryModel, UNO_QUERY);
+    css::uno::Any aValue = entryProps->getPropertyValue (OUString::createFromAscii ("Text"));
+    OUString url;
+    aValue >>= url;
+
+    printf ("Accessing WebDAV server, trying location %s ...\n",
+            OUStringToOString (url, RTL_TEXTENCODING_UTF8).getStr ());
 
     /* Create a reference to the SimpleFileAccess service */
     Reference< css::ucb::XSimpleFileAccess > fileAccess =
@@ -277,9 +304,7 @@ void WebDAVDialog::dumpDAVListing (void)
                 mxMSF->createInstance (OUString::createFromAscii ("com.sun.star.task.InteractionHandler")), UNO_QUERY);
     fileAccess->setInteractionHandler (interactionHandler);
 
-    /* XXX: You might want to put your local location here */
-    OUString Url = OUString::createFromAscii ("http://localhost/dav/");
-    Sequence< rtl::OUString > entries = fileAccess->getFolderContents (Url, false);
+    Sequence< rtl::OUString > entries = fileAccess->getFolderContents (url, false);
 
     const OUString *stringArray = entries.getConstArray ();
     sal_Int32 n = entries.getLength ();

@@ -15,6 +15,7 @@ private:
     css::uno::Reference< css::awt::XToolkit > mxToolkit;
 
     css::uno::Reference< css::uno::XInterface > dialog;
+    css::uno::Reference< css::uno::XInterface > locationEntryModel;
 
     void createDialog (void);
 
