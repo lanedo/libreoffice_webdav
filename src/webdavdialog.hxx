@@ -24,6 +24,7 @@ public:
 
     void show (void);
     void showMessageBox (void);
+    void dumpDAVListing (void);
 };
 
 #endif /* __WEBDAVDIALOG_HXX__ */

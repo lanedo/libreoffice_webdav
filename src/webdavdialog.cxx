@@ -15,6 +15,7 @@
 #include <com/sun/star/container/XNameContainer.hpp>
 #include <com/sun/star/frame/XController.hpp>
 #include <com/sun/star/lang/XComponent.hpp>
+#include <com/sun/star/ucb/XSimpleFileAccess.hpp>
 
 #include <cstdio> // TEMPORARY: for puts
 
@@ -63,7 +64,8 @@ public:
         }
         else if (controlName.equalsAscii ("Button2"))
         {
-            puts ("Button2 clicked!");
+            /* FIXME: Is this okay with regard to threading, etc. ? */
+            owner->dumpDAVListing ();
         }
     }
 };
@@ -149,7 +151,7 @@ void WebDAVDialog::createDialog (void)
 
     Reference< XPropertySet > buttonProps (buttonModel, UNO_QUERY);
 
-    buttonProps->setPropertyValue(OUString::createFromAscii("PositionX"), makeAny (20));
+    buttonProps->setPropertyValue(OUString::createFromAscii("PositionX"), makeAny (10));
     buttonProps->setPropertyValue(OUString::createFromAscii("PositionY"), makeAny (70));
     buttonProps->setPropertyValue(OUString::createFromAscii("Width"), makeAny (50));
     buttonProps->setPropertyValue(OUString::createFromAscii("Height"), makeAny (14));
@@ -184,16 +186,16 @@ void WebDAVDialog::createDialog (void)
 
     Reference< XPropertySet > buttonProps2 (buttonModel2, UNO_QUERY);
 
-    buttonProps2->setPropertyValue(OUString::createFromAscii("PositionX"), makeAny (80));
+    buttonProps2->setPropertyValue(OUString::createFromAscii("PositionX"), makeAny (70));
     buttonProps2->setPropertyValue(OUString::createFromAscii("PositionY"), makeAny (70));
-    buttonProps2->setPropertyValue(OUString::createFromAscii("Width"), makeAny (50));
+    buttonProps2->setPropertyValue(OUString::createFromAscii("Width"), makeAny (75));
     buttonProps2->setPropertyValue(OUString::createFromAscii("Height"), makeAny (14));
     buttonProps2->setPropertyValue(OUString::createFromAscii("Name"),
                                   makeAny (OUString::createFromAscii("Button2")));
     buttonProps2->setPropertyValue(OUString::createFromAscii("TabIndex"), makeAny((short)1));
 
     buttonProps2->setPropertyValue(OUString::createFromAscii("Label"),
-                                  makeAny (OUString::createFromAscii("Dummy Button")));
+                                  makeAny (OUString::createFromAscii("List URL contents on stdout")));
 
     /* Add button to container */
     container->insertByName (OUString::createFromAscii("Button2"),
@@ -250,4 +252,41 @@ void WebDAVDialog::showMessageBox (void)
             xMsgBox->execute();
         }
     }
+}
+
+void WebDAVDialog::dumpDAVListing (void)
+{
+    puts ("Accessing WebDAV server ...");
+
+    /* Create a reference to the SimpleFileAccess service */
+    Reference< css::ucb::XSimpleFileAccess > fileAccess =
+        Reference< css::ucb::XSimpleFileAccess > (
+                mxMSF->createInstance (OUString::createFromAscii ("com.sun.star.ucb.SimpleFileAccess")), UNO_QUERY);
+
+    if (!fileAccess.is ())
+    {
+        puts ("Could not create SimpleFileAccess object");
+        return;
+    }
+
+    /* Set up an interaction handler, which will handle e.g. requesting
+     * credentials from the user.
+     */
+    Reference< css::task::XInteractionHandler > interactionHandler =
+        Reference< css::task::XInteractionHandler > (
+                mxMSF->createInstance (OUString::createFromAscii ("com.sun.star.task.InteractionHandler")), UNO_QUERY);
+    fileAccess->setInteractionHandler (interactionHandler);
+
+    /* XXX: You might want to put your local location here */
+    OUString Url = OUString::createFromAscii ("http://localhost/dav/");
+    Sequence< rtl::OUString > entries = fileAccess->getFolderContents (Url, false);
+
+    const OUString *stringArray = entries.getConstArray ();
+    sal_Int32 n = entries.getLength ();
+    for (sal_Int32 i = 0; i < n; i++)
+    {
+        printf ("  %s\n", OUStringToOString (stringArray[i], RTL_TEXTENCODING_UTF8).getStr ());
+    }
+
+    puts ("\nEnd of listing.");
 }

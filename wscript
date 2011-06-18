@@ -102,6 +102,7 @@ def cppumaker (bld):
 				"com.sun.star.lang.XSingleServiceFactory",
 				"com.sun.star.lang.XTypeProvider",
 				"com.sun.star.registry.XRegistryKey",
+				"com.sun.star.ucb.XSimpleFileAccess",
 				"com.sun.star.uno.XAggregation",
 				"com.sun.star.uno.XComponentContext",
 				"com.sun.star.uno.XWeak",
