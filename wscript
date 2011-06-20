@@ -55,6 +55,7 @@ def cppumaker (bld):
 				"com.sun.star.awt.XControlContainer",
 				"com.sun.star.awt.XControlModel",
 				"com.sun.star.awt.XDialog",
+				"com.sun.star.awt.XItemList",
 				"com.sun.star.awt.XMessageBox",
 				"com.sun.star.awt.XWindow2",
 				"com.sun.star.awt.XWindowPeer",

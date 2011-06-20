@@ -10,6 +10,7 @@
 #include <com/sun/star/awt/XDialog.hpp>
 #include <com/sun/star/awt/XWindowPeer.hpp>
 #include <com/sun/star/awt/XMessageBox.hpp>
+#include <com/sun/star/awt/XItemList.hpp>
 #include <com/sun/star/beans/PropertyValue.hpp>
 #include <com/sun/star/beans/XPropertySet.hpp>
 #include <com/sun/star/container/XNameContainer.hpp>
@@ -232,23 +233,19 @@ void WebDAVDialog::createDialog (void)
 
     /* Create an edit model for a text field outputting WebDAV contents */
     outputEntryModel =
-        dialogMSF->createInstance(OUString::createFromAscii("com.sun.star.awt.UnoControlEditModel"));
+        dialogMSF->createInstance(OUString::createFromAscii("com.sun.star.awt.UnoControlListBoxModel"));
 
     Reference< XPropertySet > entryProps2 (outputEntryModel, UNO_QUERY);
+    Sequence < ::rtl::OUString > entries (1);
+    entries[0] = ::rtl::OUString::createFromAscii ("(content listing will appear here)");
 
     entryProps2->setPropertyValue(OUString::createFromAscii("PositionX"), makeAny ((sal_Int32) 10));
     entryProps2->setPropertyValue(OUString::createFromAscii("PositionY"), makeAny ((sal_Int32) 90));
     entryProps2->setPropertyValue(OUString::createFromAscii("Width"), makeAny ((sal_Int32) 130));
     entryProps2->setPropertyValue(OUString::createFromAscii("Height"), makeAny ((sal_Int32) 150));
-    entryProps2->setPropertyValue(OUString::createFromAscii("HScroll"), makeAny (true));
-    entryProps2->setPropertyValue(OUString::createFromAscii("VScroll"), makeAny (true));
-    entryProps2->setPropertyValue(OUString::createFromAscii("MultiLine"), makeAny (true));
-    entryProps2->setPropertyValue(OUString::createFromAscii("ReadOnly"), makeAny (true));
     entryProps2->setPropertyValue(OUString::createFromAscii("Name"),
                                  makeAny (OUString::createFromAscii("OutputEntry")));
-    entryProps2->setPropertyValue(OUString::createFromAscii("Text"),
-                                 makeAny (OUString::createFromAscii("(content listing will appear here)")));
-    entryProps2->setPropertyValue(OUString::createFromAscii("TabIndex"),makeAny((short)3));
+    entryProps2->setPropertyValue(OUString::createFromAscii("StringItemList"), makeAny (entries));
 
     /* Add entry to container */
     container->insertByName (OUString::createFromAscii ("OutputEntry"),
@@ -328,33 +325,27 @@ void WebDAVDialog::dumpDAVListing (void)
         Reference< css::task::XInteractionHandler > (
                 mxMSF->createInstance (OUString::createFromAscii ("com.sun.star.task.InteractionHandler")), UNO_QUERY);
     fileAccess->setInteractionHandler (interactionHandler);
-
-    Sequence< rtl::OUString > entries;
+    const Reference< XItemList > items( outputEntryModel, UNO_QUERY_THROW );
+    items->removeAllItems();
 
     /* Now try to access the folder */
     try
     {
-        entries = fileAccess->getFolderContents (url, false);
+        Sequence< rtl::OUString > entries = fileAccess->getFolderContents (url, false);
+        const OUString *stringArray = entries.getConstArray ();
+        sal_Int32 n = entries.getLength ();
+        OUString icon = OUString::createFromAscii ("file:///usr/share/icons/gnome/24x24/mimetypes/");
+        for (sal_Int32 i = 0; i < n; i++)
+        {
+            OUString fileName (stringArray[i].copy (
+                stringArray[i].lastIndexOf (OUString::createFromAscii ("/")) + 1));
+            items->insertItem(0, fileName,
+                icon + OUString::createFromAscii ("x-office-document.png"));
+            items->setItemData(0, makeAny (stringArray[i]));
+        }
     }
     catch ( ... ) /* FIXME: Need proper exception handling here */
     {
-        puts ("Caught exception accessing folder.");
-        return;
+        items->insertItemText(0, OUString::createFromAscii("(Failed to list documents)"));
     }
-
-    /* Process the output */
-    OUString outputEntryBuffer;
-    const OUString *stringArray = entries.getConstArray ();
-    sal_Int32 n = entries.getLength ();
-    for (sal_Int32 i = 0; i < n; i++)
-    {
-        outputEntryBuffer += stringArray[i];
-        outputEntryBuffer += OUString::createFromAscii ("\n");
-    }
-
-    outputEntryBuffer += OUString::createFromAscii ("--End of listing");
-
-    Reference< XPropertySet > entryProps2 (outputEntryModel, UNO_QUERY);
-    entryProps2->setPropertyValue (OUString::createFromAscii ("Text"),
-                                   makeAny (outputEntryBuffer));
 }
