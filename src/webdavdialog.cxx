@@ -116,10 +116,10 @@ void WebDAVDialog::createDialog (void)
 
     /* Configure the dialog by setting properties on the model */
     Reference< XPropertySet > dialogProps (dialogModel, UNO_QUERY);
-    dialogProps->setPropertyValue(OUString::createFromAscii("PositionX"), makeAny (100));
-    dialogProps->setPropertyValue(OUString::createFromAscii("PositionY"), makeAny (100));
-    dialogProps->setPropertyValue(OUString::createFromAscii("Width"), makeAny (150));
-    dialogProps->setPropertyValue(OUString::createFromAscii("Height"), makeAny (250));
+    dialogProps->setPropertyValue(OUString::createFromAscii("PositionX"), makeAny ((sal_Int32) 100));
+    dialogProps->setPropertyValue(OUString::createFromAscii("PositionY"), makeAny ((sal_Int32) 100));
+    dialogProps->setPropertyValue(OUString::createFromAscii("Width"), makeAny ((sal_Int32) 150));
+    dialogProps->setPropertyValue(OUString::createFromAscii("Height"), makeAny ((sal_Int32) 250));
     dialogProps->setPropertyValue(OUString::createFromAscii("Title"),
             makeAny (OUString::createFromAscii("Runtime Dialog Demo")));
 
@@ -151,10 +151,10 @@ void WebDAVDialog::createDialog (void)
 
     Reference< XPropertySet > entryProps (locationEntryModel, UNO_QUERY);
 
-    entryProps->setPropertyValue(OUString::createFromAscii("PositionX"), makeAny (10));
-    entryProps->setPropertyValue(OUString::createFromAscii("PositionY"), makeAny (40));
-    entryProps->setPropertyValue(OUString::createFromAscii("Width"), makeAny (130));
-    entryProps->setPropertyValue(OUString::createFromAscii("Height"), makeAny (16));
+    entryProps->setPropertyValue(OUString::createFromAscii("PositionX"), makeAny ((sal_Int32) 10));
+    entryProps->setPropertyValue(OUString::createFromAscii("PositionY"), makeAny ((sal_Int32) 40));
+    entryProps->setPropertyValue(OUString::createFromAscii("Width"), makeAny ((sal_Int32) 130));
+    entryProps->setPropertyValue(OUString::createFromAscii("Height"), makeAny ((sal_Int32) 16));
     entryProps->setPropertyValue(OUString::createFromAscii("Name"),
                                  makeAny (OUString::createFromAscii("LocationEntry")));
     entryProps->setPropertyValue(OUString::createFromAscii("Text"),
@@ -171,10 +171,10 @@ void WebDAVDialog::createDialog (void)
 
     Reference< XPropertySet > buttonProps (buttonModel, UNO_QUERY);
 
-    buttonProps->setPropertyValue(OUString::createFromAscii("PositionX"), makeAny (10));
-    buttonProps->setPropertyValue(OUString::createFromAscii("PositionY"), makeAny (70));
-    buttonProps->setPropertyValue(OUString::createFromAscii("Width"), makeAny (50));
-    buttonProps->setPropertyValue(OUString::createFromAscii("Height"), makeAny (14));
+    buttonProps->setPropertyValue(OUString::createFromAscii("PositionX"), makeAny ((sal_Int32) 10));
+    buttonProps->setPropertyValue(OUString::createFromAscii("PositionY"), makeAny ((sal_Int32) 70));
+    buttonProps->setPropertyValue(OUString::createFromAscii("Width"), makeAny ((sal_Int32) 50));
+    buttonProps->setPropertyValue(OUString::createFromAscii("Height"), makeAny ((sal_Int32) 14));
     buttonProps->setPropertyValue(OUString::createFromAscii("Name"),
                                   makeAny (OUString::createFromAscii("Button1")));
     buttonProps->setPropertyValue(OUString::createFromAscii("TabIndex"),makeAny((short)1));
@@ -206,10 +206,10 @@ void WebDAVDialog::createDialog (void)
 
     Reference< XPropertySet > buttonProps2 (buttonModel2, UNO_QUERY);
 
-    buttonProps2->setPropertyValue(OUString::createFromAscii("PositionX"), makeAny (70));
-    buttonProps2->setPropertyValue(OUString::createFromAscii("PositionY"), makeAny (70));
-    buttonProps2->setPropertyValue(OUString::createFromAscii("Width"), makeAny (70));
-    buttonProps2->setPropertyValue(OUString::createFromAscii("Height"), makeAny (14));
+    buttonProps2->setPropertyValue(OUString::createFromAscii("PositionX"), makeAny ((sal_Int32) 70));
+    buttonProps2->setPropertyValue(OUString::createFromAscii("PositionY"), makeAny ((sal_Int32) 70));
+    buttonProps2->setPropertyValue(OUString::createFromAscii("Width"), makeAny ((sal_Int32) 70));
+    buttonProps2->setPropertyValue(OUString::createFromAscii("Height"), makeAny ((sal_Int32) 14));
     buttonProps2->setPropertyValue(OUString::createFromAscii("Name"),
                                   makeAny (OUString::createFromAscii("Button2")));
     buttonProps2->setPropertyValue(OUString::createFromAscii("TabIndex"), makeAny((short)2));
@@ -236,10 +236,10 @@ void WebDAVDialog::createDialog (void)
 
     Reference< XPropertySet > entryProps2 (outputEntryModel, UNO_QUERY);
 
-    entryProps2->setPropertyValue(OUString::createFromAscii("PositionX"), makeAny (10));
-    entryProps2->setPropertyValue(OUString::createFromAscii("PositionY"), makeAny (90));
-    entryProps2->setPropertyValue(OUString::createFromAscii("Width"), makeAny (130));
-    entryProps2->setPropertyValue(OUString::createFromAscii("Height"), makeAny (150));
+    entryProps2->setPropertyValue(OUString::createFromAscii("PositionX"), makeAny ((sal_Int32) 10));
+    entryProps2->setPropertyValue(OUString::createFromAscii("PositionY"), makeAny ((sal_Int32) 90));
+    entryProps2->setPropertyValue(OUString::createFromAscii("Width"), makeAny ((sal_Int32) 130));
+    entryProps2->setPropertyValue(OUString::createFromAscii("Height"), makeAny ((sal_Int32) 150));
     entryProps2->setPropertyValue(OUString::createFromAscii("HScroll"), makeAny (true));
     entryProps2->setPropertyValue(OUString::createFromAscii("VScroll"), makeAny (true));
     entryProps2->setPropertyValue(OUString::createFromAscii("MultiLine"), makeAny (true));
