@@ -25,14 +25,14 @@
 	  <node oor:name="MenuItems">
 	    <node oor:name="M1" oor:op="replace">
 	      <prop oor:name="Title">
-		<value xml:lang="en-US">~WebDAV</value>
+		<value xml:lang="en-US">~Cloud Île-de-France</value>
 	      </prop>
 
 	      <node oor:name="Submenu">
 
 		<node oor:name="M1" oor:op="replace">
 		  <prop oor:name="URL" oor:type="xs:string">
-		    <value>com.lanedo.webdavui:TestAction</value>
+		    <value>com.lanedo.webdavui:configure</value>
 		  </prop>
 		  <prop oor:name="ImageIdentifier" oor:type="xs:string">
 		    <value/>
@@ -41,16 +41,37 @@
 		    <value>_self</value>
 		  </prop>
 		  <prop oor:name="Title" oor:type="xs:string">
-		    <value xml:lang="en-US">~Test Action</value>
+		    <value xml:lang="en-US">~Configure Cloud Access</value>
 		  </prop>
 		</node>
 
 		<node oor:name="M2" oor:op="replace">
 		  <prop oor:name="URL" oor:type="xs:string">
-		    <value>.uno:HelpIndex</value>
+		    <value>com.lanedo.webdavui:open</value>
+		  </prop>
+		  <prop oor:name="ImageIdentifier" oor:type="xs:string">
+		    <value/>
+		  </prop>
+		  <prop oor:name="Target" oor:type="xs:string">
+		    <value>_self</value>
 		  </prop>
 		  <prop oor:name="Title" oor:type="xs:string">
-		    <value xml:lang="en-US">Test Help Item</value>
+		    <value xml:lang="en-US">~Open a File From the Could</value>
+		  </prop>
+		</node>
+
+		<node oor:name="M3" oor:op="replace">
+		  <prop oor:name="URL" oor:type="xs:string">
+		    <value>com.lanedo.webdavui:save</value>
+		  </prop>
+		  <prop oor:name="ImageIdentifier" oor:type="xs:string">
+		    <value/>
+		  </prop>
+		  <prop oor:name="Target" oor:type="xs:string">
+		    <value>_self</value>
+		  </prop>
+		  <prop oor:name="Title" oor:type="xs:string">
+		    <value xml:lang="en-US">~Save a File To the Cloud</value>
 		  </prop>
 		</node>
 
@@ -70,13 +91,13 @@
 	    <value>standardbar</value>
 	  </prop>
 	  <prop oor:name="MergePoint">
-	    <value>.uno:Open</value>
+	    <value>.uno:New</value>
 	  </prop>
 	  <prop oor:name="MergeCommand">
-	    <value>AddAfter</value>
+	    <value>AddBefore</value>
 	  </prop>
 	  <prop oor:name="MergeFallback">
-	    <value>AddLast</value>
+	    <value>AddFirst</value>
 	  </prop>
 	  <prop oor:name="MergeContext">
 	    <value/>
@@ -85,22 +106,37 @@
 
 	    <node oor:name="B1" oor:op="replace">
 	      <prop oor:name="URL" oor:type="xs:string">
-		<value>com.lanedo.webdavui:TestAction</value>
+		<value>com.lanedo.webdavui:configure</value>
 	      </prop>
 	      <prop oor:name="ImageIdentifier" oor:type="xs:string">
 		<value/>
 	      </prop>
 	      <prop oor:name="Title" oor:type="xs:string">
-		<value xml:lang="en-US">~Test Action</value>
+		<value xml:lang="en-US">Configure Cloud Access</value>
 	      </prop>
 	    </node>
 
 	    <node oor:name="B2" oor:op="replace">
-	      <prop oor:name="URL">
-		<value>.uno:CloseDoc</value>
+	      <prop oor:name="URL" oor:type="xs:string">
+		<value>com.lanedo.webdavui:open</value>
 	      </prop>
-	      <prop oor:name="Title">
-		<value>Test Close Document</value>
+	      <prop oor:name="ImageIdentifier" oor:type="xs:string">
+		<value/>
+	      </prop>
+	      <prop oor:name="Title" oor:type="xs:string">
+		<value xml:lang="en-US">Open a File From the Cloud</value>
+	      </prop>
+	    </node>
+
+	    <node oor:name="B3" oor:op="replace">
+	      <prop oor:name="URL" oor:type="xs:string">
+		<value>com.lanedo.webdavui:save</value>
+	      </prop>
+	      <prop oor:name="ImageIdentifier" oor:type="xs:string">
+		<value/>
+	      </prop>
+	      <prop oor:name="Title" oor:type="xs:string">
+		<value xml:lang="en-US">Save a File To the Cloud</value>
 	      </prop>
 	    </node>
 
@@ -110,19 +146,67 @@
     </node>
 
     <node oor:name="Images">
-      <node oor:name="com.lanedo.webdavui.testaction.images" oor:op="replace">
+
+      <node oor:name="com.lanedo.webdavui.configure.images" oor:op="replace">
 	<prop oor:name="URL" oor:type="xs:string">
-          <value>com.lanedo.webdavui:TestAction</value>
+          <value>com.lanedo.webdavui:configure</value>
         </prop>
         <node oor:name="UserDefinedImages">
           <prop oor:name="ImageSmallURL">
-	    <value>%origin%/images/test-icon-small.png</value>
+	    <value>%origin%/images/webdav-configure-small.png</value>
           </prop>
           <prop oor:name="ImageBigURL">
-            <value>%origin%/images/test-icon-big.png</value>
+            <value>%origin%/images/webdav-configure-big.png</value>
+          </prop>
+          <prop oor:name="ImageSmallHCURL">
+	    <value>%origin%/images/webdav-configure-small-hc.png</value>
+          </prop>
+          <prop oor:name="ImageBigHCURL">
+            <value>%origin%/images/webdav-configure-big-hc.png</value>
           </prop>
         </node>
       </node>
+
+      <node oor:name="com.lanedo.webdavui.open.images" oor:op="replace">
+	<prop oor:name="URL" oor:type="xs:string">
+          <value>com.lanedo.webdavui:open</value>
+        </prop>
+        <node oor:name="UserDefinedImages">
+          <prop oor:name="ImageSmallURL">
+	    <value>%origin%/images/webdav-open-small.png</value>
+          </prop>
+          <prop oor:name="ImageBigURL">
+            <value>%origin%/images/webdav-open-big.png</value>
+          </prop>
+          <prop oor:name="ImageSmallHCURL">
+	    <value>%origin%/images/webdav-open-small-hc.png</value>
+          </prop>
+          <prop oor:name="ImageBigHCURL">
+            <value>%origin%/images/webdav-open-big-hc.png</value>
+          </prop>
+        </node>
+      </node>
+
+      <node oor:name="com.lanedo.webdavui.save.images" oor:op="replace">
+	<prop oor:name="URL" oor:type="xs:string">
+          <value>com.lanedo.webdavui:save</value>
+        </prop>
+        <node oor:name="UserDefinedImages">
+          <prop oor:name="ImageSmallURL">
+	    <value>%origin%/images/webdav-save-small.png</value>
+          </prop>
+          <prop oor:name="ImageBigURL">
+            <value>%origin%/images/webdav-save-big.png</value>
+          </prop>
+          <prop oor:name="ImageSmallHCURL">
+	    <value>%origin%/images/webdav-save-small-hc.png</value>
+          </prop>
+          <prop oor:name="ImageBigHCURL">
+            <value>%origin%/images/webdav-save-big-hc.png</value>
+          </prop>
+        </node>
+      </node>
+
     </node>
 
   </node>
