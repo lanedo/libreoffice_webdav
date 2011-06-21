@@ -26,6 +26,7 @@ public:
 
     void show (void);
     void showMessageBox (void);
+    void openSelectedDocument (void);
     void dumpDAVListing (void);
 };
 

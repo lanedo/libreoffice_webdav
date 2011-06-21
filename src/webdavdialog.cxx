@@ -17,6 +17,8 @@
 #include <com/sun/star/frame/XController.hpp>
 #include <com/sun/star/lang/XComponent.hpp>
 #include <com/sun/star/ucb/XSimpleFileAccess.hpp>
+#include <com/sun/star/frame/XComponentLoader.hpp>
+#include <com/sun/star/frame/FrameSearchFlag.hpp>
 
 #include <cstdio> // TEMPORARY: for puts
 
@@ -61,7 +63,7 @@ public:
         if (controlName.equalsAscii ("Button1"))
         {
             /* FIXME: Is this okay with regard to threading, etc. ? */
-            owner->showMessageBox ();
+            owner->openSelectedDocument ();
         }
         else if (controlName.equalsAscii ("Button2"))
         {
@@ -181,7 +183,7 @@ void WebDAVDialog::createDialog (void)
     buttonProps->setPropertyValue(OUString::createFromAscii("TabIndex"),makeAny((short)1));
 
     buttonProps->setPropertyValue(OUString::createFromAscii("Label"),
-                                  makeAny (OUString::createFromAscii("Show Dialog")));
+                                  makeAny (OUString::createFromAscii("Open Document")));
 
     /* Add button to container */
     container->insertByName (OUString::createFromAscii("Button1"),
@@ -293,6 +295,36 @@ void WebDAVDialog::showMessageBox (void)
             xMsgBox->setMessageText( OUString( RTL_CONSTASCII_USTRINGPARAM( "This is my message" )));
             xMsgBox->execute();
         }
+    }
+}
+
+void WebDAVDialog::openSelectedDocument (void)
+{
+    if ( ! (mxFrame.is() && mxToolkit.is()) )
+        return;
+
+    Reference< XPropertySet > entryProps (outputEntryModel, UNO_QUERY);
+    css::uno::Any aValue = entryProps->getPropertyValue (OUString::createFromAscii ("SelectedItems"));
+    Sequence< short > selectedItems;
+    aValue >>= selectedItems;
+    sal_Int32 n = selectedItems.getLength ();
+    for (sal_Int32 i = 0; i < n; i++)
+    {
+        const Reference< XItemList > items( outputEntryModel, UNO_QUERY_THROW );
+        css::uno::Any aURL = items->getItemData(selectedItems[0]);
+        OUString sURL;
+        aURL >>= sURL;
+        printf ("Opening document: %s\n",
+                OUStringToOString (sURL, RTL_TEXTENCODING_UTF8).getStr ());
+        /* Save the frame name, invent a unique name, and restore the name later */
+        OUString sOldName = mxFrame->getName();
+        OUString sTarget = OUString::createFromAscii("odk_officedev_desk");
+        mxFrame->setName(sTarget);
+        Reference< css::frame::XComponentLoader > xLoader(mxFrame, UNO_QUERY);
+        Sequence< css::beans::PropertyValue > lProperties (1);
+        Reference< css::lang::XComponent > xDocument (xLoader->loadComponentFromURL(
+            sURL, sTarget, css::frame::FrameSearchFlag::CHILDREN, lProperties));
+        mxFrame->setName(sOldName);
     }
 }
 

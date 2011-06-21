@@ -86,6 +86,7 @@ def cppumaker (bld):
 				"com.sun.star.frame.XFrame",
 				"com.sun.star.frame.XFrameActionListener",
 				"com.sun.star.frame.FrameActionEvent",
+				"com.sun.star.frame.FrameSearchFlag",
 				"com.sun.star.frame.XLayoutManager",
 				"com.sun.star.frame.XModel",
 				"com.sun.star.frame.XStorable",
