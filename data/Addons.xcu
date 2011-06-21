@@ -25,7 +25,8 @@
 	  <node oor:name="MenuItems">
 	    <node oor:name="M1" oor:op="replace">
 	      <prop oor:name="Title">
-		<value xml:lang="en-US">~Cloud Île-de-France</value>
+		<value xml:lang="en">~Cloud Île-de-France</value>
+		<value xml:lang="fr">~Cloud Île-de-France</value>
 	      </prop>
 
 	      <node oor:name="Submenu">
@@ -41,7 +42,8 @@
 		    <value>_self</value>
 		  </prop>
 		  <prop oor:name="Title" oor:type="xs:string">
-		    <value xml:lang="en-US">~Configure Cloud Access</value>
+		    <value xml:lang="en">~Configure Cloud Access</value>
+		    <value xml:lang="fr">~Configuration du cloud</value>
 		  </prop>
 		</node>
 
@@ -56,7 +58,8 @@
 		    <value>_self</value>
 		  </prop>
 		  <prop oor:name="Title" oor:type="xs:string">
-		    <value xml:lang="en-US">~Open a File From the Could</value>
+		    <value xml:lang="en">~Open a File From the Could</value>
+		    <value xml:lang="fr">~Ouvrir depuis le cloud</value>
 		  </prop>
 		</node>
 
@@ -71,7 +74,8 @@
 		    <value>_self</value>
 		  </prop>
 		  <prop oor:name="Title" oor:type="xs:string">
-		    <value xml:lang="en-US">~Save a File To the Cloud</value>
+		    <value xml:lang="en">~Save a File To the Cloud</value>
+		    <value xml:lang="fr">~Enregistrer sur le cloud</value>
 		  </prop>
 		</node>
 
@@ -112,7 +116,8 @@
 		<value/>
 	      </prop>
 	      <prop oor:name="Title" oor:type="xs:string">
-		<value xml:lang="en-US">Configure Cloud Access</value>
+		<value xml:lang="en">Configure Cloud Access</value>
+		<value xml:lang="fr">Configuration du cloud</value>
 	      </prop>
 	    </node>
 
@@ -124,7 +129,8 @@
 		<value/>
 	      </prop>
 	      <prop oor:name="Title" oor:type="xs:string">
-		<value xml:lang="en-US">Open a File From the Cloud</value>
+		<value xml:lang="en">Open a File From the Cloud</value>
+		<value xml:lang="fr">Ouvrir depuis le cloud</value>
 	      </prop>
 	    </node>
 
@@ -136,7 +142,8 @@
 		<value/>
 	      </prop>
 	      <prop oor:name="Title" oor:type="xs:string">
-		<value xml:lang="en-US">Save a File To the Cloud</value>
+		<value xml:lang="en">Save a File To the Cloud</value>
+		<value xml:lang="fr">Enregistrer sur le cloud</value>
 	      </prop>
 	    </node>
 
