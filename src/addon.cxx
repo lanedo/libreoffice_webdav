@@ -103,22 +103,19 @@ void SAL_CALL Addon::dispatch( const URL&                        aURL,
 {
     puts ("dispatch!");
 
-    if ( aURL.Protocol.compareToAscii("com.lanedo.webdavui:") == 0 )
+    if ( aURL.Path.compareToAscii( "configure" ) == 0 )
     {
-        if ( aURL.Path.compareToAscii( "configure" ) == 0 )
-        {
-            puts ("configure selected");
-            WebDAVDialog *dialog = new WebDAVDialog (mxMSF, mxFrame);
-            dialog->show ();
-        }
-        else if ( aURL.Path.compareToAscii( "open" ) == 0 )
-        {
-            puts ("open selected");
-        }
-        else if ( aURL.Path.compareToAscii( "save" ) == 0 )
-        {
-            puts ("save selected");
-        }
+        puts ("configure selected");
+        WebDAVDialog *dialog = new WebDAVDialog (mxMSF, mxFrame);
+        dialog->show ();
+    }
+    else if ( aURL.Path.compareToAscii( "open" ) == 0 )
+    {
+        puts ("open selected");
+    }
+    else if ( aURL.Path.compareToAscii( "save" ) == 0 )
+    {
+        puts ("save selected");
     }
 }
 
