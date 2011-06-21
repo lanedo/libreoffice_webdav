@@ -14,7 +14,7 @@ fi
 
 cp data/Addons.xcu dist
 cp description.xml dist
-cp data/package-description.txt dist
+cp data/package-description-*.txt dist
 cp data/ProtocolHandler.xcu dist
 cp data/images/* dist/images
 cp build/manifest.xml dist/META-INF

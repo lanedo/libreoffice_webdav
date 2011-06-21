@@ -7,6 +7,8 @@
                        manifest:full-path="ProtocolHandler.xcu"/>
   <manifest:file-entry manifest:media-type="application/vnd.sun.star.uno-component;type=native;platform=@PLATFORM@"
                        manifest:full-path="@PLATFORM@/@COMPONENT@"/>
-  <manifest:file-entry manifest:media-type="application/vnd.sun.star.package-bundle-description"
-		       manifest:full-path="package-description.txt"/>
+  <manifest:file-entry manifest:media-type="application/vnd.sun.star.package-bundle-description;locale=en"
+		       manifest:full-path="package-description-en.txt"/>
+  <manifest:file-entry manifest:media-type="application/vnd.sun.star.package-bundle-description;locale=fr"
+		       manifest:full-path="package-description-fr.txt"/>
 </manifest:manifest>

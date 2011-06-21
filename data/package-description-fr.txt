@@ -1,0 +1,1 @@
+Interface conviviale pour le partage de documents entre étudiants et collègues à travers un serveur WebDAV.
