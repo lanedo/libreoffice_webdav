@@ -45,12 +45,12 @@
 #include <cstdio> // TEMPORARY: for puts
 
 using rtl::OUString;
-using namespace com::sun::star::uno;
-using namespace com::sun::star::frame;
-using namespace com::sun::star::awt;
-using com::sun::star::lang::XMultiServiceFactory;
-using com::sun::star::beans::PropertyValue;
-using com::sun::star::util::URL;
+using namespace css::uno;
+using namespace css::frame;
+using namespace css::awt;
+using css::lang::XMultiServiceFactory;
+using css::beans::PropertyValue;
+using css::util::URL;
 
 // This is the service name an Add-On has to implement
 #define SERVICE_NAME "com.sun.star.frame.ProtocolHandler"

@@ -23,13 +23,13 @@
 #include <cstdio> // TEMPORARY: for puts
 
 using rtl::OUString;
-using namespace com::sun::star::awt;
-using namespace com::sun::star::beans;
-using namespace com::sun::star::container;
-using namespace com::sun::star::frame;
-using namespace com::sun::star::lang;
-using namespace com::sun::star::uno;
-using com::sun::star::lang::XMultiServiceFactory;
+using namespace css::awt;
+using namespace css::beans;
+using namespace css::container;
+using namespace css::frame;
+using namespace css::lang;
+using namespace css::uno;
+using css::lang::XMultiServiceFactory;
 
 /* Action listener */
 class WebDAVDialogActionListener : public ::cppu::WeakImplHelper1< css::awt::XActionListener >
