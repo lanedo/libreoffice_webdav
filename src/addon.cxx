@@ -87,12 +87,7 @@ Reference< XDispatch > SAL_CALL Addon::queryDispatch( const URL&             aUR
 
     if ( aURL.Protocol.compareToAscii("com.lanedo.webdavui:") == 0 )
     {
-        if ( aURL.Path.compareToAscii( "configure" ) == 0 )
-            xRet = this;
-        else if ( aURL.Path.compareToAscii( "open" ) == 0 )
-            xRet = this;
-        else if ( aURL.Path.compareToAscii( "save" ) == 0 )
-            xRet = this;
+        xRet = this;
     }
 
     return xRet;
