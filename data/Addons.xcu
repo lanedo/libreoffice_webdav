@@ -140,6 +140,12 @@
 	      </prop>
 	    </node>
 
+	    <node oor:name="B4" oor:op="replace">
+	      <prop oor:name="URL" oor:type="xs:string">
+		<value>private:separator</value>
+	      </prop>
+	    </node>
+
 	  </node>
 	</node>
       </node>
