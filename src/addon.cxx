@@ -61,7 +61,8 @@ using css::util::URL;
   * One-time initialization. We have to store the context information
   * given, like the frame we are bound to, into our members.
   */
-void SAL_CALL Addon::initialize( const Sequence< Any >& aArguments ) throw ( Exception, RuntimeException)
+void SAL_CALL Addon::initialize( const Sequence< Any >& aArguments )
+    throw (Exception, RuntimeException)
 {
     puts ("Addon class initialized");
 
@@ -78,9 +79,9 @@ void SAL_CALL Addon::initialize( const Sequence< Any >& aArguments ) throw ( Exc
   * We are ask to query the given URL and return a dispatch object if the URL
   * contains an Add-On command.
   */
-Reference< XDispatch > SAL_CALL Addon::queryDispatch( const URL&             aURL,
-                                                      const ::rtl::OUString& sTargetFrameName,
-                                                      sal_Int32              nSearchFlags )
+Reference< XDispatch > SAL_CALL Addon::queryDispatch( const URL&      aURL,
+                                                      const OUString& sTargetFrameName,
+                                                      sal_Int32       nSearchFlags )
     throw (RuntimeException)
 {
     Reference < XDispatch > xRet;
@@ -164,27 +165,27 @@ void SAL_CALL Addon::removeStatusListener( const Reference< XStatusListener >& x
 //#### Helper functions for the implementation of UNO component interfaces #########################
 //##################################################################################################
 
-::rtl::OUString Addon_getImplementationName()
+OUString Addon_getImplementationName()
     throw (RuntimeException)
 {
-    return ::rtl::OUString ( RTL_CONSTASCII_USTRINGPARAM ( IMPLEMENTATION_NAME ) );
+    return OUString ( RTL_CONSTASCII_USTRINGPARAM ( IMPLEMENTATION_NAME ) );
 }
 
-sal_Bool SAL_CALL Addon_supportsService( const ::rtl::OUString& ServiceName )
+sal_Bool SAL_CALL Addon_supportsService( const OUString& ServiceName )
     throw (RuntimeException)
 {
     return ServiceName.equalsAsciiL( RTL_CONSTASCII_STRINGPARAM ( SERVICE_NAME ) );
 }
 
-Sequence< ::rtl::OUString > SAL_CALL Addon_getSupportedServiceNames()
+Sequence< OUString > SAL_CALL Addon_getSupportedServiceNames()
     throw (RuntimeException)
 {
     puts ("In Addon_getSupportedServiceNames()");
 
-    Sequence < ::rtl::OUString > aRet(1);
-    ::rtl::OUString* pArray = aRet.getArray();
+    Sequence < OUString > aRet(1);
+    OUString* pArray = aRet.getArray();
 
-    pArray[0] =  ::rtl::OUString ( RTL_CONSTASCII_USTRINGPARAM ( SERVICE_NAME ) );
+    pArray[0] =  OUString ( RTL_CONSTASCII_USTRINGPARAM ( SERVICE_NAME ) );
 
     return aRet;
 }
@@ -201,19 +202,19 @@ Reference< XInterface > SAL_CALL Addon_createInstance( const Reference< XMultiSe
 //##################################################################################################
 
 // XServiceInfo
-::rtl::OUString SAL_CALL Addon::getImplementationName()
+OUString SAL_CALL Addon::getImplementationName()
     throw (RuntimeException)
 {
     return Addon_getImplementationName();
 }
 
-sal_Bool SAL_CALL Addon::supportsService( const ::rtl::OUString& rServiceName )
+sal_Bool SAL_CALL Addon::supportsService( const OUString& rServiceName )
     throw (RuntimeException)
 {
     return Addon_supportsService( rServiceName );
 }
 
-Sequence< ::rtl::OUString > SAL_CALL Addon::getSupportedServiceNames()
+Sequence< OUString > SAL_CALL Addon::getSupportedServiceNames()
     throw (RuntimeException)
 {
     return Addon_getSupportedServiceNames();
