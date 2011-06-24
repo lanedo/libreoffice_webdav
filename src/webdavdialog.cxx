@@ -64,7 +64,14 @@ public:
         if (controlName.equalsAscii ("Button1"))
         {
             /* FIXME: Is this okay with regard to threading, etc. ? */
-            owner->openSelectedDocument ();
+            if (owner->isSaveDialog ())
+            {
+                owner->saveSelectedDocument ();
+            }
+            else
+            {
+                owner->openSelectedDocument ();
+            }
         }
         else if (controlName.equalsAscii ("Button2"))
         {
@@ -78,7 +85,10 @@ public:
 /* Dialog construction */
 
 WebDAVDialog::WebDAVDialog( const Reference< css::lang::XMultiServiceFactory > &rxMSF,
-                            const Reference< css::frame::XFrame > &rxFrame ) : mxMSF ( rxMSF ), mxFrame ( rxFrame )
+                            const Reference< css::frame::XFrame >              &rxFrame,
+                            const sal_Bool                                      isSave) : mxMSF ( rxMSF ),
+                                                                                          mxFrame ( rxFrame ),
+                                                                                          isSave ( isSave)
 {
     puts ("dialog ctor");
 
@@ -183,8 +193,16 @@ void WebDAVDialog::createDialog (void)
                                   makeAny (OUString::createFromAscii("Button1")));
     buttonProps->setPropertyValue(OUString::createFromAscii("TabIndex"),makeAny((short)1));
 
-    buttonProps->setPropertyValue(OUString::createFromAscii("Label"),
-                                  makeAny (OUString::createFromAscii("Open Document")));
+    if (isSave)
+    {
+      buttonProps->setPropertyValue(OUString::createFromAscii("Label"),
+                                    makeAny (OUString::createFromAscii("Save Document")));
+    }
+    else
+    {
+      buttonProps->setPropertyValue(OUString::createFromAscii("Label"),
+                                    makeAny (OUString::createFromAscii("Open Document")));
+    }
 
     /* Add button to container */
     container->insertByName (OUString::createFromAscii("Button1"),
@@ -254,6 +272,11 @@ void WebDAVDialog::createDialog (void)
     container->insertByName (OUString::createFromAscii ("OutputEntry"),
                              makeAny (outputEntryModel));
 
+}
+
+sal_Bool WebDAVDialog::isSaveDialog (void)
+{
+    return isSave;
 }
 
 void WebDAVDialog::show (void)

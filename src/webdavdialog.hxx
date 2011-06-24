@@ -18,12 +18,16 @@ private:
     css::uno::Reference< css::uno::XInterface > locationEntryModel;
     css::uno::Reference< css::uno::XInterface > outputEntryModel;
 
+    sal_Bool isSave;
+
     void createDialog (void);
 
 public:
     WebDAVDialog( const css::uno::Reference< css::lang::XMultiServiceFactory > &rxMSF,
-                  const css::uno::Reference< css::frame::XFrame > &rxFrame );
+                  const css::uno::Reference< css::frame::XFrame >              &rxFrame,
+                  const sal_Bool                                                isSave);
 
+    sal_Bool isSaveDialog (void);
     void show (void);
     void showMessageBox (void);
     void openSelectedDocument (void);

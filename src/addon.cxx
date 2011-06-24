@@ -111,12 +111,14 @@ void SAL_CALL Addon::dispatch( const URL&                        aURL,
     else if ( aURL.Path.compareToAscii( "open" ) == 0 )
     {
         puts ("open selected");
-        WebDAVDialog *dialog = new WebDAVDialog (mxMSF, mxFrame);
+        WebDAVDialog *dialog = new WebDAVDialog (mxMSF, mxFrame, sal_False);
         dialog->show ();
     }
     else if ( aURL.Path.compareToAscii( "save" ) == 0 )
     {
         puts ("save selected");
+        WebDAVDialog *dialog = new WebDAVDialog (mxMSF, mxFrame, sal_True);
+        dialog->show ();
     }
 }
 
