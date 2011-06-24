@@ -343,10 +343,17 @@ void WebDAVDialog::saveSelectedDocument (void)
         aURL >>= sURL;
         printf ("Saving document as: %s\n",
                 OUStringToOString (sURL, RTL_TEXTENCODING_UTF8).getStr ());
-        Reference< css::frame::XStorable > xStorable(mxFrame, UNO_QUERY);
+        css::uno::Reference< css::frame::XController > xController = mxFrame->getController();
+        if ( !xController.is() )
+        {
+            printf ("No controller!\n");
+            break;
+        }
+        css::uno::Reference< css::frame::XModel > xModel (xController->getModel());
+        css::uno::Reference< css::frame::XStorable > xStorable( xModel, css::uno::UNO_QUERY );
         if (!xStorable.is())
         {
-            printf ("Can't save!?\n");
+            printf ("No storable!\n");
             break;
         }
         Sequence< css::beans::PropertyValue > lProperties (1);
