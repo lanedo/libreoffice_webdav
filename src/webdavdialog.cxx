@@ -32,6 +32,26 @@ using namespace css::lang;
 using namespace css::uno;
 using css::lang::XMultiServiceFactory;
 
+class WebDAVDialogItemListener : public ::cppu::WeakImplHelper1< com::sun::star::awt::XItemListener >
+{
+private:
+    WebDAVDialog * const owner;
+
+public:
+    WebDAVDialogItemListener (WebDAVDialog * const _owner)
+        : owner ( _owner ) {}
+
+    virtual void SAL_CALL itemStateChanged (const css::awt::ItemEvent &Event) throw (css::uno::RuntimeException)
+    {
+        puts ("XItemListener::itemStateChanged");
+    }
+
+    virtual void SAL_CALL disposing (const css::lang::EventObject &Source) throw  (css::uno::RuntimeException)
+    {
+        puts ("XItemListener::disposing");
+    }
+};
+
 /* Action listener */
 class WebDAVDialogActionListener : public ::cppu::WeakImplHelper1< css::awt::XActionListener >
 {
@@ -255,6 +275,12 @@ void WebDAVDialog::createDialog (void)
     /* Create an edit model for a text field outputting WebDAV contents */
     outputEntryModel =
         dialogMSF->createInstance(OUString::createFromAscii("com.sun.star.awt.UnoControlListBoxModel"));
+    Reference< XItemListener > itemListener =
+        static_cast< XItemListener *> (new WebDAVDialogItemListener (this));
+    Reference< XComponent > xComponent(outputEntryModel, UNO_QUERY);
+    Reference< XEventListener > eventListener(itemListener, UNO_QUERY);
+    xComponent->addEventListener (eventListener);
+    /* FIXME: Double-click should open file */
 
     Reference< XPropertySet > entryProps2 (outputEntryModel, UNO_QUERY);
     Sequence < ::rtl::OUString > entries (1);

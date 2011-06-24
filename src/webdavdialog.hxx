@@ -2,6 +2,7 @@
 #define __WEBDAVDIALOG_HXX__
 
 #include <com/sun/star/awt/XToolkit.hpp>
+#include <com/sun/star/awt/XItemListener.hpp>
 #include <com/sun/star/frame/XFrame.hpp>
 #include <com/sun/star/lang/XMultiServiceFactory.hpp>
 

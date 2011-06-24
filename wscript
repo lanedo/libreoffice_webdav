@@ -64,6 +64,7 @@ def cppumaker (bld):
 				"com.sun.star.awt.XMenuExtended",
 				"com.sun.star.awt.XPopupMenu",
 				"com.sun.star.awt.XPopupMenuExtended",
+				"com.sun.star.awt.XItemListener",
 				"com.sun.star.beans.NamedValue",
 				"com.sun.star.beans.PropertyValue",
 				"com.sun.star.beans.XPropertySet",
