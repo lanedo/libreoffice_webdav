@@ -311,21 +311,17 @@ void WebDAVDialog::openSelectedDocument (void)
     sal_Int32 n = selectedItems.getLength ();
     for (sal_Int32 i = 0; i < n; i++)
     {
+        /* FIXME: Re-use existing document smartly and ask to save changes as normal Open would */
         const Reference< XItemList > items( outputEntryModel, UNO_QUERY_THROW );
         css::uno::Any aURL = items->getItemData(selectedItems[0]);
         OUString sURL;
         aURL >>= sURL;
         printf ("Opening document: %s\n",
                 OUStringToOString (sURL, RTL_TEXTENCODING_UTF8).getStr ());
-        /* Save the frame name, invent a unique name, and restore the name later */
-        OUString sOldName = mxFrame->getName();
-        OUString sTarget = OUString::createFromAscii("odk_officedev_desk");
-        mxFrame->setName(sTarget);
         Reference< css::frame::XComponentLoader > xLoader(mxFrame, UNO_QUERY);
         Sequence< css::beans::PropertyValue > lProperties (1);
         Reference< css::lang::XComponent > xDocument (xLoader->loadComponentFromURL(
-            sURL, sTarget, css::frame::FrameSearchFlag::CHILDREN, lProperties));
-        mxFrame->setName(sOldName);
+            sURL, mxFrame->getName(), css::frame::FrameSearchFlag::CHILDREN, lProperties));
     }
 }
 
