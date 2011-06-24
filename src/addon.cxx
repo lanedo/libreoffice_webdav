@@ -107,12 +107,12 @@ void SAL_CALL Addon::dispatch( const URL&                        aURL,
     if ( aURL.Path.compareToAscii( "configure" ) == 0 )
     {
         puts ("configure selected");
-        WebDAVDialog *dialog = new WebDAVDialog (mxMSF, mxFrame);
-        dialog->show ();
     }
     else if ( aURL.Path.compareToAscii( "open" ) == 0 )
     {
         puts ("open selected");
+        WebDAVDialog *dialog = new WebDAVDialog (mxMSF, mxFrame);
+        dialog->show ();
     }
     else if ( aURL.Path.compareToAscii( "save" ) == 0 )
     {
@@ -148,6 +148,42 @@ void SAL_CALL Addon::addStatusListener( const Reference< XStatusListener >& xCon
                                         const URL&                          aURL )
     throw (RuntimeException)
 {
+    OUString label;
+    sal_Bool sensitive = false;
+
+    if ( aURL.Path.compareToAscii( "configure" ) == 0 )
+    {
+        label = OUString( RTL_CONSTASCII_USTRINGPARAM( "Configure Cloud Access" ) );
+    }
+    else if ( aURL.Path.compareToAscii( "open" ) == 0 )
+    {
+        label = OUString( RTL_CONSTASCII_USTRINGPARAM( "Open a File From the Could" ) );
+        sensitive = true;
+    }
+    else if ( aURL.Path.compareToAscii( "save" ) == 0 )
+    {
+        label = OUString( RTL_CONSTASCII_USTRINGPARAM( "Save a File To the Cloud" ) );
+
+        if ( mxFrame.is() &&
+             mxFrame->getController().is() &&
+             mxFrame->getController()->getModel().is() )
+        {
+            sensitive = true;
+        }
+    }
+
+    /* FIXME: for whatever reason, this breaks invoking actions from the menu.
+     * while the toolbar keeps working. Sensitivity works on both
+     * as expected tho.
+     */
+    FeatureStateEvent aEvent( static_cast<cppu::OWeakObject*>( this ),
+                              aURL,
+                              label,
+                              sensitive,
+                              true,
+                              Any() );
+
+    xControl->statusChanged( aEvent );
 }
 
 /**
