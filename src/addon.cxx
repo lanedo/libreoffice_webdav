@@ -153,17 +153,22 @@ void SAL_CALL Addon::addStatusListener( const Reference< XStatusListener >& xCon
     OUString label;
     sal_Bool sensitive = false;
 
+    puts ("addStatusListener!");
+
     if ( aURL.Path.compareToAscii( "configure" ) == 0 )
     {
+        puts ("addStatusListener(configure)");
         label = OUString( RTL_CONSTASCII_USTRINGPARAM( "Configure Cloud Access" ) );
     }
     else if ( aURL.Path.compareToAscii( "open" ) == 0 )
     {
+        puts ("addStatusListener(open)");
         label = OUString( RTL_CONSTASCII_USTRINGPARAM( "Open a File From the Could" ) );
         sensitive = true;
     }
     else if ( aURL.Path.compareToAscii( "save" ) == 0 )
     {
+        puts ("addStatusListener(save)");
         label = OUString( RTL_CONSTASCII_USTRINGPARAM( "Save a File To the Cloud" ) );
 
         if ( mxFrame.is() &&
