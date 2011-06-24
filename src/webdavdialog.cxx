@@ -19,6 +19,7 @@
 #include <com/sun/star/ucb/XSimpleFileAccess.hpp>
 #include <com/sun/star/frame/XComponentLoader.hpp>
 #include <com/sun/star/frame/FrameSearchFlag.hpp>
+#include <com/sun/star/frame/XStorable.hpp>
 
 #include <cstdio> // TEMPORARY: for puts
 
@@ -325,6 +326,37 @@ void WebDAVDialog::openSelectedDocument (void)
         Reference< css::lang::XComponent > xDocument (xLoader->loadComponentFromURL(
             sURL, sTarget, css::frame::FrameSearchFlag::CHILDREN, lProperties));
         mxFrame->setName(sOldName);
+    }
+}
+
+void WebDAVDialog::saveSelectedDocument (void)
+{
+    if ( ! (mxFrame.is() && mxToolkit.is()) )
+        return;
+
+    Reference< XPropertySet > entryProps (outputEntryModel, UNO_QUERY);
+    css::uno::Any aValue = entryProps->getPropertyValue (OUString::createFromAscii ("SelectedItems"));
+    Sequence< short > selectedItems;
+    aValue >>= selectedItems;
+    sal_Int32 n = selectedItems.getLength ();
+    for (sal_Int32 i = 0; i < n; i++)
+    {
+        const Reference< XItemList > items( outputEntryModel, UNO_QUERY_THROW );
+        css::uno::Any aURL = items->getItemData(selectedItems[0]);
+        OUString sURL;
+        aURL >>= sURL;
+        printf ("Saving document as: %s\n",
+                OUStringToOString (sURL, RTL_TEXTENCODING_UTF8).getStr ());
+        Reference< css::frame::XStorable > xStorable(mxFrame, UNO_QUERY);
+        if (!xStorable.is())
+        {
+            printf ("Can't save!?\n");
+            break;
+        }
+        Sequence< css::beans::PropertyValue > lProperties (1);
+        xStorable->storeAsURL(sURL, lProperties);
+        /* Saving multiple documents makes no sense */
+        break;
     }
 }
 
