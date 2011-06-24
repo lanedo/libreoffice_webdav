@@ -187,7 +187,7 @@ void SAL_CALL Addon::addStatusListener( const Reference< XStatusListener >& xCon
                               aURL,
                               label,
                               sensitive,
-                              true,
+                              false,
                               Any() );
 
     xControl->statusChanged( aEvent );
