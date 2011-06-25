@@ -8,12 +8,15 @@
 #include <com/sun/star/awt/XControlContainer.hpp>
 #include <com/sun/star/awt/XControlModel.hpp>
 #include <com/sun/star/awt/XDialog.hpp>
+#include <com/sun/star/awt/XDialogProvider2.hpp>
 #include <com/sun/star/awt/XWindowPeer.hpp>
 #include <com/sun/star/awt/XMessageBox.hpp>
 #include <com/sun/star/awt/XItemList.hpp>
 #include <com/sun/star/beans/PropertyValue.hpp>
 #include <com/sun/star/beans/XPropertySet.hpp>
 #include <com/sun/star/container/XNameContainer.hpp>
+#include <com/sun/star/deployment/PackageInformationProvider.hpp>
+#include <com/sun/star/deployment/XPackageInformationProvider.hpp>
 #include <com/sun/star/frame/XController.hpp>
 #include <com/sun/star/lang/XComponent.hpp>
 #include <com/sun/star/ucb/XSimpleFileAccess.hpp>
@@ -27,6 +30,7 @@ using rtl::OUString;
 using namespace css::awt;
 using namespace css::beans;
 using namespace css::container;
+using namespace css::deployment;
 using namespace css::frame;
 using namespace css::lang;
 using namespace css::uno;
@@ -81,7 +85,7 @@ public:
         OUString controlName;
         aValue >>= controlName;
 
-        if (controlName.equalsAscii ("Button1"))
+        if (controlName.equalsAscii ("OpenButton"))
         {
             /* FIXME: Is this okay with regard to threading, etc. ? */
             if (owner->isSaveDialog ())
@@ -93,7 +97,7 @@ public:
                 owner->openSelectedDocument ();
             }
         }
-        else if (controlName.equalsAscii ("Button2"))
+        else if (controlName.equalsAscii ("OpenLocationButton"))
         {
             /* FIXME: Is this okay with regard to threading, etc. ? */
             owner->dumpDAVListing ();
@@ -124,182 +128,81 @@ WebDAVDialog::WebDAVDialog( const Reference< css::uno::XComponentContext > &rxCo
 
 void WebDAVDialog::createDialog (void)
 {
-    /* The below code is a cleaned up and better commented version of
-     * http://wiki.services.openoffice.org/wiki/Dialog_box_with_an_List_Box
-     *
-     *
-     * In here, we hard code a dialog at run time.  Apparently, it
-     * is also possible to design a dialog in the BASIC IDE, save
-     * this to a .xdl (XDialog) file and load this at run time.
-     * This is kind of like how glade works.  Might be a better
-     * option.
-     *
-     * As far as I understand, the xdl file contains all models
-     * like we define below in code.  We can attach "signal handlers"
-     * at runtime by getting the created control through the
-     * control container.
-     */
+    /* Construct path to XDL file in extension package */
+    Reference< XPackageInformationProvider> infoProvider =
+        PackageInformationProvider::get (mxContext);
 
-    /* Create dialog model */
-    Reference< XInterface > dialogModel =
-        mxMCF->createInstanceWithContext(OUString::createFromAscii("com.sun.star.awt.UnoControlDialogModel"), mxContext);
+    OUString dialogFile(RTL_CONSTASCII_USTRINGPARAM("/open.xdl"));
+    OUString dialogUrl(infoProvider->getPackageLocation(OUString::createFromAscii("com.lanedo.webdavui")) + dialogFile);
 
-    if (!dialogModel.is ())
-    {
-        printf ("Could not create XDialogModel.\n");
-        return;
-    }
-
-    /* Configure the dialog by setting properties on the model */
-    Reference< XPropertySet > dialogProps (dialogModel, UNO_QUERY);
-    dialogProps->setPropertyValue(OUString::createFromAscii("PositionX"), makeAny ((sal_Int32) 100));
-    dialogProps->setPropertyValue(OUString::createFromAscii("PositionY"), makeAny ((sal_Int32) 100));
-    dialogProps->setPropertyValue(OUString::createFromAscii("Width"), makeAny ((sal_Int32) 150));
-    dialogProps->setPropertyValue(OUString::createFromAscii("Height"), makeAny ((sal_Int32) 250));
-    dialogProps->setPropertyValue(OUString::createFromAscii("Title"),
-            makeAny (OUString::createFromAscii("Runtime Dialog Demo")));
-
-    /* Create the actual control for the dialog and tie it to the
-     * dialog model
-     */
-    dialog = mxMCF->createInstanceWithContext(OUString::createFromAscii("com.sun.star.awt.UnoControlDialog"), mxContext);
-    Reference< XControl > control(dialog, UNO_QUERY);
-    Reference< XControlModel > controlModel(dialogModel, UNO_QUERY);
-    control->setModel(controlModel);
+    /* Create dialog from file */
+    Reference< XInterface > dialogProvider =
+        mxMCF->createInstanceWithContext(OUString::createFromAscii("com.sun.star.awt.DialogProvider2"), mxContext);
+    Reference< XDialogProvider2 > dialogProvider2(dialogProvider, UNO_QUERY);
+    dialog = dialogProvider2->createDialog(dialogUrl);
 
     /* Put the dialog in a window */
-    Reference< XWindow > window (control, UNO_QUERY);
+    Reference< XControl > control(dialog, UNO_QUERY);
+    Reference< XWindow > window(control, UNO_QUERY);
     window->setVisible(true);
     control->createPeer(mxToolkit,NULL);
 
-    /* To create "child widgets" of the dialog, we need to use
-     * a MultiServiceFactory tied to the dialog model.
-     */
-    Reference< XMultiServiceFactory > dialogMSF (dialogModel,
-                                                 UNO_QUERY);
+    /* Get the open/save button */
+    Reference< XControlContainer > controlContainer (dialog, UNO_QUERY);
+    Reference< XControl > openButton =
+        controlContainer->getControl (OUString::createFromAscii ("OpenButton"));
+    Reference< XControlModel > openButtonModel =
+        openButton->getModel ();
 
-    /* Create a container for the controls within the dialog */
-    Reference< XNameContainer > container (dialogModel, UNO_QUERY);
-
-    /* Create an edit model for a text field */
-    locationEntryModel =
-        dialogMSF->createInstance(OUString::createFromAscii("com.sun.star.awt.UnoControlEditModel"));
-
-    Reference< XPropertySet > entryProps (locationEntryModel, UNO_QUERY);
-
-    entryProps->setPropertyValue(OUString::createFromAscii("PositionX"), makeAny ((sal_Int32) 10));
-    entryProps->setPropertyValue(OUString::createFromAscii("PositionY"), makeAny ((sal_Int32) 40));
-    entryProps->setPropertyValue(OUString::createFromAscii("Width"), makeAny ((sal_Int32) 130));
-    entryProps->setPropertyValue(OUString::createFromAscii("Height"), makeAny ((sal_Int32) 16));
-    entryProps->setPropertyValue(OUString::createFromAscii("Name"),
-                                 makeAny (OUString::createFromAscii("LocationEntry")));
-    entryProps->setPropertyValue(OUString::createFromAscii("Text"),
-                                 makeAny (OUString::createFromAscii("http://localhost/dav/")));
-    entryProps->setPropertyValue(OUString::createFromAscii("TabIndex"),makeAny((short)0));
-
-    /* Add entry to container */
-    container->insertByName (OUString::createFromAscii ("LocationEntry"),
-                             makeAny (locationEntryModel));
-
-    /* Create a button model and set properties */
-    Reference< XInterface > buttonModel =
-        dialogMSF->createInstance(OUString::createFromAscii("com.sun.star.awt.UnoControlButtonModel"));
-
-    Reference< XPropertySet > buttonProps (buttonModel, UNO_QUERY);
-
-    buttonProps->setPropertyValue(OUString::createFromAscii("PositionX"), makeAny ((sal_Int32) 10));
-    buttonProps->setPropertyValue(OUString::createFromAscii("PositionY"), makeAny ((sal_Int32) 70));
-    buttonProps->setPropertyValue(OUString::createFromAscii("Width"), makeAny ((sal_Int32) 50));
-    buttonProps->setPropertyValue(OUString::createFromAscii("Height"), makeAny ((sal_Int32) 14));
-    buttonProps->setPropertyValue(OUString::createFromAscii("Name"),
-                                  makeAny (OUString::createFromAscii("Button1")));
-    buttonProps->setPropertyValue(OUString::createFromAscii("TabIndex"),makeAny((short)1));
+    Reference< XPropertySet > openProps (openButtonModel, UNO_QUERY);
 
     if (isSave)
     {
-      buttonProps->setPropertyValue(OUString::createFromAscii("Label"),
-                                    makeAny (OUString::createFromAscii("Save Document")));
+      openProps->setPropertyValue(OUString::createFromAscii("Label"),
+                                  makeAny (OUString::createFromAscii("Save Document")));
     }
     else
     {
-      buttonProps->setPropertyValue(OUString::createFromAscii("Label"),
-                                    makeAny (OUString::createFromAscii("Open Document")));
+      openProps->setPropertyValue(OUString::createFromAscii("Label"),
+                                  makeAny (OUString::createFromAscii("Open Document")));
     }
 
-    /* Add button to container */
-    container->insertByName (OUString::createFromAscii("Button1"),
-                             makeAny (buttonModel));
+    Reference< XActionListener > actionListener =
+        static_cast< XActionListener *> (new WebDAVDialogActionListener (this));
+    Reference< XButton > openButtonControl (openButton, UNO_QUERY);
+    openButtonControl->addActionListener (actionListener);
 
-    /* Get the button control through the control container
-     * (note that above we only created its model).
-     */
-    Reference< XControlContainer > controlContainer (dialog, UNO_QUERY);
+    /* Get the button control for open URL */
     Reference< XInterface > buttonObject =
-        controlContainer->getControl (OUString::createFromAscii ("Button1"));
+        controlContainer->getControl (OUString::createFromAscii ("OpenLocationButton"));
     Reference< XButton > buttonControl (buttonObject, UNO_QUERY);
 
     /* and connect it to our action listener */
-    Reference< XActionListener > actionListener =
-        static_cast< XActionListener *> (new WebDAVDialogActionListener (this));
     buttonControl->addActionListener (actionListener);
 
+    /* Save references to the file list and location entry models */
+    Reference< XControl > listControl =
+        controlContainer->getControl (OUString::createFromAscii ("FileList"));
+    outputEntryModel = listControl->getModel ();
 
-    /* Second button */
-    Reference< XInterface > buttonModel2 =
-        dialogMSF->createInstance(OUString::createFromAscii("com.sun.star.awt.UnoControlButtonModel"));
+    Reference< XControl > entryControl =
+        controlContainer->getControl (OUString::createFromAscii ("LocationEntry"));
+    locationEntryModel = entryControl->getModel ();
 
-    Reference< XPropertySet > buttonProps2 (buttonModel2, UNO_QUERY);
-
-    buttonProps2->setPropertyValue(OUString::createFromAscii("PositionX"), makeAny ((sal_Int32) 70));
-    buttonProps2->setPropertyValue(OUString::createFromAscii("PositionY"), makeAny ((sal_Int32) 70));
-    buttonProps2->setPropertyValue(OUString::createFromAscii("Width"), makeAny ((sal_Int32) 70));
-    buttonProps2->setPropertyValue(OUString::createFromAscii("Height"), makeAny ((sal_Int32) 14));
-    buttonProps2->setPropertyValue(OUString::createFromAscii("Name"),
-                                  makeAny (OUString::createFromAscii("Button2")));
-    buttonProps2->setPropertyValue(OUString::createFromAscii("TabIndex"), makeAny((short)2));
-
-    buttonProps2->setPropertyValue(OUString::createFromAscii("Label"),
-                                  makeAny (OUString::createFromAscii("List contents of URL")));
-
-    /* Add button to container */
-    container->insertByName (OUString::createFromAscii("Button2"),
-                             makeAny (buttonModel2));
-
-    /* Get the button control through the control container
-     * (note that above we only created its model).
-     */
-    Reference< XInterface > buttonObject2 =
-        controlContainer->getControl (OUString::createFromAscii ("Button2"));
-    Reference< XButton > buttonControl2 (buttonObject2, UNO_QUERY);
-
-    buttonControl2->addActionListener (actionListener);
-
-    /* Create an edit model for a text field outputting WebDAV contents */
-    outputEntryModel =
-        dialogMSF->createInstance(OUString::createFromAscii("com.sun.star.awt.UnoControlListBoxModel"));
+#if 0
     Reference< XItemListener > itemListener =
         static_cast< XItemListener *> (new WebDAVDialogItemListener (this));
     Reference< XComponent > xComponent(outputEntryModel, UNO_QUERY);
     Reference< XEventListener > eventListener(itemListener, UNO_QUERY);
     xComponent->addEventListener (eventListener);
     /* FIXME: Double-click should open file */
+#endif
 
     Reference< XPropertySet > entryProps2 (outputEntryModel, UNO_QUERY);
     Sequence < ::rtl::OUString > entries (1);
     entries[0] = ::rtl::OUString::createFromAscii ("(content listing will appear here)");
 
-    entryProps2->setPropertyValue(OUString::createFromAscii("PositionX"), makeAny ((sal_Int32) 10));
-    entryProps2->setPropertyValue(OUString::createFromAscii("PositionY"), makeAny ((sal_Int32) 90));
-    entryProps2->setPropertyValue(OUString::createFromAscii("Width"), makeAny ((sal_Int32) 130));
-    entryProps2->setPropertyValue(OUString::createFromAscii("Height"), makeAny ((sal_Int32) 150));
-    entryProps2->setPropertyValue(OUString::createFromAscii("Name"),
-                                 makeAny (OUString::createFromAscii("OutputEntry")));
     entryProps2->setPropertyValue(OUString::createFromAscii("StringItemList"), makeAny (entries));
-
-    /* Add entry to container */
-    container->insertByName (OUString::createFromAscii ("OutputEntry"),
-                             makeAny (outputEntryModel));
-
 }
 
 sal_Bool WebDAVDialog::isSaveDialog (void)
