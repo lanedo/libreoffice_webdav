@@ -183,7 +183,7 @@ void WebDAVDialog::createDialog (void)
     /* Save references to the file list and location entry models */
     Reference< XControl > listControl =
         controlContainer->getControl (OUString::createFromAscii ("FileList"));
-    outputEntryModel = listControl->getModel ();
+    fileListModel = listControl->getModel ();
 
     Reference< XControl > entryControl =
         controlContainer->getControl (OUString::createFromAscii ("LocationEntry"));
@@ -198,11 +198,11 @@ void WebDAVDialog::createDialog (void)
     /* FIXME: Double-click should open file */
 #endif
 
-    Reference< XPropertySet > entryProps2 (outputEntryModel, UNO_QUERY);
-    Sequence < ::rtl::OUString > entries (1);
-    entries[0] = ::rtl::OUString::createFromAscii ("(content listing will appear here)");
+    Reference< XPropertySet > listProps (fileListModel, UNO_QUERY);
+    Sequence < OUString > entries (1);
+    entries[0] = OUString::createFromAscii ("(content listing will appear here)");
 
-    entryProps2->setPropertyValue(OUString::createFromAscii("StringItemList"), makeAny (entries));
+    listProps->setPropertyValue(OUString::createFromAscii("StringItemList"), makeAny (entries));
 }
 
 sal_Bool WebDAVDialog::isSaveDialog (void)
@@ -258,7 +258,7 @@ void WebDAVDialog::openSelectedDocument (void)
     if ( ! (mxFrame.is() && mxToolkit.is()) )
         return;
 
-    Reference< XPropertySet > entryProps (outputEntryModel, UNO_QUERY);
+    Reference< XPropertySet > entryProps (fileListModel, UNO_QUERY);
     css::uno::Any aValue = entryProps->getPropertyValue (OUString::createFromAscii ("SelectedItems"));
     Sequence< short > selectedItems;
     aValue >>= selectedItems;
@@ -266,7 +266,7 @@ void WebDAVDialog::openSelectedDocument (void)
     for (sal_Int32 i = 0; i < n; i++)
     {
         /* FIXME: Re-use existing document smartly and ask to save changes as normal Open would */
-        const Reference< XItemList > items( outputEntryModel, UNO_QUERY_THROW );
+        const Reference< XItemList > items(fileListModel, UNO_QUERY_THROW );
         css::uno::Any aURL = items->getItemData(selectedItems[0]);
         OUString sURL;
         aURL >>= sURL;
@@ -284,14 +284,14 @@ void WebDAVDialog::saveSelectedDocument (void)
     if ( ! (mxFrame.is() && mxToolkit.is()) )
         return;
 
-    Reference< XPropertySet > entryProps (outputEntryModel, UNO_QUERY);
+    Reference< XPropertySet > entryProps (fileListModel, UNO_QUERY);
     css::uno::Any aValue = entryProps->getPropertyValue (OUString::createFromAscii ("SelectedItems"));
     Sequence< short > selectedItems;
     aValue >>= selectedItems;
     sal_Int32 n = selectedItems.getLength ();
     for (sal_Int32 i = 0; i < n; i++)
     {
-        const Reference< XItemList > items( outputEntryModel, UNO_QUERY_THROW );
+        const Reference< XItemList > items(fileListModel, UNO_QUERY_THROW );
         css::uno::Any aURL = items->getItemData(selectedItems[0]);
         OUString sURL;
         aURL >>= sURL;
@@ -346,7 +346,7 @@ void WebDAVDialog::dumpDAVListing (void)
         Reference< css::task::XInteractionHandler > (
                 mxMCF->createInstanceWithContext (OUString::createFromAscii ("com.sun.star.task.InteractionHandler"), mxContext), UNO_QUERY);
     fileAccess->setInteractionHandler (interactionHandler);
-    const Reference< XItemList > items( outputEntryModel, UNO_QUERY_THROW );
+    const Reference< XItemList > items(fileListModel, UNO_QUERY_THROW );
     items->removeAllItems();
 
     /* Now try to access the folder */

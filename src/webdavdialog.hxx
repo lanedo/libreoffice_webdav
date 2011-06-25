@@ -18,7 +18,7 @@ private:
 
     css::uno::Reference< css::uno::XInterface > dialog;
     css::uno::Reference< css::uno::XInterface > locationEntryModel;
-    css::uno::Reference< css::uno::XInterface > outputEntryModel;
+    css::uno::Reference< css::uno::XInterface > fileListModel;
 
     sal_Bool isSave;
 
