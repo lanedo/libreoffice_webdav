@@ -31,6 +31,7 @@ public:
 
     sal_Bool isSaveDialog (void);
     void show (void);
+    void closeDialog (void);
     void showMessageBox (void);
     void openSelectedDocument (void);
     void saveSelectedDocument (void);

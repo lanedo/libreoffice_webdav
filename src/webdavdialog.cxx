@@ -102,6 +102,10 @@ public:
             /* FIXME: Is this okay with regard to threading, etc. ? */
             owner->dumpDAVListing ();
         }
+        else if (controlName.equalsAscii ("CancelButton"))
+        {
+            owner->closeDialog ();
+        }
     }
 };
 
@@ -185,13 +189,19 @@ void WebDAVDialog::createDialog (void)
     Reference< XButton > openButtonControl (openButton, UNO_QUERY);
     openButtonControl->addActionListener (actionListener);
 
-    /* Get the button control for open URL */
+    /* Connect List URL button to action listener */
     Reference< XInterface > buttonObject =
         controlContainer->getControl (OUString::createFromAscii ("OpenLocationButton"));
     Reference< XButton > buttonControl (buttonObject, UNO_QUERY);
 
-    /* and connect it to our action listener */
     buttonControl->addActionListener (actionListener);
+
+    /* Connect cancel button to action listener */
+    Reference< XInterface > cancelObject =
+        controlContainer->getControl (OUString::createFromAscii ("CancelButton"));
+    Reference< XButton > cancelControl (cancelObject, UNO_QUERY);
+
+    cancelControl->addActionListener (actionListener);
 
     /* Save references to the file list and location entry models */
     Reference< XControl > listControl =
@@ -234,6 +244,12 @@ void WebDAVDialog::show (void)
      */
     Reference< XComponent > xComponent(dialog,UNO_QUERY);
     xComponent->dispose();
+}
+
+void WebDAVDialog::closeDialog (void)
+{
+    Reference< XDialog > xDialog(dialog,UNO_QUERY);
+    xDialog->endExecute();
 }
 
 void WebDAVDialog::showMessageBox (void)
