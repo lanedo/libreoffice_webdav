@@ -341,6 +341,15 @@ void WebDAVDialog::saveSelectedDocument (void)
             break;
         }
         Sequence< css::beans::PropertyValue > lProperties (1);
+
+        /* Set interaction handler */
+        Reference< css::task::XInteractionHandler > interactionHandler =
+            Reference< css::task::XInteractionHandler > (
+                    mxMCF->createInstanceWithContext (OUString::createFromAscii ("com.sun.star.task.InteractionHandler"),
+                                                      mxContext), UNO_QUERY);
+        lProperties[0].Name = OUString::createFromAscii ("InteractionHandler");
+        lProperties[0].Value = makeAny (interactionHandler);
+
         xStorable->storeAsURL(sURL, lProperties);
         /* Saving multiple documents makes no sense */
         break;
