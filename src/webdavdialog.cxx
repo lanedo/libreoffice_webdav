@@ -303,6 +303,10 @@ void WebDAVDialog::openSelectedDocument (void)
         Reference< css::lang::XComponent > xDocument (xLoader->loadComponentFromURL(
             sURL, mxFrame->getName(), css::frame::FrameSearchFlag::CHILDREN, lProperties));
     }
+
+    /* Close dialog when done */
+    /* FIXME: This seems to make sense, right? */
+    closeDialog ();
 }
 
 void WebDAVDialog::saveSelectedDocument (void)
