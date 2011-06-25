@@ -276,21 +276,24 @@ void WebDAVDialog::openSelectedDocument (void)
         return;
 
     Reference< XPropertySet > entryProps (fileListModel, UNO_QUERY);
-    css::uno::Any aValue = entryProps->getPropertyValue (OUString::createFromAscii ("SelectedItems"));
+    Any aValue = entryProps->getPropertyValue (OUString::createFromAscii ("SelectedItems"));
     Sequence< short > selectedItems;
     aValue >>= selectedItems;
+
     sal_Int32 n = selectedItems.getLength ();
     for (sal_Int32 i = 0; i < n; i++)
     {
         /* FIXME: Re-use existing document smartly and ask to save changes as normal Open would */
         const Reference< XItemList > items(fileListModel, UNO_QUERY_THROW );
-        css::uno::Any aURL = items->getItemData(selectedItems[0]);
+        Any aURL = items->getItemData(selectedItems[0]);
         OUString sURL;
         aURL >>= sURL;
+
         printf ("Opening document: %s\n",
                 OUStringToOString (sURL, RTL_TEXTENCODING_UTF8).getStr ());
-        Reference< css::frame::XComponentLoader > xLoader(mxFrame, UNO_QUERY);
-        Sequence< css::beans::PropertyValue > lProperties (1);
+
+        Reference< XComponentLoader > xLoader(mxFrame, UNO_QUERY);
+        Sequence< PropertyValue > lProperties (1);
 
         /* Set interaction handler */
         Reference< css::task::XInteractionHandler > interactionHandler =
@@ -300,8 +303,8 @@ void WebDAVDialog::openSelectedDocument (void)
         lProperties[0].Name = OUString::createFromAscii ("InteractionHandler");
         lProperties[0].Value = makeAny (interactionHandler);
 
-        Reference< css::lang::XComponent > xDocument (xLoader->loadComponentFromURL(
-            sURL, mxFrame->getName(), css::frame::FrameSearchFlag::CHILDREN, lProperties));
+        Reference< XComponent > xDocument (xLoader->loadComponentFromURL(
+            sURL, mxFrame->getName(), FrameSearchFlag::CHILDREN, lProperties));
     }
 
     /* Close dialog when done */
@@ -315,32 +318,37 @@ void WebDAVDialog::saveSelectedDocument (void)
         return;
 
     Reference< XPropertySet > entryProps (fileListModel, UNO_QUERY);
-    css::uno::Any aValue = entryProps->getPropertyValue (OUString::createFromAscii ("SelectedItems"));
+    Any aValue = entryProps->getPropertyValue (OUString::createFromAscii ("SelectedItems"));
     Sequence< short > selectedItems;
     aValue >>= selectedItems;
+
     sal_Int32 n = selectedItems.getLength ();
     for (sal_Int32 i = 0; i < n; i++)
     {
         const Reference< XItemList > items(fileListModel, UNO_QUERY_THROW );
-        css::uno::Any aURL = items->getItemData(selectedItems[0]);
+        Any aURL = items->getItemData(selectedItems[0]);
         OUString sURL;
         aURL >>= sURL;
+
         printf ("Saving document as: %s\n",
                 OUStringToOString (sURL, RTL_TEXTENCODING_UTF8).getStr ());
-        css::uno::Reference< css::frame::XController > xController = mxFrame->getController();
+
+        Reference< XController > xController = mxFrame->getController();
         if ( !xController.is() )
         {
             printf ("No controller!\n");
             break;
         }
-        css::uno::Reference< css::frame::XModel > xModel (xController->getModel());
-        css::uno::Reference< css::frame::XStorable > xStorable( xModel, css::uno::UNO_QUERY );
+
+        Reference< XModel > xModel (xController->getModel());
+        Reference< XStorable > xStorable( xModel, UNO_QUERY );
         if (!xStorable.is())
         {
             printf ("No storable!\n");
             break;
         }
-        Sequence< css::beans::PropertyValue > lProperties (1);
+
+        Sequence< PropertyValue > lProperties (1);
 
         /* Set interaction handler */
         Reference< css::task::XInteractionHandler > interactionHandler =
