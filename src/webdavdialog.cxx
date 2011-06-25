@@ -291,6 +291,15 @@ void WebDAVDialog::openSelectedDocument (void)
                 OUStringToOString (sURL, RTL_TEXTENCODING_UTF8).getStr ());
         Reference< css::frame::XComponentLoader > xLoader(mxFrame, UNO_QUERY);
         Sequence< css::beans::PropertyValue > lProperties (1);
+
+        /* Set interaction handler */
+        Reference< css::task::XInteractionHandler > interactionHandler =
+            Reference< css::task::XInteractionHandler > (
+                    mxMCF->createInstanceWithContext (OUString::createFromAscii ("com.sun.star.task.InteractionHandler"),
+                                                      mxContext), UNO_QUERY);
+        lProperties[0].Name = OUString::createFromAscii ("InteractionHandler");
+        lProperties[0].Value = makeAny (interactionHandler);
+
         Reference< css::lang::XComponent > xDocument (xLoader->loadComponentFromURL(
             sURL, mxFrame->getName(), css::frame::FrameSearchFlag::CHILDREN, lProperties));
     }
