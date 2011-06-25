@@ -354,6 +354,8 @@ void WebDAVDialog::saveSelectedDocument (void)
         /* Saving multiple documents makes no sense */
         break;
     }
+
+    closeDialog ();
 }
 
 void WebDAVDialog::dumpDAVListing (void)
