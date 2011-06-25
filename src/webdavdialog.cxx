@@ -12,6 +12,7 @@
 #include <com/sun/star/awt/XWindowPeer.hpp>
 #include <com/sun/star/awt/XMessageBox.hpp>
 #include <com/sun/star/awt/XItemList.hpp>
+#include <com/sun/star/awt/XListBox.hpp>
 #include <com/sun/star/beans/PropertyValue.hpp>
 #include <com/sun/star/beans/XPropertySet.hpp>
 #include <com/sun/star/container/XNameContainer.hpp>
@@ -35,26 +36,6 @@ using namespace css::frame;
 using namespace css::lang;
 using namespace css::uno;
 using css::lang::XMultiComponentFactory;
-
-class WebDAVDialogItemListener : public ::cppu::WeakImplHelper1< com::sun::star::awt::XItemListener >
-{
-private:
-    WebDAVDialog * const owner;
-
-public:
-    WebDAVDialogItemListener (WebDAVDialog * const _owner)
-        : owner ( _owner ) {}
-
-    virtual void SAL_CALL itemStateChanged (const css::awt::ItemEvent &Event) throw (css::uno::RuntimeException)
-    {
-        puts ("XItemListener::itemStateChanged");
-    }
-
-    virtual void SAL_CALL disposing (const css::lang::EventObject &Source) throw  (css::uno::RuntimeException)
-    {
-        puts ("XItemListener::disposing");
-    }
-};
 
 /* Action listener */
 class WebDAVDialogActionListener : public ::cppu::WeakImplHelper1< css::awt::XActionListener >
@@ -94,6 +75,17 @@ public:
             }
             else
             {
+                owner->openSelectedDocument ();
+            }
+        }
+        else if (controlName.equalsAscii ("FileList"))
+        {
+            if (!owner->isSaveDialog ())
+            {
+                /* This will work fine, because the first click will
+                 * select the item.  Which means the item will be
+                 * selected when we enter this method.
+                 */
                 owner->openSelectedDocument ();
             }
         }
@@ -212,15 +204,11 @@ void WebDAVDialog::createDialog (void)
         controlContainer->getControl (OUString::createFromAscii ("LocationEntry"));
     locationEntryModel = entryControl->getModel ();
 
-#if 0
-    Reference< XItemListener > itemListener =
-        static_cast< XItemListener *> (new WebDAVDialogItemListener (this));
-    Reference< XComponent > xComponent(outputEntryModel, UNO_QUERY);
-    Reference< XEventListener > eventListener(itemListener, UNO_QUERY);
-    xComponent->addEventListener (eventListener);
-    /* FIXME: Double-click should open file */
-#endif
+    /* Connect the list box to an action listener */
+    Reference< XListBox > listBox(listControl, UNO_QUERY);
+    listBox->addActionListener (actionListener);
 
+    /* Put a placeholder item in the list box */
     Reference< XPropertySet > listProps (fileListModel, UNO_QUERY);
     Sequence < OUString > entries (1);
     entries[0] = OUString::createFromAscii ("(content listing will appear here)");
