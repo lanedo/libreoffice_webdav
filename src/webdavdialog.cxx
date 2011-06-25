@@ -17,12 +17,12 @@
 #include <com/sun/star/container/XNameContainer.hpp>
 #include <com/sun/star/deployment/PackageInformationProvider.hpp>
 #include <com/sun/star/deployment/XPackageInformationProvider.hpp>
+#include <com/sun/star/frame/FrameSearchFlag.hpp>
+#include <com/sun/star/frame/XComponentLoader.hpp>
 #include <com/sun/star/frame/XController.hpp>
+#include <com/sun/star/frame/XStorable.hpp>
 #include <com/sun/star/lang/XComponent.hpp>
 #include <com/sun/star/ucb/XSimpleFileAccess.hpp>
-#include <com/sun/star/frame/XComponentLoader.hpp>
-#include <com/sun/star/frame/FrameSearchFlag.hpp>
-#include <com/sun/star/frame/XStorable.hpp>
 
 #include <cstdio> // TEMPORARY: for puts
 
