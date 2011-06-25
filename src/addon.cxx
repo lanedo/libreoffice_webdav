@@ -38,7 +38,8 @@
 
 #include <osl/diagnose.h>
 #include <rtl/ustring.hxx>
-#include <com/sun/star/lang/XMultiServiceFactory.hpp>
+#include <com/sun/star/lang/XMultiComponentFactory.hpp>
+#include <com/sun/star/uno/XComponentContext.hpp>
 #include <com/sun/star/beans/PropertyValue.hpp>
 #include <com/sun/star/frame/XFrame.hpp>
 
@@ -48,7 +49,7 @@ using rtl::OUString;
 using namespace css::uno;
 using namespace css::frame;
 using namespace css::awt;
-using css::lang::XMultiServiceFactory;
+using css::lang::XMultiComponentFactory;
 using css::beans::PropertyValue;
 using css::util::URL;
 
@@ -111,13 +112,13 @@ void SAL_CALL Addon::dispatch( const URL&                        aURL,
     else if ( aURL.Path.compareToAscii( "open" ) == 0 )
     {
         puts ("open selected");
-        WebDAVDialog *dialog = new WebDAVDialog (mxMSF, mxFrame, sal_False);
+        WebDAVDialog *dialog = new WebDAVDialog (mxContext, mxFrame, sal_False);
         dialog->show ();
     }
     else if ( aURL.Path.compareToAscii( "save" ) == 0 )
     {
         puts ("save selected");
-        WebDAVDialog *dialog = new WebDAVDialog (mxMSF, mxFrame, sal_True);
+        WebDAVDialog *dialog = new WebDAVDialog (mxContext, mxFrame, sal_True);
         dialog->show ();
     }
 }
@@ -233,11 +234,11 @@ Sequence< OUString > SAL_CALL Addon_getSupportedServiceNames()
     return aRet;
 }
 
-Reference< XInterface > SAL_CALL Addon_createInstance( const Reference< XMultiServiceFactory > & rSMgr)
+Reference< XInterface > SAL_CALL Addon_createInstance( const Reference< XComponentContext > & rContext)
     throw (Exception)
 {
     puts ("In Addon_createInstance");
-    return (cppu::OWeakObject*) new Addon( rSMgr );
+    return (cppu::OWeakObject*) new Addon( rContext );
 }
 
 //##################################################################################################

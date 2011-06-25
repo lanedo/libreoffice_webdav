@@ -121,11 +121,12 @@ extern "C" SAL_DLLPUBLIC_EXPORT void * SAL_CALL component_getFactory(const sal_C
 
     if (rtl_str_compare( pImplName, IMPLEMENTATION_NAME ) == 0)
     {
-        Reference< XSingleServiceFactory > xFactory( createSingleFactory(
-            reinterpret_cast< XMultiServiceFactory * >( pServiceManager ),
-            OUString( RTL_CONSTASCII_USTRINGPARAM( IMPLEMENTATION_NAME ) ),
-            Addon_createInstance,
-            Addon_getSupportedServiceNames() ) );
+        Reference< XSingleComponentFactory > xFactory =
+            ::cppu::createSingleComponentFactory(
+                Addon_createInstance,
+                OUString::createFromAscii( IMPLEMENTATION_NAME ),
+                Addon_getSupportedServiceNames(),
+                NULL);
 
         if (xFactory.is())
         {

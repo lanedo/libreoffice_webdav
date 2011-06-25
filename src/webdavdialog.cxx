@@ -30,7 +30,7 @@ using namespace css::container;
 using namespace css::frame;
 using namespace css::lang;
 using namespace css::uno;
-using css::lang::XMultiServiceFactory;
+using css::lang::XMultiComponentFactory;
 
 class WebDAVDialogItemListener : public ::cppu::WeakImplHelper1< com::sun::star::awt::XItemListener >
 {
@@ -104,18 +104,20 @@ public:
 
 /* Dialog construction */
 
-WebDAVDialog::WebDAVDialog( const Reference< css::lang::XMultiServiceFactory > &rxMSF,
-                            const Reference< css::frame::XFrame >              &rxFrame,
-                            const sal_Bool                                      isSave) : mxMSF ( rxMSF ),
-                                                                                          mxFrame ( rxFrame ),
-                                                                                          isSave ( isSave)
+WebDAVDialog::WebDAVDialog( const Reference< css::uno::XComponentContext > &rxContext,
+                            const Reference< css::frame::XFrame >          &rxFrame,
+                            const sal_Bool                                  isSave) : mxContext ( rxContext ),
+                                                                                      mxFrame ( rxFrame ),
+                                                                                      isSave ( isSave)
 {
     puts ("dialog ctor");
 
+    mxMCF = mxContext->getServiceManager ();
+
     // Create the toolkit to have access to it later
-    mxToolkit = Reference< XToolkit >( mxMSF->createInstance(
+    mxToolkit = Reference< XToolkit >( mxMCF->createInstanceWithContext(
                                         OUString( RTL_CONSTASCII_USTRINGPARAM(
-                                            "com.sun.star.awt.Toolkit" ))), UNO_QUERY );
+                                            "com.sun.star.awt.Toolkit" )), mxContext), UNO_QUERY );
 
     createDialog ();
 }
@@ -140,7 +142,7 @@ void WebDAVDialog::createDialog (void)
 
     /* Create dialog model */
     Reference< XInterface > dialogModel =
-        mxMSF->createInstance(OUString::createFromAscii("com.sun.star.awt.UnoControlDialogModel"));
+        mxMCF->createInstanceWithContext(OUString::createFromAscii("com.sun.star.awt.UnoControlDialogModel"), mxContext);
 
     if (!dialogModel.is ())
     {
@@ -160,7 +162,7 @@ void WebDAVDialog::createDialog (void)
     /* Create the actual control for the dialog and tie it to the
      * dialog model
      */
-    dialog = mxMSF->createInstance(OUString::createFromAscii("com.sun.star.awt.UnoControlDialog"));
+    dialog = mxMCF->createInstanceWithContext(OUString::createFromAscii("com.sun.star.awt.UnoControlDialog"), mxContext);
     Reference< XControl > control(dialog, UNO_QUERY);
     Reference< XControlModel > controlModel(dialogModel, UNO_QUERY);
     control->setModel(controlModel);
@@ -426,7 +428,7 @@ void WebDAVDialog::dumpDAVListing (void)
     /* Create a reference to the SimpleFileAccess service */
     Reference< css::ucb::XSimpleFileAccess > fileAccess =
         Reference< css::ucb::XSimpleFileAccess > (
-                mxMSF->createInstance (OUString::createFromAscii ("com.sun.star.ucb.SimpleFileAccess")), UNO_QUERY);
+                mxMCF->createInstanceWithContext (OUString::createFromAscii ("com.sun.star.ucb.SimpleFileAccess"), mxContext), UNO_QUERY);
 
     if (!fileAccess.is ())
     {
@@ -439,7 +441,7 @@ void WebDAVDialog::dumpDAVListing (void)
      */
     Reference< css::task::XInteractionHandler > interactionHandler =
         Reference< css::task::XInteractionHandler > (
-                mxMSF->createInstance (OUString::createFromAscii ("com.sun.star.task.InteractionHandler")), UNO_QUERY);
+                mxMCF->createInstanceWithContext (OUString::createFromAscii ("com.sun.star.task.InteractionHandler"), mxContext), UNO_QUERY);
     fileAccess->setInteractionHandler (interactionHandler);
     const Reference< XItemList > items( outputEntryModel, UNO_QUERY_THROW );
     items->removeAllItems();

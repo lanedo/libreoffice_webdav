@@ -39,6 +39,7 @@
 #include <com/sun/star/lang/XInitialization.hpp>
 #include <com/sun/star/frame/XDispatchProvider.hpp>
 #include <com/sun/star/lang/XServiceInfo.hpp>
+#include <com/sun/star/uno/XComponentContext.hpp>
 #include <cppuhelper/implbase4.hxx>
 
 namespace css = com::sun::star;
@@ -68,12 +69,12 @@ class Addon : public cppu::WeakImplHelper4
 >
 {
 private:
-    css::uno::Reference< css::lang::XMultiServiceFactory > mxMSF;
+    css::uno::Reference< css::uno::XComponentContext > mxContext;
     css::uno::Reference< css::frame::XFrame > mxFrame;
 
 public:
-    Addon( const css::uno::Reference< css::lang::XMultiServiceFactory > &rxMSF)
-        : mxMSF( rxMSF ) {}
+    Addon( const css::uno::Reference< css::uno::XComponentContext > &rxContext)
+        : mxContext( rxContext ) {}
 
     // XDispatchProvider
     virtual css::uno::Reference< css::frame::XDispatch >
@@ -119,7 +120,7 @@ css::uno::Sequence< rtl::OUString > SAL_CALL Addon_getSupportedServiceNames(  )
     throw ( css::uno::RuntimeException );
 
 css::uno::Reference< css::uno::XInterface >
-SAL_CALL Addon_createInstance( const css::uno::Reference< css::lang::XMultiServiceFactory > & rSMgr)
+SAL_CALL Addon_createInstance( const css::uno::Reference< css::uno::XComponentContext > & rSMgr)
     throw ( css::uno::Exception );
 
 #endif // _Addon_HXX

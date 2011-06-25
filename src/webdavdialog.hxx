@@ -4,14 +4,15 @@
 #include <com/sun/star/awt/XToolkit.hpp>
 #include <com/sun/star/awt/XItemListener.hpp>
 #include <com/sun/star/frame/XFrame.hpp>
-#include <com/sun/star/lang/XMultiServiceFactory.hpp>
+#include <com/sun/star/lang/XMultiComponentFactory.hpp>
 
 namespace css = com::sun::star;
 
 class WebDAVDialog
 {
 private:
-    css::uno::Reference< css::lang::XMultiServiceFactory > mxMSF;
+    css::uno::Reference< css::uno::XComponentContext> mxContext;
+    css::uno::Reference< css::lang::XMultiComponentFactory > mxMCF;
     css::uno::Reference< css::frame::XFrame > mxFrame;
     css::uno::Reference< css::awt::XToolkit > mxToolkit;
 
@@ -24,9 +25,9 @@ private:
     void createDialog (void);
 
 public:
-    WebDAVDialog( const css::uno::Reference< css::lang::XMultiServiceFactory > &rxMSF,
-                  const css::uno::Reference< css::frame::XFrame >              &rxFrame,
-                  const sal_Bool                                                isSave);
+    WebDAVDialog( const css::uno::Reference< css::uno::XComponentContext > &rxContext,
+                  const css::uno::Reference< css::frame::XFrame >          &rxFrame,
+                  const sal_Bool                                            isSave);
 
     sal_Bool isSaveDialog (void);
     void show (void);
