@@ -141,6 +141,18 @@ void WebDAVDialog::createDialog (void)
     Reference< XDialogProvider2 > dialogProvider2(dialogProvider, UNO_QUERY);
     dialog = dialogProvider2->createDialog(dialogUrl);
 
+    Reference< XDialog > realDialog (dialog, UNO_QUERY);
+
+    /* FIXME, these strings need to be translatable */
+    if (isSave)
+    {
+        realDialog->setTitle(OUString::createFromAscii("Save a File To the Cloud"));
+    }
+    else
+    {
+        realDialog->setTitle(OUString::createFromAscii("Open a File From the Cloud"));
+    }
+
     /* Put the dialog in a window */
     Reference< XControl > control(dialog, UNO_QUERY);
     Reference< XWindow > window(control, UNO_QUERY);
@@ -156,6 +168,7 @@ void WebDAVDialog::createDialog (void)
 
     Reference< XPropertySet > openProps (openButtonModel, UNO_QUERY);
 
+    /* FIXME, these strings need to be translatable */
     if (isSave)
     {
       openProps->setPropertyValue(OUString::createFromAscii("Label"),
