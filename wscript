@@ -170,4 +170,5 @@ def build(bld):
 	bld.install_files('%s/share/extensions/%s' % (Options.options.LO_PREFIX, target), bld.path.ant_glob('data/*.xcu'))
 	bld.install_files('%s/share/extensions/%s/images' % (Options.options.LO_PREFIX, target), bld.path.ant_glob('data/images/*.png'))
 	bld.install_files('%s/share/extensions/%s' % (Options.options.LO_PREFIX, target), bld.path.ant_glob('data/*.txt'))
+	bld.install_files('%s/share/extensions/%s' % (Options.options.LO_PREFIX, target), bld.path.ant_glob('data/*.xdl'))
 
