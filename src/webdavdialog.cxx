@@ -56,8 +56,6 @@ public:
     // XActionListener
     virtual void SAL_CALL actionPerformed (const css::awt::ActionEvent &rEvent) throw (css::uno::RuntimeException)
     {
-        puts ("action performed");
-
         /* Obtain the name of the control the event originated from */
         Reference< XControl > control (rEvent.Source, UNO_QUERY);
         Reference< XControlModel > controlModel = control->getModel ();
@@ -65,6 +63,7 @@ public:
         css::uno::Any aValue = controlProps->getPropertyValue (OUString::createFromAscii ("Name"));
         OUString controlName;
         aValue >>= controlName;
+        printf ("action performed: %s\n", OUStringToOString (controlName, RTL_TEXTENCODING_UTF8).getStr ());
 
         if (controlName.equalsAscii ("OpenButton"))
         {
