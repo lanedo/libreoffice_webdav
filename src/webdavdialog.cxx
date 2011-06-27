@@ -69,30 +69,15 @@ public:
 
         if (controlName.equalsAscii ("OpenButton"))
         {
-            /* FIXME: Is this okay with regard to threading, etc. ? */
-            if (owner->isSaveDialog ())
-            {
-                owner->saveSelectedDocument ();
-            }
-            else
-            {
-                owner->openSelectedDocument ();
-            }
+            owner->openOrSaveSelectedDocument ();
         }
         else if (controlName.equalsAscii ("FileList"))
         {
-            if (owner->isSaveDialog ())
-            {
-                owner->saveSelectedDocument ();
-            }
-            else
-            {
-                /* This will work fine, because the first click will
-                 * select the item.  Which means the item will be
-                 * selected when we enter this method.
-                 */
-                owner->openSelectedDocument ();
-            }
+            /* This will work fine, because the first click will
+             * select the item.  Which means the item will be
+             * selected when we enter this method.
+             */
+            owner->openOrSaveSelectedDocument ();
         }
         else if (controlName.equalsAscii ("OpenLocationButton"))
         {
@@ -345,7 +330,7 @@ void WebDAVDialog::showMessageBox (void)
     }
 }
 
-void WebDAVDialog::openSelectedDocument (void)
+void WebDAVDialog::openOrSaveSelectedDocument (void)
 {
     if ( ! (mxFrame.is() && mxToolkit.is()) )
         return;
@@ -358,7 +343,6 @@ void WebDAVDialog::openSelectedDocument (void)
     sal_Int32 n = selectedItems.getLength ();
     for (sal_Int32 i = 0; i < n; i++)
     {
-        /* FIXME: Re-use existing document smartly and ask to save changes as normal Open would */
         const Reference< XItemList > items(fileListModel, UNO_QUERY_THROW );
         Any aURL = items->getItemData(selectedItems[i]);
         OUString sURL;
@@ -366,9 +350,6 @@ void WebDAVDialog::openSelectedDocument (void)
         /* No URL, so this was informational or an error message */
         if ( sURL.getLength() == 0 )
             return;
-
-        printf ("Opening document: %s\n",
-                OUStringToOString (sURL, RTL_TEXTENCODING_UTF8).getStr ());
 
         Reference< XComponentLoader > xLoader(mxFrame, UNO_QUERY);
         Sequence< PropertyValue > lProperties (1);
@@ -381,69 +362,33 @@ void WebDAVDialog::openSelectedDocument (void)
         lProperties[0].Name = OUString::createFromAscii ("InteractionHandler");
         lProperties[0].Value = makeAny (interactionHandler);
 
-        Reference< XComponent > xDocument (xLoader->loadComponentFromURL(
-            sURL, mxFrame->getName(), FrameSearchFlag::CHILDREN, lProperties));
+        if (isSaveDialog ())
+        {
+            printf ("Saving document: %s\n",
+                    OUStringToOString (sURL, RTL_TEXTENCODING_UTF8).getStr ());
+
+            Reference< XController > xController = mxFrame->getController();
+            if ( !xController.is() )
+                return;
+            Reference< XModel > xModel (xController->getModel());
+            Reference< XStorable > xStorable( xModel, UNO_QUERY );
+            if (!xStorable.is())
+                return;
+
+            xStorable->storeAsURL(sURL, lProperties);
+            /* Saving multiple documents makes no sense */
+            break;
+        }
+        else
+        {
+            printf ("Opening document: %s\n",
+                    OUStringToOString (sURL, RTL_TEXTENCODING_UTF8).getStr ());
+            Reference< XComponent > xDocument (xLoader->loadComponentFromURL(
+                sURL, mxFrame->getName(), FrameSearchFlag::CHILDREN, lProperties));
+        }
     }
 
     /* Close dialog when done */
-    /* FIXME: This seems to make sense, right? */
-    closeDialog ();
-}
-
-void WebDAVDialog::saveSelectedDocument (void)
-{
-    if ( ! (mxFrame.is() && mxToolkit.is()) )
-        return;
-
-    Reference< XPropertySet > entryProps (fileListModel, UNO_QUERY);
-    Any aValue = entryProps->getPropertyValue (OUString::createFromAscii ("SelectedItems"));
-    Sequence< short > selectedItems;
-    aValue >>= selectedItems;
-
-    sal_Int32 n = selectedItems.getLength ();
-    for (sal_Int32 i = 0; i < n; i++)
-    {
-        const Reference< XItemList > items(fileListModel, UNO_QUERY_THROW );
-        Any aURL = items->getItemData(selectedItems[i]);
-        OUString sURL;
-        aURL >>= sURL;
-        /* No URL, so this was informational or an error message */
-        if ( sURL.getLength() == 0 )
-            return;
-
-        printf ("Saving document as: %s\n",
-                OUStringToOString (sURL, RTL_TEXTENCODING_UTF8).getStr ());
-
-        Reference< XController > xController = mxFrame->getController();
-        if ( !xController.is() )
-        {
-            printf ("No controller!\n");
-            break;
-        }
-
-        Reference< XModel > xModel (xController->getModel());
-        Reference< XStorable > xStorable( xModel, UNO_QUERY );
-        if (!xStorable.is())
-        {
-            printf ("No storable!\n");
-            break;
-        }
-
-        Sequence< PropertyValue > lProperties (1);
-
-        /* Set interaction handler */
-        Reference< css::task::XInteractionHandler > interactionHandler =
-            Reference< css::task::XInteractionHandler > (
-                    mxMCF->createInstanceWithContext (OUString::createFromAscii ("com.sun.star.task.InteractionHandler"),
-                                                      mxContext), UNO_QUERY);
-        lProperties[0].Name = OUString::createFromAscii ("InteractionHandler");
-        lProperties[0].Value = makeAny (interactionHandler);
-
-        xStorable->storeAsURL(sURL, lProperties);
-        /* Saving multiple documents makes no sense */
-        break;
-    }
-
     closeDialog ();
 }
 

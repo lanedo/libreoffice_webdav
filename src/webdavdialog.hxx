@@ -33,8 +33,7 @@ public:
     void show (void);
     void closeDialog (void);
     void showMessageBox (void);
-    void openSelectedDocument (void);
-    void saveSelectedDocument (void);
+    void openOrSaveSelectedDocument (void);
     void dumpDAVListing (void);
 };
 
