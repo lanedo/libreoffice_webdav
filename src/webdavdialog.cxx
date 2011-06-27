@@ -253,13 +253,20 @@ void WebDAVDialog::createDialog (void)
         controlContainer->getControl (OUString::createFromAscii ("FileList"));
     fileListModel = listControl->getModel ();
 
+    OUString remoteServer (OUString::createFromAscii("http://localhost/dav/"));
+
     /* Connect the entry to a key listener and get its model */
     Reference< XControl > entryControl =
         controlContainer->getControl (OUString::createFromAscii ("LocationEntry"));
     locationEntryModel = entryControl->getModel ();
     Reference< XPropertySet > entryProps (locationEntryModel, UNO_QUERY);
-    entryProps->setPropertyValue(OUString::createFromAscii("Text"),
-                                 makeAny (OUString::createFromAscii("http://localhost/dav/")));
+    entryProps->setPropertyValue(OUString::createFromAscii("Text"), makeAny (remoteServer));
+
+    Reference< XControl > labelControl =
+        controlContainer->getControl (OUString::createFromAscii ("Location"));
+    Reference< XInterface > locationLabelModel (labelControl->getModel ());
+    Reference< XPropertySet > labelProps (locationLabelModel, UNO_QUERY);
+    labelProps->setPropertyValue(OUString::createFromAscii("Label"), makeAny (remoteServer));
 
     Reference< XWindow > entryWindow (entryControl, UNO_QUERY);
     entryWindow->addKeyListener (keyListener);
