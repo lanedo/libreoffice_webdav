@@ -216,6 +216,9 @@ void WebDAVDialog::createDialog (void)
     Reference< XControl > entryControl =
         controlContainer->getControl (OUString::createFromAscii ("LocationEntry"));
     locationEntryModel = entryControl->getModel ();
+    Reference< XPropertySet > entryProps (locationEntryModel, UNO_QUERY);
+    entryProps->setPropertyValue(OUString::createFromAscii("Text"),
+                                 makeAny (OUString::createFromAscii("http://localhost/dav/")));
 
     /* Connect the list box to an action listener */
     Reference< XListBox > listBox(listControl, UNO_QUERY);
