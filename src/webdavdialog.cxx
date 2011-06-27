@@ -80,7 +80,11 @@ public:
         }
         else if (controlName.equalsAscii ("FileList"))
         {
-            if (!owner->isSaveDialog ())
+            if (owner->isSaveDialog ())
+            {
+                owner->saveSelectedDocument ();
+            }
+            else
             {
                 /* This will work fine, because the first click will
                  * select the item.  Which means the item will be
