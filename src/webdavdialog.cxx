@@ -2,6 +2,7 @@
 #include <osl/diagnose.h>
 #include <rtl/ustring.hxx>
 #include <cppuhelper/implbase1.hxx>
+#include <com/sun/star/awt/Key.hpp>
 #include <com/sun/star/awt/WindowAttribute.hpp>
 #include <com/sun/star/awt/XButton.hpp>
 #include <com/sun/star/awt/XControl.hpp>
@@ -36,6 +37,7 @@ using namespace css::frame;
 using namespace css::lang;
 using namespace css::uno;
 using css::lang::XMultiComponentFactory;
+using css::awt::Key::RETURN;
 
 /* Action listener */
 class WebDAVDialogActionListener : public ::cppu::WeakImplHelper1< css::awt::XActionListener >
@@ -50,7 +52,7 @@ public:
     // XEventListener
     virtual void SAL_CALL disposing (const css::lang::EventObject &aEventObj) throw (css::uno::RuntimeException)
     {
-        puts ("dispose");
+        puts ("dispose action listener");
     }
 
     // XActionListener
@@ -101,6 +103,54 @@ public:
         {
             owner->closeDialog ();
         }
+    }
+};
+
+/* Key listener */
+class WebDAVDialogKeyListener : public ::cppu::WeakImplHelper1< css::awt::XKeyListener >
+{
+private:
+    WebDAVDialog * const owner;
+
+public:
+    WebDAVDialogKeyListener (WebDAVDialog * const _owner)
+       : owner (_owner) { }
+
+    // XEventListener
+    virtual void SAL_CALL disposing (const css::lang::EventObject &aEventObj) throw (css::uno::RuntimeException)
+    {
+        puts ("dispose key listener");
+    }
+
+    // XKeyListener
+    virtual void SAL_CALL keyPressed (const css::awt::KeyEvent &rEvent) throw (css::uno::RuntimeException)
+    {
+        /* Obtain the name of the control the event originated from */
+        Reference< XControl > control (rEvent.Source, UNO_QUERY);
+        Reference< XControlModel > controlModel = control->getModel ();
+        Reference< XPropertySet > controlProps (controlModel, UNO_QUERY);
+        css::uno::Any aValue = controlProps->getPropertyValue (OUString::createFromAscii ("Name"));
+        OUString controlName;
+        aValue >>= controlName;
+
+        puts ("key pressed");
+
+        if (controlName.equalsAscii ("LocationEntry"))
+        {
+            short aKey = rEvent.KeyCode;
+
+            puts("LocationEntry key pressed");
+
+            if (aKey == RETURN)
+            {
+                owner->dumpDAVListing ();
+            }
+        }
+    }
+
+    virtual void SAL_CALL keyReleased (const css::awt::KeyEvent &rEvent) throw (css::uno::RuntimeException)
+    {
+        puts ("key released");
     }
 };
 
@@ -189,8 +239,13 @@ void WebDAVDialog::createDialog (void)
                                   makeAny (OUString::createFromAscii("Open Document")));
     }
 
+    /* Create event listeners */
     Reference< XActionListener > actionListener =
         static_cast< XActionListener *> (new WebDAVDialogActionListener (this));
+
+    Reference< XKeyListener > keyListener =
+        static_cast< XKeyListener *> (new WebDAVDialogKeyListener (this));
+
     Reference< XButton > openButtonControl (openButton, UNO_QUERY);
     openButtonControl->addActionListener (actionListener);
 
@@ -213,12 +268,16 @@ void WebDAVDialog::createDialog (void)
         controlContainer->getControl (OUString::createFromAscii ("FileList"));
     fileListModel = listControl->getModel ();
 
+    /* Connect the entry to a key listener and get its model */
     Reference< XControl > entryControl =
         controlContainer->getControl (OUString::createFromAscii ("LocationEntry"));
     locationEntryModel = entryControl->getModel ();
     Reference< XPropertySet > entryProps (locationEntryModel, UNO_QUERY);
     entryProps->setPropertyValue(OUString::createFromAscii("Text"),
                                  makeAny (OUString::createFromAscii("http://localhost/dav/")));
+
+    Reference< XWindow > entryWindow (entryControl, UNO_QUERY);
+    entryWindow->addKeyListener (keyListener);
 
     /* Connect the list box to an action listener */
     Reference< XListBox > listBox(listControl, UNO_QUERY);
