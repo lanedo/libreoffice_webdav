@@ -298,9 +298,12 @@ void WebDAVDialog::openSelectedDocument (void)
     {
         /* FIXME: Re-use existing document smartly and ask to save changes as normal Open would */
         const Reference< XItemList > items(fileListModel, UNO_QUERY_THROW );
-        Any aURL = items->getItemData(selectedItems[0]);
+        Any aURL = items->getItemData(selectedItems[i]);
         OUString sURL;
         aURL >>= sURL;
+        /* No URL, so this was informational or an error message */
+        if ( sURL.getLength() == 0 )
+            return;
 
         printf ("Opening document: %s\n",
                 OUStringToOString (sURL, RTL_TEXTENCODING_UTF8).getStr ());
@@ -339,9 +342,12 @@ void WebDAVDialog::saveSelectedDocument (void)
     for (sal_Int32 i = 0; i < n; i++)
     {
         const Reference< XItemList > items(fileListModel, UNO_QUERY_THROW );
-        Any aURL = items->getItemData(selectedItems[0]);
+        Any aURL = items->getItemData(selectedItems[i]);
         OUString sURL;
         aURL >>= sURL;
+        /* No URL, so this was informational or an error message */
+        if ( sURL.getLength() == 0 )
+            return;
 
         printf ("Saving document as: %s\n",
                 OUStringToOString (sURL, RTL_TEXTENCODING_UTF8).getStr ());
