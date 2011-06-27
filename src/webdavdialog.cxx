@@ -248,6 +248,28 @@ void WebDAVDialog::createDialog (void)
 
     cancelControl->addActionListener (actionListener);
 
+    Reference< XControl > entryControl =
+        controlContainer->getControl (OUString::createFromAscii ("FileEntry"));
+    fileEntryModel = entryControl->getModel ();
+    Reference< XPropertySet > entryProps (fileEntryModel, UNO_QUERY);
+    if (isSaveDialog ())
+    {
+        Reference< XController > xController = mxFrame->getController();
+        if ( !xController.is() )
+            return;
+        Reference< XModel > xModel (xController->getModel());
+        Reference< XStorable > xStorable( xModel, UNO_QUERY );
+        if (!xStorable.is())
+            return;
+
+        if (xStorable->hasLocation ())
+        {
+            OUString fileName (xStorable->getLocation().copy (
+                xStorable->getLocation().lastIndexOf (OUString::createFromAscii ("/")) + 1));
+            entryProps->setPropertyValue(OUString::createFromAscii("Text"), makeAny (fileName));
+        }
+    }
+
     /* Save references to the file list and location entry models */
     Reference< XControl > listControl =
         controlContainer->getControl (OUString::createFromAscii ("FileList"));
@@ -256,10 +278,10 @@ void WebDAVDialog::createDialog (void)
     OUString remoteServer (OUString::createFromAscii("http://localhost/dav/"));
 
     /* Connect the entry to a key listener and get its model */
-    Reference< XControl > entryControl =
+    entryControl =
         controlContainer->getControl (OUString::createFromAscii ("LocationEntry"));
     locationEntryModel = entryControl->getModel ();
-    Reference< XPropertySet > entryProps (locationEntryModel, UNO_QUERY);
+    entryProps = Reference< XPropertySet> (locationEntryModel, UNO_QUERY);
     entryProps->setPropertyValue(OUString::createFromAscii("Text"), makeAny (remoteServer));
 
     Reference< XControl > labelControl =
