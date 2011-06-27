@@ -456,12 +456,29 @@ void WebDAVDialog::dumpDAVListing (void)
     /* Now try to access the folder */
     try
     {
+        if (! (fileAccess->exists (url) && fileAccess->isFolder (url)))
+        {
+            items->insertItemText(0, OUString::createFromAscii("(Failed to list documents)"));
+            return;
+        }
         Sequence< rtl::OUString > entries = fileAccess->getFolderContents (url, false);
         const OUString *stringArray = entries.getConstArray ();
         sal_Int32 n = entries.getLength ();
+
         OUString icon = OUString::createFromAscii ("file:///usr/share/icons/gnome/24x24/mimetypes/");
         for (sal_Int32 i = 0; i < n; i++)
         {
+            /* Skip file formats that are not from LibreOffice */
+            OUString extension (stringArray[i].copy (
+                stringArray[i].lastIndexOf (OUString::createFromAscii (".")) + 1));
+            if (! (extension.equalsAscii ("odf")
+                || extension.equalsAscii ("odg")
+                || extension.equalsAscii ("odm")
+                || extension.equalsAscii ("odp")
+                || extension.equalsAscii ("ods")
+                || extension.equalsAscii ("odt")))
+                continue;
+
             OUString fileName (stringArray[i].copy (
                 stringArray[i].lastIndexOf (OUString::createFromAscii ("/")) + 1));
             items->insertItem(0, fileName,
