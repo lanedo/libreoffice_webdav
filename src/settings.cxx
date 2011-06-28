@@ -53,7 +53,10 @@ OUString Settings::getStringValue (const OUString& aKeyName)
 
 OUString Settings::getRemoveServerName ()
 {
-    return getStringValue (OUString::createFromAscii ("ooInetHTTPProxyName"));
+    OUString remoteServerName (getStringValue (OUString::createFromAscii ("ooInetHTTPProxyName")));
+    if (remoteServerName.getLength() == 0)
+        remoteServerName = OUString::createFromAscii ("http://localhost/dav/");
+    return remoteServerName;
 }
 
 bool Settings::loadSettings (Reference< css::lang::XMultiServiceFactory > const & factory)
