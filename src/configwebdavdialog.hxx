@@ -27,7 +27,6 @@ public:
 
     void show (void);
     void closeDialog (void);
-    void showMessageBox (void);
 };
 
 #endif /* __CONFIGWEBDAVDIALOG_HXX__ */

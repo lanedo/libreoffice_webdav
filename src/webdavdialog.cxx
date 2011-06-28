@@ -364,36 +364,6 @@ void WebDAVDialog::closeDialog (void)
     xDialog->endExecute();
 }
 
-void WebDAVDialog::showMessageBox (void)
-{
-    if ( ! (mxFrame.is() && mxToolkit.is()) )
-        return;
-
-    // describe window properties.
-    WindowDescriptor                aDescriptor;
-    aDescriptor.Type              = WindowClass_MODALTOP;
-    aDescriptor.WindowServiceName = OUString( RTL_CONSTASCII_USTRINGPARAM( "infobox" ));
-    aDescriptor.ParentIndex       = -1;
-    aDescriptor.Parent            = Reference< XWindowPeer >( mxFrame->getContainerWindow(), UNO_QUERY );
-    aDescriptor.Bounds            = Rectangle(0,0,300,200);
-    aDescriptor.WindowAttributes  = WindowAttribute::BORDER |
-        WindowAttribute::MOVEABLE |
-        WindowAttribute::CLOSEABLE;
-
-    Reference< XWindowPeer > xPeer = mxToolkit->createWindow( aDescriptor );
-
-    if ( xPeer.is() )
-    {
-        Reference< XMessageBox > xMsgBox( xPeer, UNO_QUERY );
-        if ( xMsgBox.is() )
-        {
-            xMsgBox->setCaptionText( OUString( RTL_CONSTASCII_USTRINGPARAM( "This is my caption" )));
-            xMsgBox->setMessageText( OUString( RTL_CONSTASCII_USTRINGPARAM( "This is my message" )));
-            xMsgBox->execute();
-        }
-    }
-}
-
 void WebDAVDialog::openOrSaveSelectedDocument (void)
 {
     if ( ! (mxFrame.is() && mxToolkit.is()) )

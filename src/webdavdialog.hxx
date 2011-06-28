@@ -35,7 +35,6 @@ public:
     sal_Bool isSaveDialog (void);
     void show (void);
     void closeDialog (void);
-    void showMessageBox (void);
     void openOrSaveSelectedDocument (void);
     void dumpDAVListing (void);
 };
