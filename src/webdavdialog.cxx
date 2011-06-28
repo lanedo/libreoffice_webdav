@@ -188,7 +188,7 @@ void WebDAVDialog::createDialog (void)
     Reference< XDialog > realDialog (dialog, UNO_QUERY);
 
     /* FIXME, these strings need to be translatable */
-    if (isSave)
+    if (isSaveDialog ())
     {
         realDialog->setTitle(OUString::createFromAscii("Save a File To the Cloud"));
     }
@@ -213,7 +213,7 @@ void WebDAVDialog::createDialog (void)
     Reference< XPropertySet > openProps (openButtonModel, UNO_QUERY);
 
     /* FIXME, these strings need to be translatable */
-    if (isSave)
+    if (isSaveDialog ())
     {
       openProps->setPropertyValue(OUString::createFromAscii("Label"),
                                   makeAny (OUString::createFromAscii("Save Document")));
