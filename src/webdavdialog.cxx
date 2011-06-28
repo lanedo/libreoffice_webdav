@@ -1,4 +1,5 @@
 #include "webdavdialog.hxx"
+#include "settings.hxx"
 #include <osl/diagnose.h>
 #include <rtl/ustring.hxx>
 #include <cppuhelper/implbase1.hxx>
@@ -277,7 +278,8 @@ void WebDAVDialog::createDialog (void)
         controlContainer->getControl (OUString::createFromAscii ("FileList"));
     fileListModel = listControl->getModel ();
 
-    OUString remoteServer (OUString::createFromAscii("http://localhost/dav/"));
+    WebDAVUI::Settings settings (mxContext);
+    OUString remoteServer (settings.getRemoveServerName ());
 
     /* Connect the entry to a key listener and get its model */
     entryControl =

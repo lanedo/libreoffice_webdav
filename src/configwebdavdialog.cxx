@@ -1,4 +1,5 @@
 #include "configwebdavdialog.hxx"
+#include "settings.hxx"
 #include <osl/diagnose.h>
 #include <rtl/ustring.hxx>
 #include <cppuhelper/implbase1.hxx>
@@ -169,8 +170,17 @@ void ConfigWebDAVDialog::createDialog (void)
     window->setVisible(true);
     control->createPeer(mxToolkit,NULL);
 
-    /* Get the open/save button */
+    WebDAVUI::Settings settings (mxContext);
+    OUString remoteServer (settings.getRemoveServerName ());
+
     Reference< XControlContainer > controlContainer (dialog, UNO_QUERY);
+    Reference< XControl > entryControl =
+        controlContainer->getControl (OUString::createFromAscii ("LocationEntry"));
+    locationEntryModel = entryControl->getModel ();
+    Reference< XPropertySet > entryProps (locationEntryModel, UNO_QUERY);
+    entryProps->setPropertyValue(OUString::createFromAscii("Text"), makeAny (remoteServer));
+
+    /* Get the open/save button */
     Reference< XControl > saveButton =
         controlContainer->getControl (OUString::createFromAscii ("SaveButton"));
     Reference< XControlModel > saveButtonModel =
