@@ -21,6 +21,8 @@ private:
     css::uno::Reference< css::uno::XInterface > fileListModel;
     css::uno::Reference< css::uno::XInterface > fileEntryModel;
 
+    css::uno::Reference< css::uno::XInterface > gridModel;
+
     sal_Bool isSave;
 
     void createDialog (void);

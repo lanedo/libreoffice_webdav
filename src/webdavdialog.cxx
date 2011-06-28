@@ -3,6 +3,7 @@
 #include <rtl/ustring.hxx>
 #include <cppuhelper/implbase1.hxx>
 #include <com/sun/star/awt/Key.hpp>
+#include <com/sun/star/awt/PosSize.hpp>
 #include <com/sun/star/awt/WindowAttribute.hpp>
 #include <com/sun/star/awt/XButton.hpp>
 #include <com/sun/star/awt/XControl.hpp>
@@ -303,6 +304,32 @@ void WebDAVDialog::createDialog (void)
     entries[0] = OUString::createFromAscii ("(content listing will appear here)");
 
     listProps->setPropertyValue(OUString::createFromAscii("StringItemList"), makeAny (entries));
+
+
+#if 0
+    /* FIXME: i have no clue why this doesn't work */
+    /* The grid control */
+    gridModel =
+      mxMCF->createInstanceWithContext(OUString::createFromAscii("com.sun.star.awt.grid.UnoControlGridModel"),
+                                       mxContext);
+
+    if (!gridModel.is())
+      {
+        puts("EEEEEEEEEEEEEEK");
+        return;
+      }
+
+    Reference< XPropertySet > gridProps (gridModel, UNO_QUERY);
+    gridProps->setPropertyValue (OUString::createFromAscii ("PositionX"), makeAny ((sal_Int32) 6));
+    gridProps->setPropertyValue (OUString::createFromAscii ("PositionY"), makeAny ((sal_Int32) 200));
+    gridProps->setPropertyValue (OUString::createFromAscii ("Width"), makeAny ((sal_Int32) 200));
+    gridProps->setPropertyValue (OUString::createFromAscii ("Height"), makeAny ((sal_Int32) 100));
+
+    Reference< XNameContainer > nameContainer (dialog, UNO_QUERY);
+
+    nameContainer->insertByName (OUString::createFromAscii ("FileGrid"),
+                                 makeAny (gridModel));
+#endif
 }
 
 sal_Bool WebDAVDialog::isSaveDialog (void)
