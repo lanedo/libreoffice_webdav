@@ -39,6 +39,7 @@ using namespace css::lang;
 using namespace css::uno;
 using css::lang::XMultiComponentFactory;
 using css::awt::Key::RETURN;
+using css::awt::PosSize::POSSIZE;
 
 /* Action listener */
 class WebDAVDialogActionListener : public ::cppu::WeakImplHelper1< css::awt::XActionListener >
@@ -306,8 +307,6 @@ void WebDAVDialog::createDialog (void)
     listProps->setPropertyValue(OUString::createFromAscii("StringItemList"), makeAny (entries));
 
 
-#if 0
-    /* FIXME: i have no clue why this doesn't work */
     /* The grid control */
     gridModel =
       mxMCF->createInstanceWithContext(OUString::createFromAscii("com.sun.star.awt.grid.UnoControlGridModel"),
@@ -319,17 +318,24 @@ void WebDAVDialog::createDialog (void)
         return;
       }
 
-    Reference< XPropertySet > gridProps (gridModel, UNO_QUERY);
-    gridProps->setPropertyValue (OUString::createFromAscii ("PositionX"), makeAny ((sal_Int32) 6));
-    gridProps->setPropertyValue (OUString::createFromAscii ("PositionY"), makeAny ((sal_Int32) 200));
-    gridProps->setPropertyValue (OUString::createFromAscii ("Width"), makeAny ((sal_Int32) 200));
-    gridProps->setPropertyValue (OUString::createFromAscii ("Height"), makeAny ((sal_Int32) 100));
+    Reference< XControlModel > model = control->getModel();
+    Reference< XNameContainer > nameContainer (model, UNO_QUERY);
 
-    Reference< XNameContainer > nameContainer (dialog, UNO_QUERY);
+     if (!nameContainer.is())
+      {
+        puts("EEEEEEEEEEEEEEK name container");
+        return;
+      }
 
-    nameContainer->insertByName (OUString::createFromAscii ("FileGrid"),
-                                 makeAny (gridModel));
-#endif
+     nameContainer->insertByName (OUString::createFromAscii ("FileGrid"),
+                                  makeAny (gridModel));
+
+     Reference< XControl > gridControl =
+       controlContainer->getControl (OUString::createFromAscii ("FileGrid"));
+     Reference< XWindow > gridWindow (gridControl, UNO_QUERY);
+
+     gridWindow->setPosSize (7, 400, 400, 200, POSSIZE);
+     gridWindow->setVisible (true);
 }
 
 sal_Bool WebDAVDialog::isSaveDialog (void)
