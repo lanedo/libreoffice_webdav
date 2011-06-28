@@ -35,6 +35,7 @@
 
 #include "addon.hxx"
 #include "webdavdialog.hxx"
+#include "configwebdavdialog.hxx"
 
 #include <osl/diagnose.h>
 #include <rtl/ustring.hxx>
@@ -108,6 +109,8 @@ void SAL_CALL Addon::dispatch( const URL&                        aURL,
     if ( aURL.Path.compareToAscii( "configure" ) == 0 )
     {
         puts ("configure selected");
+        ConfigWebDAVDialog *dialog = new ConfigWebDAVDialog (mxContext, mxFrame);
+        dialog->show ();
     }
     else if ( aURL.Path.compareToAscii( "open" ) == 0 )
     {
@@ -160,6 +163,7 @@ void SAL_CALL Addon::addStatusListener( const Reference< XStatusListener >& xCon
     {
         puts ("addStatusListener(configure)");
         label = OUString( RTL_CONSTASCII_USTRINGPARAM( "Configure Cloud Access" ) );
+        sensitive = true;
     }
     else if ( aURL.Path.compareToAscii( "open" ) == 0 )
     {

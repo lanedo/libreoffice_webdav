@@ -16,7 +16,7 @@ cp data/Addons.xcu dist
 cp description.xml dist
 cp data/package-description-*.txt dist
 cp data/ProtocolHandler.xcu dist
-cp data/open.xdl dist
+cp data/*.xdl dist
 cp data/images/* dist/images
 cp build/manifest.xml dist/META-INF
 if [ $bits -eq 32 ]; then
