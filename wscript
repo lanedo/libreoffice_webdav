@@ -49,6 +49,7 @@ def cppumaker (bld):
 				"com.sun.star.awt.KeyEvent",
 				"com.sun.star.awt.KeyModifier",
 				"com.sun.star.awt.MenuEvent",
+				"com.sun.star.awt.PosSize",
 				"com.sun.star.awt.XActionListener",
 				"com.sun.star.awt.XButton",
 				"com.sun.star.awt.XControl",
