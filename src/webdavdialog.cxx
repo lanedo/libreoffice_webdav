@@ -336,7 +336,7 @@ void WebDAVDialog::createDialog (void)
        controlContainer->getControl (OUString::createFromAscii ("FileGrid"));
      Reference< XWindow > gridWindow (gridControl, UNO_QUERY);
 
-     gridWindow->setPosSize (7, 400, 400, 200, POSSIZE);
+     gridWindow->setPosSize (7, 480, 400, 200, POSSIZE);
      gridWindow->setVisible (true);
 }
 
