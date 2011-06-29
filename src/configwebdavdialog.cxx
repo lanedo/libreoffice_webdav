@@ -37,7 +37,6 @@
  *************************************************************************/
 
 #include "configwebdavdialog.hxx"
-#include "settings.hxx"
 #include <osl/diagnose.h>
 #include <rtl/ustring.hxx>
 #include <cppuhelper/implbase1.hxx>
@@ -108,7 +107,7 @@ public:
 
         if (controlName.equalsAscii ("SaveButton"))
         {
-            owner->closeDialog ();
+            owner->saveChanges ();
         }
         else if (controlName.equalsAscii ("CancelButton"))
         {
@@ -163,6 +162,7 @@ ConfigWebDAVDialog::ConfigWebDAVDialog( const Reference< css::uno::XComponentCon
     puts ("dialog ctor");
 
     mxMCF = mxContext->getServiceManager ();
+    mSettings = new WebDAVUI::Settings (mxContext);
 
     // Create the toolkit to have access to it later
     mxToolkit = Reference< XToolkit >( mxMCF->createInstanceWithContext(
@@ -208,8 +208,7 @@ void ConfigWebDAVDialog::createDialog (void)
     window->setVisible(true);
     control->createPeer(mxToolkit,NULL);
 
-    WebDAVUI::Settings settings (mxContext);
-    OUString remoteServer (settings.getRemoveServerName ());
+    OUString remoteServer (mSettings->getRemoveServerName ());
 
     Reference< XControlContainer > controlContainer (dialog, UNO_QUERY);
     Reference< XControl > entryControl =
@@ -262,6 +261,16 @@ void ConfigWebDAVDialog::show (void)
      */
     Reference< XComponent > xComponent(dialog,UNO_QUERY);
     xComponent->dispose();
+}
+
+void ConfigWebDAVDialog::saveChanges (void)
+{
+    Reference< XPropertySet > entryProps (locationEntryModel, UNO_QUERY);
+    Any aValue = entryProps->getPropertyValue (OUString::createFromAscii ("Text"));
+    OUString remoteServer;
+    aValue >>= remoteServer;
+    mSettings->setRemoteServerName (remoteServer);
+    closeDialog ();
 }
 
 void ConfigWebDAVDialog::closeDialog (void)

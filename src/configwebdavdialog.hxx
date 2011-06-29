@@ -40,6 +40,7 @@
 #ifndef __CONFIGWEBDAVDIALOG_HXX__
 #define __CONFIGWEBDAVDIALOG_HXX__
 
+#include "settings.hxx"
 #include <com/sun/star/awt/XToolkit.hpp>
 #include <com/sun/star/awt/XItemListener.hpp>
 #include <com/sun/star/frame/XFrame.hpp>
@@ -54,6 +55,7 @@ private:
     css::uno::Reference< css::lang::XMultiComponentFactory > mxMCF;
     css::uno::Reference< css::frame::XFrame > mxFrame;
     css::uno::Reference< css::awt::XToolkit > mxToolkit;
+    WebDAVUI::Settings* mSettings;
 
     css::uno::Reference< css::uno::XInterface > dialog;
     css::uno::Reference< css::uno::XInterface > locationEntryModel;
@@ -65,6 +67,7 @@ public:
                   const css::uno::Reference< css::frame::XFrame >          &rxFrame);
 
     void show (void);
+    void saveChanges (void);
     void closeDialog (void);
 };
 

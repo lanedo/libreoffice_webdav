@@ -115,6 +115,7 @@ def cppumaker (bld):
 				"com.sun.star.uno.XComponentContext",
 				"com.sun.star.uno.XWeak",
 				"com.sun.star.util.URL",
+				"com.sun.star.util.XChangesBatch",
 				"com.sun.star.util.XURLTransformer",
 				"com.sun.star.task.XJob"]
 	

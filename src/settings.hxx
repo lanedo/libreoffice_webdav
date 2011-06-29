@@ -54,6 +54,7 @@ class Settings
 private:
     Reference< XComponentContext > mxContext;
     Reference< css::lang::XMultiComponentFactory > mxMCF;
+    Reference< css::lang::XMultiServiceFactory > mxCfgProvider;
     Reference< XInterface > mxIface;
 
     bool loadSettings (Reference< css::lang::XMultiServiceFactory > const & factory);
@@ -65,6 +66,9 @@ public:
 
     OUString getStringValue (const OUString& aKeyName);
     OUString getRemoveServerName ();
+
+    bool setStringValue (const OUString& aKeyName, const OUString& aValue);
+    bool setRemoteServerName (const OUString& aValue);
 };
 
 }

@@ -50,6 +50,7 @@
 #include <com/sun/star/frame/XComponentLoader.hpp>
 #include <com/sun/star/frame/XController.hpp>
 #include <com/sun/star/lang/XComponent.hpp>
+#include <com/sun/star/util/XChangesBatch.hpp>
 
 using rtl::OUString;
 using namespace css::awt;
@@ -111,17 +112,17 @@ bool Settings::loadSettings (Reference< css::lang::XMultiServiceFactory > const 
 
     try
     {
-        Reference< css::lang::XMultiServiceFactory > xCfgProvider (
+        mxCfgProvider = Reference< css::lang::XMultiServiceFactory > (
             factory->createInstance (kConfigurationProviderService), UNO_QUERY);
         OSL_ENSURE (xCfgProvider.is (), "Failed to create ConfigurationProvider");
-        if (!xCfgProvider.is())
+        if (!mxCfgProvider.is())
             return false;
 
         css::beans::NamedValue aPath (OUString (RTL_CONSTASCII_USTRINGPARAM ("nodepath")),
                                       makeAny (kComponent) );
         Sequence< Any > aArgs (1);
         aArgs[0] <<=  aPath;
-        mxIface = xCfgProvider->createInstanceWithArguments (kReadOnlyViewService, aArgs);
+        mxIface = mxCfgProvider->createInstanceWithArguments (kReadOnlyViewService, aArgs);
         Reference<css::container::XNameAccess > xAccess (mxIface, UNO_QUERY_THROW);
         xAccess->getByName (kServerDefinition) >>= mxIface;
     }
@@ -133,6 +134,43 @@ bool Settings::loadSettings (Reference< css::lang::XMultiServiceFactory > const 
     }
 
     return true;
+}
+
+bool Settings::setStringValue (const OUString& aKeyName, const OUString& aValue)
+{
+    printf ("Settings::setStringValue\n");
+    if (getStringValue (aKeyName) == aValue)
+        return false;
+
+    try
+    {
+        OUString aConfigRoot (RTL_CONSTASCII_USTRINGPARAM ("org.openoffice.Inet/Settings"));
+        PropertyValue aProperty;
+        aProperty.Name  = OUString (RTL_CONSTASCII_USTRINGPARAM ("nodepath"));
+        aProperty.Value = makeAny (aConfigRoot);
+        Sequence< Any > aArgumentList (1);
+        aArgumentList[0] = makeAny (aProperty);
+        Reference< XInterface > m_xConfigurationUpdateAccess = mxCfgProvider->createInstanceWithArguments (OUString (
+            RTL_CONSTASCII_USTRINGPARAM ("com.sun.star.configuration.ConfigurationUpdateAccess")),
+            aArgumentList);
+
+        Reference< XPropertySet > xPropertySet (m_xConfigurationUpdateAccess, UNO_QUERY_THROW);
+        xPropertySet->setPropertyValue (aKeyName, makeAny (aValue));
+        Reference< css::util::XChangesBatch > xChangesBatch (m_xConfigurationUpdateAccess, UNO_QUERY_THROW);
+        xChangesBatch->commitChanges ();
+        return true;
+    }
+    catch (RuntimeException & e) {
+        printf ("Failed to update string setting: %s\n",
+                OUStringToOString (e.Message, RTL_TEXTENCODING_ASCII_US).getStr ());
+    }
+
+    return false;
+}
+
+bool Settings::setRemoteServerName (const OUString& aValue)
+{
+    return setStringValue (OUString::createFromAscii ("ooInetHTTPProxyName"), aValue);
 }
 
 }

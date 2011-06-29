@@ -39,6 +39,7 @@
 #ifndef __WEBDAVDIALOG_HXX__
 #define __WEBDAVDIALOG_HXX__
 
+#include "settings.hxx"
 #include <com/sun/star/awt/XToolkit.hpp>
 #include <com/sun/star/awt/XItemListener.hpp>
 #include <com/sun/star/frame/XFrame.hpp>
