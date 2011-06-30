@@ -199,8 +199,7 @@ void ConfigWebDAVDialog::createDialog (void)
 
     Reference< XDialog > realDialog (dialog, UNO_QUERY);
 
-    /* FIXME, these strings need to be translatable */
-    realDialog->setTitle(OUString::createFromAscii("Configure the Cloud"));
+    realDialog->setTitle (mSettings->localizedString ("Configure the Cloud"));
 
     /* Put the dialog in a window */
     Reference< XControl > control(dialog, UNO_QUERY);
@@ -225,9 +224,8 @@ void ConfigWebDAVDialog::createDialog (void)
 
     Reference< XPropertySet > openProps (saveButtonModel, UNO_QUERY);
 
-    /* FIXME, these strings need to be translatable */
     openProps->setPropertyValue(OUString::createFromAscii("Label"),
-                                  makeAny (OUString::createFromAscii("Save Config")));
+                                  makeAny (mSettings->localizedString ("Save Config")));
 
 
     /* Create event listeners */

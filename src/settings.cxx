@@ -173,5 +173,10 @@ bool Settings::setRemoteServerName (const OUString& aValue)
     return setStringValue (OUString::createFromAscii ("ooInetHTTPProxyName"), aValue);
 }
 
+OUString Settings::localizedString (const char* englishString)
+{
+    return OUString::createFromAscii (englishString);
+}
+
 }
 

@@ -37,7 +37,6 @@
  *************************************************************************/
 
 #include "webdavdialog.hxx"
-#include "settings.hxx"
 #include <osl/diagnose.h>
 #include <rtl/ustring.hxx>
 #include <cppuhelper/implbase1.hxx>
@@ -192,6 +191,7 @@ WebDAVDialog::WebDAVDialog( const Reference< css::uno::XComponentContext > &rxCo
     puts ("dialog ctor");
 
     mxMCF = mxContext->getServiceManager ();
+    mSettings = new WebDAVUI::Settings (mxContext);
 
     // Create the toolkit to have access to it later
     mxToolkit = Reference< XToolkit >( mxMCF->createInstanceWithContext(
@@ -228,14 +228,13 @@ void WebDAVDialog::createDialog (void)
 
     Reference< XDialog > realDialog (dialog, UNO_QUERY);
 
-    /* FIXME, these strings need to be translatable */
     if (isSaveDialog ())
     {
-        realDialog->setTitle(OUString::createFromAscii("Save a File To the Cloud"));
+        realDialog->setTitle (mSettings->localizedString ("Save a File To the Cloud"));
     }
     else
     {
-        realDialog->setTitle(OUString::createFromAscii("Open a File From the Cloud"));
+        realDialog->setTitle (mSettings->localizedString ("Open a File From the Cloud"));
     }
 
     /* Put the dialog in a window */
@@ -253,16 +252,15 @@ void WebDAVDialog::createDialog (void)
 
     Reference< XPropertySet > openProps (openButtonModel, UNO_QUERY);
 
-    /* FIXME, these strings need to be translatable */
     if (isSaveDialog ())
     {
       openProps->setPropertyValue(OUString::createFromAscii("Label"),
-                                  makeAny (OUString::createFromAscii("Save Document")));
+                                  makeAny (mSettings->localizedString ("Save Document")));
     }
     else
     {
       openProps->setPropertyValue(OUString::createFromAscii("Label"),
-                                  makeAny (OUString::createFromAscii("Open Document")));
+                                  makeAny (mSettings->localizedString ("Open Document")));
     }
 
     /* Create event listeners */
@@ -316,8 +314,7 @@ void WebDAVDialog::createDialog (void)
         controlContainer->getControl (OUString::createFromAscii ("FileList"));
     fileListModel = listControl->getModel ();
 
-    WebDAVUI::Settings settings (mxContext);
-    OUString remoteServer (settings.getRemoveServerName ());
+    OUString remoteServer (mSettings->getRemoveServerName ());
 
     /* Connect the entry to a key listener and get its model */
     entryControl =
@@ -501,7 +498,7 @@ void WebDAVDialog::dumpDAVListing (void)
     {
         if (! (fileAccess->exists (url) && fileAccess->isFolder (url)))
         {
-            items->insertItemText(0, OUString::createFromAscii("(Failed to list documents)"));
+            items->insertItemText (0, mSettings->localizedString ("Failed to list documents"));
             return;
         }
         Sequence< rtl::OUString > entries = fileAccess->getFolderContents (url, false);
@@ -531,6 +528,6 @@ void WebDAVDialog::dumpDAVListing (void)
     }
     catch ( ... ) /* FIXME: Need proper exception handling here */
     {
-        items->insertItemText(0, OUString::createFromAscii("(Failed to list documents)"));
+        items->insertItemText (0, mSettings->localizedString ("Failed to list documents"));
     }
 }

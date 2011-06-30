@@ -54,7 +54,7 @@ private:
     css::uno::Reference< css::lang::XMultiComponentFactory > mxMCF;
     css::uno::Reference< css::frame::XFrame > mxFrame;
     css::uno::Reference< css::awt::XToolkit > mxToolkit;
-
+    WebDAVUI::Settings* mSettings;
     css::uno::Reference< css::uno::XInterface > dialog;
     css::uno::Reference< css::uno::XInterface > locationEntryModel;
     css::uno::Reference< css::uno::XInterface > fileListModel;

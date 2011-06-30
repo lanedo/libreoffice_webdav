@@ -69,6 +69,8 @@ public:
 
     bool setStringValue (const OUString& aKeyName, const OUString& aValue);
     bool setRemoteServerName (const OUString& aValue);
+
+    OUString localizedString (const char* englishString);
 };
 
 }
