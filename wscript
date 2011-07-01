@@ -153,9 +153,9 @@ def build(bld):
 
 	bld.shlib(source=['src/component.cxx',
 			  'src/addon.cxx',
-			  'src/webdavdialog.cxx',
+			  'src/filedialog.cxx',
 			  'src/settings.cxx',
-			  'src/configwebdavdialog.cxx'],
+			  'src/configdialog.cxx'],
 	          target=target,
 	          uselib=['SALLIB', 'CPPULIB', 'CPPUHELPERLIB' ],
 	          includes=includes,

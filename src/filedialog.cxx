@@ -36,7 +36,7 @@
  *
  *************************************************************************/
 
-#include "webdavdialog.hxx"
+#include "filedialog.hxx"
 #include <osl/diagnose.h>
 #include <rtl/ustring.hxx>
 #include <cppuhelper/implbase1.hxx>
@@ -79,14 +79,16 @@ using css::lang::XMultiComponentFactory;
 using css::awt::Key::RETURN;
 using css::awt::PosSize::POSSIZE;
 
+namespace WebDAVUI {
+
 /* Action listener */
-class WebDAVDialogActionListener : public ::cppu::WeakImplHelper1< css::awt::XActionListener >
+class FileDialogActionListener : public ::cppu::WeakImplHelper1< css::awt::XActionListener >
 {
 private:
-    WebDAVDialog * const owner;
+    FileDialog * const owner;
 
 public:
-    WebDAVDialogActionListener (WebDAVDialog * const _owner)
+    FileDialogActionListener (FileDialog * const _owner)
        : owner (_owner) { }
 
     // XEventListener
@@ -105,7 +107,8 @@ public:
         css::uno::Any aValue = controlProps->getPropertyValue (OUString::createFromAscii ("Name"));
         OUString controlName;
         aValue >>= controlName;
-        printf ("action performed: %s\n", OUStringToOString (controlName, RTL_TEXTENCODING_UTF8).getStr ());
+        printf ("FileDialog::actionPerformed %s\n",
+                OUStringToOString (controlName, RTL_TEXTENCODING_UTF8).getStr ());
 
         if (controlName.equalsAscii ("OpenButton"))
         {
@@ -122,7 +125,7 @@ public:
         else if (controlName.equalsAscii ("OpenLocationButton"))
         {
             /* FIXME: Is this okay with regard to threading, etc. ? */
-            owner->dumpDAVListing ();
+            owner->listFiles ();
         }
         else if (controlName.equalsAscii ("CancelButton"))
         {
@@ -132,13 +135,13 @@ public:
 };
 
 /* Key listener */
-class WebDAVDialogKeyListener : public ::cppu::WeakImplHelper1< css::awt::XKeyListener >
+class FileDialogKeyListener : public ::cppu::WeakImplHelper1< css::awt::XKeyListener >
 {
 private:
-    WebDAVDialog * const owner;
+    FileDialog * const owner;
 
 public:
-    WebDAVDialogKeyListener (WebDAVDialog * const _owner)
+    FileDialogKeyListener (FileDialog * const _owner)
        : owner (_owner) { }
 
     // XEventListener
@@ -168,7 +171,7 @@ public:
 
             if (aKey == RETURN)
             {
-                owner->dumpDAVListing ();
+                owner->listFiles ();
             }
         }
     }
@@ -182,11 +185,11 @@ public:
 
 /* Dialog construction */
 
-WebDAVDialog::WebDAVDialog( const Reference< css::uno::XComponentContext > &rxContext,
-                            const Reference< css::frame::XFrame >          &rxFrame,
-                            const sal_Bool                                  isSave) : mxContext ( rxContext ),
-                                                                                      mxFrame ( rxFrame ),
-                                                                                      isSave ( isSave)
+FileDialog::FileDialog( const Reference< css::uno::XComponentContext > &rxContext,
+                        const Reference< css::frame::XFrame >          &rxFrame,
+                        const sal_Bool                                  isSave) : mxContext ( rxContext ),
+                                                                                  mxFrame ( rxFrame ),
+                                                                                  isSave ( isSave)
 {
     puts ("dialog ctor");
 
@@ -201,7 +204,7 @@ WebDAVDialog::WebDAVDialog( const Reference< css::uno::XComponentContext > &rxCo
     createDialog ();
 }
 
-void WebDAVDialog::createDialog (void)
+void FileDialog::createDialog (void)
 {
     /* Construct path to XDL file in extension package */
     Reference< XPackageInformationProvider> infoProvider =
@@ -265,10 +268,10 @@ void WebDAVDialog::createDialog (void)
 
     /* Create event listeners */
     Reference< XActionListener > actionListener =
-        static_cast< XActionListener *> (new WebDAVDialogActionListener (this));
+        static_cast< XActionListener *> (new FileDialogActionListener (this));
 
     Reference< XKeyListener > keyListener =
-        static_cast< XKeyListener *> (new WebDAVDialogKeyListener (this));
+        static_cast< XKeyListener *> (new FileDialogKeyListener (this));
 
     Reference< XButton > openButtonControl (openButton, UNO_QUERY);
     openButtonControl->addActionListener (actionListener);
@@ -375,12 +378,12 @@ void WebDAVDialog::createDialog (void)
      gridWindow->setVisible (true);
 }
 
-sal_Bool WebDAVDialog::isSaveDialog (void)
+sal_Bool FileDialog::isSaveDialog (void)
 {
     return isSave;
 }
 
-void WebDAVDialog::show (void)
+void FileDialog::show (void)
 {
     /* Execute the clear */
     Reference< XDialog > xDialog(dialog,UNO_QUERY);
@@ -393,13 +396,13 @@ void WebDAVDialog::show (void)
     xComponent->dispose();
 }
 
-void WebDAVDialog::closeDialog (void)
+void FileDialog::closeDialog (void)
 {
     Reference< XDialog > xDialog(dialog,UNO_QUERY);
     xDialog->endExecute();
 }
 
-void WebDAVDialog::openOrSaveSelectedDocument (void)
+void FileDialog::openOrSaveSelectedDocument (void)
 {
     if ( ! (mxFrame.is() && mxToolkit.is()) )
         return;
@@ -461,7 +464,7 @@ void WebDAVDialog::openOrSaveSelectedDocument (void)
     closeDialog ();
 }
 
-void WebDAVDialog::dumpDAVListing (void)
+void FileDialog::listFiles (void)
 {
     /* Get text from our location entry */
     Reference< XPropertySet > entryProps (locationEntryModel, UNO_QUERY);
@@ -531,3 +534,6 @@ void WebDAVDialog::dumpDAVListing (void)
         items->insertItemText (0, mSettings->localizedString ("Failed to list documents"));
     }
 }
+
+}
+

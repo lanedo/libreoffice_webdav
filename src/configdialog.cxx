@@ -36,7 +36,7 @@
  *
  *************************************************************************/
 
-#include "configwebdavdialog.hxx"
+#include "configdialog.hxx"
 #include <osl/diagnose.h>
 #include <rtl/ustring.hxx>
 #include <cppuhelper/implbase1.hxx>

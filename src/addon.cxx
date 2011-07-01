@@ -37,8 +37,8 @@
  *************************************************************************/
 
 #include "addon.hxx"
-#include "webdavdialog.hxx"
-#include "configwebdavdialog.hxx"
+#include "filedialog.hxx"
+#include "configdialog.hxx"
 
 #include <osl/diagnose.h>
 #include <rtl/ustring.hxx>
@@ -118,13 +118,13 @@ void SAL_CALL Addon::dispatch( const URL&                        aURL,
     else if ( aURL.Path.compareToAscii( "open" ) == 0 )
     {
         puts ("open selected");
-        WebDAVDialog *dialog = new WebDAVDialog (mxContext, mxFrame, sal_False);
+        WebDAVUI::FileDialog *dialog = new WebDAVUI::FileDialog (mxContext, mxFrame, sal_False);
         dialog->show ();
     }
     else if ( aURL.Path.compareToAscii( "save" ) == 0 )
     {
         puts ("save selected");
-        WebDAVDialog *dialog = new WebDAVDialog (mxContext, mxFrame, sal_True);
+        WebDAVUI::FileDialog *dialog = new WebDAVUI::FileDialog (mxContext, mxFrame, sal_True);
         dialog->show ();
     }
 }

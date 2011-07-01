@@ -47,7 +47,9 @@
 
 namespace css = com::sun::star;
 
-class WebDAVDialog
+namespace WebDAVUI {
+
+class FileDialog
 {
 private:
     css::uno::Reference< css::uno::XComponentContext> mxContext;
@@ -67,15 +69,17 @@ private:
     void createDialog (void);
 
 public:
-    WebDAVDialog( const css::uno::Reference< css::uno::XComponentContext > &rxContext,
-                  const css::uno::Reference< css::frame::XFrame >          &rxFrame,
-                  const sal_Bool                                            isSave);
+    FileDialog( const css::uno::Reference< css::uno::XComponentContext > &rxContext,
+                const css::uno::Reference< css::frame::XFrame >          &rxFrame,
+                const sal_Bool                                            isSave);
 
     sal_Bool isSaveDialog (void);
     void show (void);
     void closeDialog (void);
     void openOrSaveSelectedDocument (void);
-    void dumpDAVListing (void);
+    void listFiles (void);
 };
+
+}
 
 #endif /* __WEBDAVDIALOG_HXX__ */
