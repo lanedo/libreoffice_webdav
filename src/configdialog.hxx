@@ -66,7 +66,8 @@ private:
 
 public:
     ConfigDialog( const css::uno::Reference< css::uno::XComponentContext > &rxContext,
-                  const css::uno::Reference< css::frame::XFrame >          &rxFrame);
+                  const css::uno::Reference< css::frame::XFrame >          &rxFrame,
+                  WebDAVUI::Settings*                                       rSettings);
 
     void show (void);
     void saveChanges (void);

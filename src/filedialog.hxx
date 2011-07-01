@@ -71,6 +71,7 @@ private:
 public:
     FileDialog( const css::uno::Reference< css::uno::XComponentContext > &rxContext,
                 const css::uno::Reference< css::frame::XFrame >          &rxFrame,
+                WebDAVUI::Settings*                                       mSettings,
                 const sal_Bool                                            isSave);
 
     sal_Bool isSaveDialog (void);

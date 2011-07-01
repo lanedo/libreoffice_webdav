@@ -159,13 +159,14 @@ public:
 /* Dialog construction */
 
 ConfigDialog::ConfigDialog( const Reference< css::uno::XComponentContext > &rxContext,
-                            const Reference< css::frame::XFrame >          &rxFrame) : mxContext ( rxContext ),
-                                                                                      mxFrame ( rxFrame )
+                            const Reference< css::frame::XFrame >          &rxFrame,
+                            WebDAVUI::Settings*                             rSettings) : mxContext ( rxContext ),
+                                                                                         mxFrame ( rxFrame ),
+                                                                                         mSettings ( rSettings)
 {
     puts ("dialog ctor");
 
     mxMCF = mxContext->getServiceManager ();
-    mSettings = new WebDAVUI::Settings (mxContext);
 
     // Create the toolkit to have access to it later
     mxToolkit = Reference< XToolkit >( mxMCF->createInstanceWithContext(

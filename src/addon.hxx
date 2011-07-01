@@ -39,6 +39,7 @@
 #ifndef _Addon_HXX
 #define _Addon_HXX
 
+#include "settings.hxx"
 #include <com/sun/star/lang/XInitialization.hpp>
 #include <com/sun/star/frame/XDispatchProvider.hpp>
 #include <com/sun/star/lang/XServiceInfo.hpp>
@@ -74,6 +75,7 @@ class Addon : public cppu::WeakImplHelper4
 private:
     css::uno::Reference< css::uno::XComponentContext > mxContext;
     css::uno::Reference< css::frame::XFrame > mxFrame;
+    WebDAVUI::Settings* mSettings;
 
 public:
     Addon( const css::uno::Reference< css::uno::XComponentContext > &rxContext)

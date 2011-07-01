@@ -109,22 +109,24 @@ void SAL_CALL Addon::dispatch( const URL&                        aURL,
 {
     puts ("dispatch!");
 
+    mSettings = new WebDAVUI::Settings (mxContext);
+
     if ( aURL.Path.compareToAscii( "configure" ) == 0 )
     {
         puts ("configure selected");
-        WebDAVUI::ConfigDialog *dialog = new WebDAVUI::ConfigDialog (mxContext, mxFrame);
+        WebDAVUI::ConfigDialog *dialog = new WebDAVUI::ConfigDialog (mxContext, mxFrame, mSettings);
         dialog->show ();
     }
     else if ( aURL.Path.compareToAscii( "open" ) == 0 )
     {
         puts ("open selected");
-        WebDAVUI::FileDialog *dialog = new WebDAVUI::FileDialog (mxContext, mxFrame, sal_False);
+        WebDAVUI::FileDialog *dialog = new WebDAVUI::FileDialog (mxContext, mxFrame, mSettings, sal_False);
         dialog->show ();
     }
     else if ( aURL.Path.compareToAscii( "save" ) == 0 )
     {
         puts ("save selected");
-        WebDAVUI::FileDialog *dialog = new WebDAVUI::FileDialog (mxContext, mxFrame, sal_True);
+        WebDAVUI::FileDialog *dialog = new WebDAVUI::FileDialog (mxContext, mxFrame, mSettings, sal_True);
         dialog->show ();
     }
 }
@@ -165,19 +167,19 @@ void SAL_CALL Addon::addStatusListener( const Reference< XStatusListener >& xCon
     if ( aURL.Path.compareToAscii( "configure" ) == 0 )
     {
         puts ("addStatusListener(configure)");
-        label = OUString( RTL_CONSTASCII_USTRINGPARAM( "Configure Cloud Access" ) );
+        label = mSettings->localizedString ("Configure Cloud Access");
         sensitive = true;
     }
     else if ( aURL.Path.compareToAscii( "open" ) == 0 )
     {
         puts ("addStatusListener(open)");
-        label = OUString( RTL_CONSTASCII_USTRINGPARAM( "Open a File From the Could" ) );
+        label = mSettings->localizedString ("Open a File From the Could");
         sensitive = true;
     }
     else if ( aURL.Path.compareToAscii( "save" ) == 0 )
     {
         puts ("addStatusListener(save)");
-        label = OUString( RTL_CONSTASCII_USTRINGPARAM( "Save a File To the Cloud" ) );
+        label = mSettings->localizedString ("Save a File To the Cloud");
 
         if ( mxFrame.is() &&
              mxFrame->getController().is() &&

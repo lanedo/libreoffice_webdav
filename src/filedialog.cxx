@@ -187,14 +187,15 @@ public:
 
 FileDialog::FileDialog( const Reference< css::uno::XComponentContext > &rxContext,
                         const Reference< css::frame::XFrame >          &rxFrame,
+                        WebDAVUI::Settings*                             rSettings,
                         const sal_Bool                                  isSave) : mxContext ( rxContext ),
                                                                                   mxFrame ( rxFrame ),
+                                                                                  mSettings ( rSettings),
                                                                                   isSave ( isSave)
 {
     puts ("dialog ctor");
 
     mxMCF = mxContext->getServiceManager ();
-    mSettings = new WebDAVUI::Settings (mxContext);
 
     // Create the toolkit to have access to it later
     mxToolkit = Reference< XToolkit >( mxMCF->createInstanceWithContext(
