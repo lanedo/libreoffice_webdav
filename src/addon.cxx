@@ -112,7 +112,7 @@ void SAL_CALL Addon::dispatch( const URL&                        aURL,
     if ( aURL.Path.compareToAscii( "configure" ) == 0 )
     {
         puts ("configure selected");
-        ConfigWebDAVDialog *dialog = new ConfigWebDAVDialog (mxContext, mxFrame);
+        WebDAVUI::ConfigDialog *dialog = new WebDAVUI::ConfigDialog (mxContext, mxFrame);
         dialog->show ();
     }
     else if ( aURL.Path.compareToAscii( "open" ) == 0 )

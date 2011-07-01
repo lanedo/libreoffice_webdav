@@ -37,8 +37,8 @@
  *************************************************************************/
 
 
-#ifndef __CONFIGWEBDAVDIALOG_HXX__
-#define __CONFIGWEBDAVDIALOG_HXX__
+#ifndef __WEBDAVUI_CONFIG_DIALOG_HXX__
+#define __WEBDAVUI_CONFIG_DIALOG_HXX__
 
 #include "settings.hxx"
 #include <com/sun/star/awt/XToolkit.hpp>
@@ -48,7 +48,9 @@
 
 namespace css = com::sun::star;
 
-class ConfigWebDAVDialog
+namespace WebDAVUI {
+
+class ConfigDialog
 {
 private:
     css::uno::Reference< css::uno::XComponentContext> mxContext;
@@ -63,7 +65,7 @@ private:
     void createDialog (void);
 
 public:
-    ConfigWebDAVDialog( const css::uno::Reference< css::uno::XComponentContext > &rxContext,
+    ConfigDialog( const css::uno::Reference< css::uno::XComponentContext > &rxContext,
                   const css::uno::Reference< css::frame::XFrame >          &rxFrame);
 
     void show (void);
@@ -71,4 +73,6 @@ public:
     void closeDialog (void);
 };
 
-#endif /* __CONFIGWEBDAVDIALOG_HXX__ */
+}
+
+#endif /* __WEBDAVUI_CONFIG_DIALOG_HXX__ */

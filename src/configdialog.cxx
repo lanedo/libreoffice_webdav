@@ -77,14 +77,16 @@ using namespace css::uno;
 using css::lang::XMultiComponentFactory;
 using css::awt::Key::RETURN;
 
+namespace WebDAVUI {
+
 /* Action listener */
-class WebDAVDialogActionListener : public ::cppu::WeakImplHelper1< css::awt::XActionListener >
+class ConfigDialogActionListener : public ::cppu::WeakImplHelper1< css::awt::XActionListener >
 {
 private:
-    ConfigWebDAVDialog * const owner;
+    ConfigDialog * const owner;
 
 public:
-    WebDAVDialogActionListener (ConfigWebDAVDialog * const _owner)
+    ConfigDialogActionListener (ConfigDialog * const _owner)
        : owner (_owner) { }
 
     // XEventListener
@@ -103,7 +105,8 @@ public:
         css::uno::Any aValue = controlProps->getPropertyValue (OUString::createFromAscii ("Name"));
         OUString controlName;
         aValue >>= controlName;
-        printf ("action performed: %s\n", OUStringToOString (controlName, RTL_TEXTENCODING_UTF8).getStr ());
+        printf ("ConfigDialog::actionPerformed %s\n",
+                OUStringToOString (controlName, RTL_TEXTENCODING_UTF8).getStr ());
 
         if (controlName.equalsAscii ("SaveButton"))
         {
@@ -117,13 +120,13 @@ public:
 };
 
 /* Key listener */
-class WebDAVDialogKeyListener : public ::cppu::WeakImplHelper1< css::awt::XKeyListener >
+class ConfigDialogKeyListener : public ::cppu::WeakImplHelper1< css::awt::XKeyListener >
 {
 private:
-    ConfigWebDAVDialog * const owner;
+    ConfigDialog * const owner;
 
 public:
-    WebDAVDialogKeyListener (ConfigWebDAVDialog * const _owner)
+    ConfigDialogKeyListener (ConfigDialog * const _owner)
        : owner (_owner) { }
 
     // XEventListener
@@ -155,7 +158,7 @@ public:
 
 /* Dialog construction */
 
-ConfigWebDAVDialog::ConfigWebDAVDialog( const Reference< css::uno::XComponentContext > &rxContext,
+ConfigDialog::ConfigDialog( const Reference< css::uno::XComponentContext > &rxContext,
                             const Reference< css::frame::XFrame >          &rxFrame) : mxContext ( rxContext ),
                                                                                       mxFrame ( rxFrame )
 {
@@ -172,7 +175,7 @@ ConfigWebDAVDialog::ConfigWebDAVDialog( const Reference< css::uno::XComponentCon
     createDialog ();
 }
 
-void ConfigWebDAVDialog::createDialog (void)
+void ConfigDialog::createDialog (void)
 {
     /* Construct path to XDL file in extension package */
     Reference< XPackageInformationProvider> infoProvider =
@@ -230,10 +233,10 @@ void ConfigWebDAVDialog::createDialog (void)
 
     /* Create event listeners */
     Reference< XActionListener > actionListener =
-        static_cast< XActionListener *> (new WebDAVDialogActionListener (this));
+        static_cast< XActionListener *> (new ConfigDialogActionListener (this));
 
     Reference< XKeyListener > keyListener =
-        static_cast< XKeyListener *> (new WebDAVDialogKeyListener (this));
+        static_cast< XKeyListener *> (new ConfigDialogKeyListener (this));
 
     Reference< XButton > saveButtonControl (saveButton, UNO_QUERY);
     saveButtonControl->addActionListener (actionListener);
@@ -248,7 +251,7 @@ void ConfigWebDAVDialog::createDialog (void)
 }
 
 
-void ConfigWebDAVDialog::show (void)
+void ConfigDialog::show (void)
 {
     /* Execute the clear */
     Reference< XDialog > xDialog(dialog,UNO_QUERY);
@@ -261,7 +264,7 @@ void ConfigWebDAVDialog::show (void)
     xComponent->dispose();
 }
 
-void ConfigWebDAVDialog::saveChanges (void)
+void ConfigDialog::saveChanges (void)
 {
     Reference< XPropertySet > entryProps (locationEntryModel, UNO_QUERY);
     Any aValue = entryProps->getPropertyValue (OUString::createFromAscii ("Text"));
@@ -271,9 +274,11 @@ void ConfigWebDAVDialog::saveChanges (void)
     closeDialog ();
 }
 
-void ConfigWebDAVDialog::closeDialog (void)
+void ConfigDialog::closeDialog (void)
 {
     Reference< XDialog > xDialog(dialog,UNO_QUERY);
     xDialog->endExecute();
+}
+
 }
 
