@@ -45,6 +45,7 @@
 
 namespace css = com::sun::star;
 using namespace css::uno;
+using namespace css::lang;
 using rtl::OUString;
 
 namespace WebDAVUI {
@@ -53,11 +54,11 @@ class Settings
 {
 private:
     Reference< XComponentContext > mxContext;
-    Reference< css::lang::XMultiComponentFactory > mxMCF;
-    Reference< css::lang::XMultiServiceFactory > mxCfgProvider;
+    Reference< XMultiComponentFactory > mxMCF;
+    Reference< XMultiServiceFactory > mxCfgProvider;
     Reference< XInterface > mxIface;
 
-    bool loadSettings (Reference< css::lang::XMultiServiceFactory > const & factory);
+    bool loadSettings (Reference< XMultiServiceFactory > const & factory);
     bool getStringValueByReference (Reference< css::container::XNameAccess >& xAccess,
                                     const OUString& aKeyName, OUString& aValue);
 

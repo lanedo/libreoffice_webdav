@@ -63,16 +63,16 @@ using css::awt::Key::RETURN;
 
 namespace WebDAVUI {
 
-Settings::Settings (const Reference< css::uno::XComponentContext > &rxContext) : mxContext (rxContext)
+Settings::Settings (const Reference< XComponentContext > &rxContext) : mxContext (rxContext)
 {
     printf ("Settings::Settings\n");
     mxMCF = mxContext->getServiceManager ();
-    Reference< css::lang::XMultiServiceFactory > multiServiceFactory (
+    Reference< XMultiServiceFactory > multiServiceFactory (
         mxContext->getServiceManager(), UNO_QUERY_THROW);
     loadSettings (multiServiceFactory);
 }
 
-bool Settings::getStringValueByReference (Reference<css::container::XNameAccess>& xAccess,
+bool Settings::getStringValueByReference (Reference<XNameAccess>& xAccess,
     const OUString& aKeyName, OUString& aValue)
 {
     OSL_ASSERT(xAccess.is());
@@ -86,7 +86,7 @@ bool Settings::getStringValueByReference (Reference<css::container::XNameAccess>
 OUString Settings::getStringValue (const OUString& aKeyName)
 {
     OUString aValue;
-    Reference<css::container::XNameAccess > xChildAccess(mxIface, UNO_QUERY_THROW);
+    Reference<XNameAccess > xChildAccess(mxIface, UNO_QUERY_THROW);
     getStringValueByReference (xChildAccess, aKeyName, aValue);
     return aValue;
 }
@@ -99,7 +99,7 @@ OUString Settings::getRemoveServerName ()
     return remoteServerName;
 }
 
-bool Settings::loadSettings (Reference< css::lang::XMultiServiceFactory > const & factory)
+bool Settings::loadSettings (Reference< XMultiServiceFactory > const & factory)
 {
     printf ("Settings::loadSettings\n");
     OSL_ASSERT (factory.is());
@@ -112,7 +112,7 @@ bool Settings::loadSettings (Reference< css::lang::XMultiServiceFactory > const 
 
     try
     {
-        mxCfgProvider = Reference< css::lang::XMultiServiceFactory > (
+        mxCfgProvider = Reference< XMultiServiceFactory > (
             factory->createInstance (kConfigurationProviderService), UNO_QUERY);
         OSL_ENSURE (xCfgProvider.is (), "Failed to create ConfigurationProvider");
         if (!mxCfgProvider.is())
@@ -123,7 +123,7 @@ bool Settings::loadSettings (Reference< css::lang::XMultiServiceFactory > const 
         Sequence< Any > aArgs (1);
         aArgs[0] <<=  aPath;
         mxIface = mxCfgProvider->createInstanceWithArguments (kReadOnlyViewService, aArgs);
-        Reference<css::container::XNameAccess > xAccess (mxIface, UNO_QUERY_THROW);
+        Reference<XNameAccess > xAccess (mxIface, UNO_QUERY_THROW);
         xAccess->getByName (kServerDefinition) >>= mxIface;
     }
     catch (Exception & e)
