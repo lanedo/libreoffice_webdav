@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE dlg:window PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "dialog.dtd">
-<dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:id="WebDAVOpenDialog" dlg:left="135" dlg:top="27" dlg:width="216" dlg:height="398" dlg:closeable="true" dlg:moveable="true">
+<dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:id="OpenDialog" dlg:left="135" dlg:top="27" dlg:width="216" dlg:height="398" dlg:closeable="true" dlg:moveable="true">
  <dlg:bulletinboard>
-  <dlg:text dlg:id="Label1" dlg:tab-index="1" dlg:left="7" dlg:top="162" dlg:width="35" dlg:height="19" dlg:value="File name"/>
-  <dlg:text dlg:id="TypeLabel" dlg:tab-index="2" dlg:left="7" dlg:top="197" dlg:width="29" dlg:height="15" dlg:value="File type"/>
+  <dlg:text dlg:id="Label1" dlg:tab-index="1" dlg:left="7" dlg:top="162" dlg:width="35" dlg:height="19" dlg:value=""/>
+  <dlg:text dlg:id="TypeLabel" dlg:tab-index="2" dlg:left="7" dlg:top="197" dlg:width="39" dlg:height="15" dlg:value="&amp;4.OpenDialog.TypeLabel.Label"/>
   <dlg:combobox dlg:id="TypeEntry" dlg:tab-index="4" dlg:left="45" dlg:top="193" dlg:width="84" dlg:height="12" dlg:spin="true"/>
   <dlg:combobox dlg:id="FileEntry" dlg:tab-index="2" dlg:left="43" dlg:top="162" dlg:width="89" dlg:height="17"/>
-  <dlg:button dlg:id="CancelButton" dlg:tab-index="3" dlg:left="150" dlg:top="188" dlg:width="55" dlg:height="17" dlg:value="Cancel"/>
-  <dlg:button dlg:id="OpenButton" dlg:tab-index="0" dlg:left="150" dlg:top="162" dlg:width="54" dlg:height="19" dlg:value="Open"/>
-  <dlg:checkbox dlg:id="ReadOnlyCheckBox" dlg:tab-index="4" dlg:left="6" dlg:top="217" dlg:width="49" dlg:height="11" dlg:value="Read Only" dlg:checked="false"/>
+  <dlg:button dlg:id="CancelButton" dlg:tab-index="3" dlg:left="150" dlg:top="188" dlg:width="55" dlg:height="17" dlg:value="&amp;1.OpenDialog.CancelButton.Label"/>
+  <dlg:button dlg:id="OpenButton" dlg:tab-index="0" dlg:left="150" dlg:top="162" dlg:width="54" dlg:height="19" dlg:value="&amp;2.OpenDialog.OpenButton.Label"/>
+  <dlg:checkbox dlg:id="ReadOnlyCheckBox" dlg:tab-index="4" dlg:left="6" dlg:top="217" dlg:width="49" dlg:height="11" dlg:value="&amp;3.OpenDialog.ReadonlyButton.Label" dlg:checked="false"/>
   <dlg:text dlg:id="Location" dlg:tab-index="5" dlg:left="7" dlg:top="51" dlg:width="98" dlg:height="15" dlg:value="Label3"/>
   <dlg:textfield dlg:id="LocationEntry" dlg:tab-index="6" dlg:left="6" dlg:top="20" dlg:width="115" dlg:height="14"/>
   <dlg:button dlg:id="OpenLocationButton" dlg:tab-index="7" dlg:left="124" dlg:top="20" dlg:width="86" dlg:height="14" dlg:value="List contents of URL"/>

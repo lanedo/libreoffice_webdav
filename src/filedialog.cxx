@@ -211,7 +211,7 @@ void FileDialog::createDialog (void)
     Reference< XPackageInformationProvider> infoProvider =
         PackageInformationProvider::get (mxContext);
 
-    OUString dialogFile(RTL_CONSTASCII_USTRINGPARAM("/open.xdl"));
+    OUString dialogFile(RTL_CONSTASCII_USTRINGPARAM("/OpenDialog.xdl"));
     OUString packageUrl(infoProvider->getPackageLocation(OUString::createFromAscii("com.lanedo.webdavui")));
     if (packageUrl.getLength() == 0)
         packageUrl = OUString::createFromAscii("file:///usr/lib/libreoffice/share/extensions/webdavui");
