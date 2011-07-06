@@ -167,19 +167,16 @@ void SAL_CALL Addon::addStatusListener( const Reference< XStatusListener >& xCon
     if ( aURL.Path.compareToAscii( "configure" ) == 0 )
     {
         puts ("addStatusListener(configure)");
-        label = mSettings->localizedString ("Configure Cloud Access");
         sensitive = true;
     }
     else if ( aURL.Path.compareToAscii( "open" ) == 0 )
     {
         puts ("addStatusListener(open)");
-        label = mSettings->localizedString ("Open a File From the Could");
         sensitive = true;
     }
     else if ( aURL.Path.compareToAscii( "save" ) == 0 )
     {
         puts ("addStatusListener(save)");
-        label = mSettings->localizedString ("Save a File To the Cloud");
 
         if ( mxFrame.is() &&
              mxFrame->getController().is() &&
@@ -189,13 +186,9 @@ void SAL_CALL Addon::addStatusListener( const Reference< XStatusListener >& xCon
         }
     }
 
-    /* FIXME: for whatever reason, this breaks invoking actions from the menu.
-     * while the toolbar keeps working. Sensitivity works on both
-     * as expected tho.
-     */
     FeatureStateEvent aEvent( static_cast<cppu::OWeakObject*>( this ),
                               aURL,
-                              label,
+                              OUString::createFromAscii (""),
                               sensitive,
                               false,
                               Any() );
