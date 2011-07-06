@@ -110,7 +110,8 @@ public:
         printf ("FileDialog::actionPerformed %s\n",
                 OUStringToOString (controlName, RTL_TEXTENCODING_UTF8).getStr ());
 
-        if (controlName.equalsAscii ("OpenButton"))
+        if (controlName.equalsAscii ("OpenButton")
+         || controlName.equalsAscii ("SaveButton"))
         {
             owner->openOrSaveSelectedDocument ();
         }
@@ -253,19 +254,14 @@ void FileDialog::createDialog (void)
         controlContainer->getControl (OUString::createFromAscii ("OpenButton"));
     Reference< XControlModel > openButtonModel =
         openButton->getModel ();
-
-    Reference< XPropertySet > openProps (openButtonModel, UNO_QUERY);
-
-    if (isSaveDialog ())
-    {
-      openProps->setPropertyValue(OUString::createFromAscii("Label"),
-                                  makeAny (mSettings->localizedString ("Save Document")));
-    }
-    else
-    {
-      openProps->setPropertyValue(OUString::createFromAscii("Label"),
-                                  makeAny (mSettings->localizedString ("Open Document")));
-    }
+    Reference< XWindow > openButtonWindow (openButton, UNO_QUERY);
+    openButtonWindow->setVisible (!isSaveDialog ());
+    Reference< XControl > saveButton =
+        controlContainer->getControl (OUString::createFromAscii ("SaveButton"));
+    Reference< XControlModel > saveButtonModel =
+        saveButton->getModel ();
+    Reference< XWindow > saveButtonWindow (saveButton, UNO_QUERY);
+    saveButtonWindow->setVisible (isSaveDialog ());
 
     /* Create event listeners */
     Reference< XActionListener > actionListener =
@@ -276,6 +272,8 @@ void FileDialog::createDialog (void)
 
     Reference< XButton > openButtonControl (openButton, UNO_QUERY);
     openButtonControl->addActionListener (actionListener);
+    Reference< XButton > saveButtonControl (saveButton, UNO_QUERY);
+    saveButtonControl->addActionListener (actionListener);
 
     /* Connect List URL button to action listener */
     Reference< XInterface > buttonObject =
