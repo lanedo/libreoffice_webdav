@@ -182,7 +182,7 @@ void ConfigDialog::createDialog (void)
     Reference< XPackageInformationProvider> infoProvider =
         PackageInformationProvider::get (mxContext);
 
-    OUString dialogFile(RTL_CONSTASCII_USTRINGPARAM("/config.xdl"));
+    OUString dialogFile(RTL_CONSTASCII_USTRINGPARAM("/ConfigDialog.xdl"));
     OUString packageUrl(infoProvider->getPackageLocation(OUString::createFromAscii("com.lanedo.webdavui")));
     if (packageUrl.getLength() == 0)
         packageUrl = OUString::createFromAscii("file:///usr/lib/libreoffice/share/extensions/webdavui");
@@ -227,9 +227,6 @@ void ConfigDialog::createDialog (void)
         saveButton->getModel ();
 
     Reference< XPropertySet > openProps (saveButtonModel, UNO_QUERY);
-
-    openProps->setPropertyValue(OUString::createFromAscii("Label"),
-                                  makeAny (mSettings->localizedString ("Save Config")));
 
 
     /* Create event listeners */

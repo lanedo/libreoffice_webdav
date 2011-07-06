@@ -171,8 +171,8 @@ def build(bld):
 	    PLATFORM=lo_platform,
 	    COMPONENT=env['cxxshlib_PATTERN'] % target)
 
-	bld.install_files('%s/share/extensions/%s' % (Options.options.LO_PREFIX, target), bld.path.ant_glob('data/*.xcu'))
+	for glob in ['data/*.xcu', 'data/*.txt', 'data/*.xdl', 'data/*.default', 'data/*.properties']:
+		bld.install_files('%s/share/extensions/%s' % \
+		(Options.options.LO_PREFIX, target), bld.path.ant_glob(glob))
 	bld.install_files('%s/share/extensions/%s/images' % (Options.options.LO_PREFIX, target), bld.path.ant_glob('data/images/*.png'))
-	bld.install_files('%s/share/extensions/%s' % (Options.options.LO_PREFIX, target), bld.path.ant_glob('data/*.txt'))
-	bld.install_files('%s/share/extensions/%s' % (Options.options.LO_PREFIX, target), bld.path.ant_glob('data/*.xdl'))
 
