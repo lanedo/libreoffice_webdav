@@ -162,17 +162,25 @@ public:
         OUString controlName;
         aValue >>= controlName;
 
-        puts ("key pressed");
+        printf ("FileDialogKeyListener::keyPressed: %s\n",
+                OUStringToOString (controlName, RTL_TEXTENCODING_UTF8).getStr ());
 
         if (controlName.equalsAscii ("LocationEntry"))
         {
             short aKey = rEvent.KeyCode;
 
-            puts("LocationEntry key pressed");
-
             if (aKey == RETURN)
             {
                 owner->listFiles ();
+            }
+        }
+        else if (controlName.equalsAscii ("FileList"))
+        {
+            short aKey = rEvent.KeyCode;
+
+            if (aKey == RETURN)
+            {
+                owner->openOrSaveSelectedDocument ();
             }
         }
     }
@@ -315,6 +323,8 @@ void FileDialog::createDialog (void)
     /* Connect the list box to an action listener */
     Reference< XListBox > listBox(listControl, UNO_QUERY);
     listBox->addActionListener (actionListener);
+    Reference< XWindow > listWindow (listControl, UNO_QUERY);
+    listWindow->addKeyListener (keyListener);
 
     /* Put a placeholder item in the list box */
     Reference< XPropertySet > listProps (fileListModel, UNO_QUERY);
