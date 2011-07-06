@@ -43,10 +43,13 @@
 #include <rtl/ustring.hxx>
 #include <cppuhelper/implbase1.hxx>
 #include <com/sun/star/awt/Key.hpp>
+#include <com/sun/star/awt/XControlContainer.hpp>
 #include <com/sun/star/awt/XDialogProvider2.hpp>
 #include <com/sun/star/beans/PropertyValue.hpp>
 #include <com/sun/star/beans/XPropertySet.hpp>
 #include <com/sun/star/container/XNameContainer.hpp>
+#include <com/sun/star/deployment/PackageInformationProvider.hpp>
+#include <com/sun/star/deployment/XPackageInformationProvider.hpp>
 #include <com/sun/star/frame/XComponentLoader.hpp>
 #include <com/sun/star/frame/XController.hpp>
 #include <com/sun/star/lang/XComponent.hpp>
@@ -56,12 +59,33 @@ using rtl::OUString;
 using namespace css::awt;
 using namespace css::beans;
 using namespace css::container;
+using namespace css::deployment;
 using namespace css::lang;
 using namespace css::uno;
 using css::lang::XMultiComponentFactory;
 using css::awt::Key::RETURN;
 
 namespace WebDAVUI {
+
+Reference< XInterface > Settings::createDialog (const OUString& dialogName) {
+    Reference< XPackageInformationProvider> infoProvider =
+        PackageInformationProvider::get (mxContext);
+    OUString dialogFile (OUString::createFromAscii ("/") + dialogName + OUString::createFromAscii (".xdl"));
+    OUString packageUrl (infoProvider->getPackageLocation (
+                         OUString::createFromAscii ("com.lanedo.webdavui")));
+    if (packageUrl.getLength () == 0)
+        packageUrl = OUString::createFromAscii (
+            "file:///usr/lib/libreoffice/share/extensions/webdavui");
+    OUString dialogUrl (packageUrl + dialogFile);
+    printf ("Settings::createDialog: Loading UI from %s...\n",
+            OUStringToOString (dialogUrl, RTL_TEXTENCODING_UTF8).getStr ());
+
+    Reference< XInterface > dialogProvider =
+        mxMCF->createInstanceWithContext (
+            OUString::createFromAscii("com.sun.star.awt.DialogProvider2"), mxContext);
+    Reference< XDialogProvider2 > dialogProvider2 (dialogProvider, UNO_QUERY);
+    return dialogProvider2->createDialog (dialogUrl);
+}
 
 Settings::Settings (const Reference< XComponentContext > &rxContext) : mxContext (rxContext)
 {

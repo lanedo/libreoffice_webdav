@@ -71,6 +71,7 @@ public:
     bool setStringValue (const OUString& aKeyName, const OUString& aValue);
     bool setRemoteServerName (const OUString& aValue);
 
+    Reference< XInterface > createDialog (const OUString& dialogName);
     OUString localizedString (const char* englishString);
 };
 

@@ -178,29 +178,7 @@ ConfigDialog::ConfigDialog( const Reference< css::uno::XComponentContext > &rxCo
 
 void ConfigDialog::createDialog (void)
 {
-    /* Construct path to XDL file in extension package */
-    Reference< XPackageInformationProvider> infoProvider =
-        PackageInformationProvider::get (mxContext);
-
-    OUString dialogFile(RTL_CONSTASCII_USTRINGPARAM("/ConfigDialog.xdl"));
-    OUString packageUrl(infoProvider->getPackageLocation(OUString::createFromAscii("com.lanedo.webdavui")));
-    if (packageUrl.getLength() == 0)
-        packageUrl = OUString::createFromAscii("file:///usr/lib/libreoffice/share/extensions/webdavui");
-    OUString dialogUrl(packageUrl + dialogFile);
-    printf ("Loading UI from %s...\n",
-            OUStringToOString (dialogUrl, RTL_TEXTENCODING_UTF8).getStr ());
-
-    /* Create dialog from file */
-    Reference< XInterface > dialogProvider =
-        mxMCF->createInstanceWithContext(OUString::createFromAscii("com.sun.star.awt.DialogProvider2"), mxContext);
-    Reference< XDialogProvider2 > dialogProvider2(dialogProvider, UNO_QUERY);
-    dialog = dialogProvider2->createDialog(dialogUrl);
-    if (!dialog.is())
-    {
-        printf ("Failed to load dialog, bailing out\n");
-        return;
-    }
-
+    dialog = mSettings->createDialog (OUString::createFromAscii ("ConfigDialog"));
     Reference< XDialog > realDialog (dialog, UNO_QUERY);
 
     realDialog->setTitle (mSettings->localizedString ("Configure the Cloud"));
