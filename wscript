@@ -1,21 +1,46 @@
 import Options
 import Utils
 import platform
+import shutil
+import os
+import glob
 
 APPNAME='webdavui'
 VERSION='0.1.0'
+
+if Options.platform in ('cygwin', 'win32'):
+    default_lo_prefix = 'C:/Apps/LibreOffice3.4'
+    default_ure_prefix = 'C:/Apps/LibreOffice3.4/URE'
+    default_include_prefix = default_lo_prefix + '/Basis/sdk/include'
+    lo_basis3_3 = '/Basis'
+    uno_sal = 'isal'
+    uno_cppu = 'icppu'
+    uno_cppuhelpergcc3 = 'icppuhelper'
+    lo_platform = 'Win32'
+else:
+    default_lo_prefix = '/usr/lib/libreoffice'
+    default_ure_prefix = '/usr/lib/ure/share'
+    default_include_prefix = '/usr/include/libreoffice'
+    lo_basis3_3 = '/basis3.3'
+    uno_sal = 'uno_sal'
+    uno_cppu = 'uno_cppu'
+    uno_cppuhelpergcc3 = 'uno_cppuhelpergcc3'
+    if platform.architecture()[0][:-3] == '64':
+        lo_platform = 'Linux_x86_64'
+    else:
+        lo_platform = 'Linux_x86'
 
 #-- OPTIONS --
 def options(opt):
 	opt.load('compiler_cxx')
 	opt.add_option('--libreoffice-prefix',
 	               action='store',
-	               default='/usr/lib/libreoffice',
+	               default=default_lo_prefix,
 	               dest="LO_PREFIX",
 	               help='Libreoffice prefix')
    	opt.add_option('--ure-prefix',
 	               action='store',
-	               default='/usr/lib/ure',
+	               default=default_ure_prefix,
 	               dest="URE_PREFIX",
 	               help='Libreoffice prefix')
 
@@ -23,20 +48,23 @@ def options(opt):
 def configure(conf):
 	conf.load('compiler_cxx')
 	
-	uno_sdk_libpath = '%s/basis3.3/sdk/lib' % Options.options.LO_PREFIX
+	uno_sdk_libpath = '%s%s/sdk/lib' % (Options.options.LO_PREFIX, lo_basis3_3)
+	print 'SDK: ' + uno_sdk_libpath
+	print 'URE: ' + Options.options.URE_PREFIX
 
-	conf.check_cxx(lib='uno_sal', uselib_store='SALLIB', libpath=uno_sdk_libpath, mandatory=True)
-	conf.check_cxx(lib='uno_cppu', uselib_store='CPPULIB', libpath=uno_sdk_libpath, mandatory=True)
-	conf.check_cxx(lib='uno_cppuhelpergcc3', uselib_store='CPPUHELPERLIB', libpath=uno_sdk_libpath,  mandatory=True)
+	conf.check_cxx(lib=uno_sal, uselib_store='SALLIB', libpath=uno_sdk_libpath, mandatory=True)
+	conf.check_cxx(lib=uno_cppu, uselib_store='CPPULIB', libpath=uno_sdk_libpath, mandatory=True)
+	conf.check_cxx(lib=uno_cppuhelpergcc3, uselib_store='CPPUHELPERLIB', libpath=uno_sdk_libpath,  mandatory=True)
 
-	conf.find_program('cppumaker', var='CPPUMAKER', path_list=[Options.options.LO_PREFIX + '/basis3.3/sdk/bin'], mandatory=True)
+	conf.find_program('cppumaker', var='CPPUMAKER', \
+	    path_list=[Options.options.LO_PREFIX + lo_basis3_3 + '/sdk/bin'], mandatory=True)
 
 	conf.env['TYPES_RDB'] = conf.find_file('types.rdb',
-	                                       path_list=[Options.options.URE_PREFIX + '/share/misc/'],
+	                                       path_list=[Options.options.URE_PREFIX + '/misc/'],
 	                                       mandatory=True)
 
 	conf.env['OFFAPI_RDB'] = conf.find_file('offapi.rdb',
-	                                        path_list=[Options.options.LO_PREFIX + '/basis3.3/program'],
+	                                        path_list=[Options.options.LO_PREFIX + lo_basis3_3 + '/program'],
 	                                        mandatory=True)
 
 def cppumaker (bld):
@@ -129,7 +157,7 @@ def cppumaker (bld):
 	return target
 
 def build(bld):
-	includes = ['/usr/include/libreoffice']
+	includes = [default_include_prefix]
 	
 	includes.append (cppumaker (bld))
 
@@ -140,16 +168,10 @@ def build(bld):
 	env['cxxshlib_PATTERN']	= '%s.uno' + env['cxxshlib_PATTERN'].split("%s")[-1]
 	env.append_value('LINKFLAGS', '-Wl,--version-script=%s/data/component.uno.map,-z origin' % bld.path.abspath())
 	env.append_value('CXXFLAGS', '-Wall')
-	env.append_value('CXXFLAGS', '-g')
+	if bld.env['CC_NAME'] == 'gcc':
+		env.append_value('CXXFLAGS', '-g')
 
 	target = 'webdavui'
-
-	bits = platform.architecture()[0][:-3]
-
-	if bits == "64":
-		lo_platform = "Linux_x86_64"
-	else:
-		lo_platform = "Linux_x86"
 
 	bld.shlib(source=['src/component.cxx',
 			  'src/addon.cxx',
@@ -171,8 +193,8 @@ def build(bld):
 	    PLATFORM=lo_platform,
 	    COMPONENT=env['cxxshlib_PATTERN'] % target)
 
-	for glob in ['data/*.xcu', 'data/*.txt', 'data/*.xdl', 'data/*.default', 'data/*.properties']:
+	for pattern in ['data/*.xcu', 'data/*.txt', 'data/*.xdl', 'data/*.default', 'data/*.properties']:
 		bld.install_files('%s/share/extensions/%s' % \
-		(Options.options.LO_PREFIX, target), bld.path.ant_glob(glob))
+		(Options.options.LO_PREFIX, target), bld.path.ant_glob(pattern))
 	bld.install_files('%s/share/extensions/%s/images' % (Options.options.LO_PREFIX, target), bld.path.ant_glob('data/images/*.png'))
 
