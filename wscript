@@ -198,3 +198,26 @@ def build(bld):
 		(Options.options.LO_PREFIX, target), bld.path.ant_glob(pattern))
 	bld.install_files('%s/share/extensions/%s/images' % (Options.options.LO_PREFIX, target), bld.path.ant_glob('data/images/*.png'))
 
+def mkdir (folder):
+    if not os.path.exists (folder):
+        os.mkdir (folder)
+
+def dist(a):
+	cwd = os.getcwd () + '/'
+	mkdir (cwd + 'dist')
+	mkdir (cwd + 'dist/images')
+	for pattern in ['data/*.xcu', 'data/*.txt', 'data/*.xdl', 'data/*.default', 'data/*.properties']:
+		for filename in glob.iglob (pattern):
+			shutil.copy2 (filename, cwd + 'dist')
+	for filename in glob.iglob ('data/images/*.png'):
+		shutil.copy2 (filename, cwd + 'dist/images')
+
+	shutil.copy2 (cwd + 'description.xml', cwd + 'dist')
+	mkdir (cwd + 'dist/META-INF')
+	shutil.copy2 (cwd + 'build/manifest.xml', cwd + 'dist/META-INF')
+	mkdir (cwd + 'dist/' + lo_platform)
+	for filename in glob.iglob ('build/webdavui.uno.*'):
+		shutil.copy2 (filename , cwd + 'dist/' + lo_platform)
+	shutil.make_archive (cwd + 'webdavui', 'zip', cwd + 'dist')
+	shutil.move (cwd + 'webdavui.zip', cwd + 'webdavui.oxt')
+

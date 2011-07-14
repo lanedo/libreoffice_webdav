@@ -7,5 +7,11 @@ This extension can be built with the LibreOffice SDK.
 2. Setup the SDK: /usr/lib/libreoffice/basis3.3/sdk/setsdkenv_unix
 3. ./waf configure
 4. ./waf build
+
+You can either install system-wide
+
 5. sudo ./waf install
 
+Or create a webdavui.oxt package:
+
+5. ./waf dist
