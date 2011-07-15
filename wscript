@@ -227,5 +227,5 @@ def dist(a):
 		shutil.move (cwd + 'webdavui.zip', cwd + 'webdavui.oxt')
 	except:
 		# Lame Unix-only < Python 2.7 fallback
-		os.system ('rm -f webdavui.oxt && zip -r ../webdavui.oxt .')
+		os.system ('rm -f webdavui.oxt && cd dist && zip -r ../webdavui.oxt .')
 
