@@ -302,7 +302,7 @@ void FileDialog::createDialog (void)
         controlContainer->getControl (OUString::createFromAscii ("FileList"));
     fileListModel = listControl->getModel ();
 
-    OUString remoteServer (mSettings->getRemoveServerName ());
+    OUString remoteServer (mSettings->getRemoteServerName ());
 
     /* Connect the entry to a key listener and get its model */
     entryControl =

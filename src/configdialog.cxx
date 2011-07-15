@@ -189,7 +189,7 @@ void ConfigDialog::createDialog (void)
     window->setVisible(true);
     control->createPeer(mxToolkit,NULL);
 
-    OUString remoteServer (mSettings->getRemoveServerName ());
+    OUString remoteServer (mSettings->getRemoteServerName ());
 
     Reference< XControlContainer > controlContainer (dialog, UNO_QUERY);
     Reference< XControl > entryControl =

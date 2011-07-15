@@ -114,7 +114,7 @@ OUString Settings::getStringValue (const OUString& aKeyName)
     return aValue;
 }
 
-OUString Settings::getRemoveServerName ()
+OUString Settings::getRemoteServerName ()
 {
     OUString remoteServerName (getStringValue (OUString::createFromAscii ("webdavURL")));
     if (remoteServerName.getLength() == 0)

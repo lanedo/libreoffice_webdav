@@ -67,7 +67,7 @@ public:
     Settings (const Reference< XComponentContext > &rxContext);
 
     OUString getStringValue (const OUString& aKeyName);
-    OUString getRemoveServerName ();
+    OUString getRemoteServerName ();
 
     bool setStringValue (const OUString& aKeyName, const OUString& aValue);
     bool setRemoteServerName (const OUString& aValue);
