@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<oor:component-schema oor:name="ConfigurationData"
+                      oor:package="com.lanedo.webdavui"
+                      xml:lang="en-US"
+                      xmlns:oor="http://openoffice.org/2001/registry"
+                      xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <component>
+        <group oor:name="Settings">
+            <prop oor:name="webdavURL" oor:type="xs:string"/>
+        </group>
+        <group oor:name="Translations">
+            <prop oor:name="windowTitleOpen" oor:type="xs:string" oor:localized="true"/>
+            <prop oor:name="windowTitleSave" oor:type="xs:string" oor:localized="true"/>
+        </group>
+    </component>
+</oor:component-schema>

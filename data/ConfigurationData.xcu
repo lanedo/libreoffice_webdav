@@ -1,0 +1,19 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<oor:component-data xmlns:oor="http://openoffice.org/2001/registry"
+                    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                    oor:name="ConfigurationData"
+                    oor:package="com.lanedo.webdavui">
+    <node oor:name="Settings">
+        <prop oor:name="webdavURL">
+           <value>http://localhost/dav/</value>
+        </prop>
+    </node>
+    <node oor:name="Tranaslations">
+        <prop oor:name="windowTitleOpen">
+            <value xml:lang="en-US">Open a File From the Cloud</value>
+        </prop>
+        <prop oor:name="windowTitleSave">
+            <value xml:lang="en-US">Save a File To the Cloud</value>
+        </prop>
+    </node>
+</oor:component-data>
