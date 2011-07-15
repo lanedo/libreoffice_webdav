@@ -67,6 +67,12 @@ using css::awt::Key::RETURN;
 
 namespace WebDAVUI {
 
+/* Location of configuration data */
+static const OUString settingsComponent (RTL_CONSTASCII_USTRINGPARAM ("com.lanedo.webdavui.ConfigurationData/Settings"));
+static const OUString remoteServerKey (RTL_CONSTASCII_USTRINGPARAM ("webdavURL"));
+
+
+
 Reference< XInterface > Settings::createDialog (const OUString& dialogName) {
     Reference< XPackageInformationProvider> infoProvider =
         PackageInformationProvider::get (mxContext);
@@ -116,7 +122,7 @@ OUString Settings::getStringValue (const OUString& aKeyName)
 
 OUString Settings::getRemoteServerName ()
 {
-    OUString remoteServerName (getStringValue (OUString::createFromAscii ("webdavURL")));
+    OUString remoteServerName (getStringValue (remoteServerName));
     if (remoteServerName.getLength() == 0)
         remoteServerName = OUString::createFromAscii ("http://localhost/dav/");
     return remoteServerName;
@@ -130,7 +136,6 @@ bool Settings::loadSettings (Reference< XMultiServiceFactory > const & factory)
         RTL_CONSTASCII_USTRINGPARAM ("com.sun.star.configuration.ConfigurationProvider"));
     const OUString kReadOnlyViewService (
         RTL_CONSTASCII_USTRINGPARAM ("com.sun.star.configuration.ConfigurationAccess"));
-    const OUString kComponent (RTL_CONSTASCII_USTRINGPARAM("com.lanedo.webdavui.ConfigurationData/Settings"));
 
     try
     {
@@ -141,7 +146,7 @@ bool Settings::loadSettings (Reference< XMultiServiceFactory > const & factory)
             return false;
 
         css::beans::NamedValue aPath (OUString (RTL_CONSTASCII_USTRINGPARAM ("nodepath")),
-                                      makeAny (kComponent) );
+                                      makeAny (settingsComponent) );
         Sequence< Any > aArgs (1);
         aArgs[0] <<=  aPath;
 
@@ -165,10 +170,9 @@ bool Settings::setStringValue (const OUString& aKeyName, const OUString& aValue)
 
     try
     {
-        OUString aConfigRoot (RTL_CONSTASCII_USTRINGPARAM ("com.lanedo.webdavui.ConfigurationData/Settings"));
         PropertyValue aProperty;
         aProperty.Name  = OUString (RTL_CONSTASCII_USTRINGPARAM ("nodepath"));
-        aProperty.Value = makeAny (aConfigRoot);
+        aProperty.Value = makeAny (settingsComponent);
         Sequence< Any > aArgumentList (1);
         aArgumentList[0] = makeAny (aProperty);
         Reference< XInterface > m_xConfigurationUpdateAccess = mxCfgProvider->createInstanceWithArguments (OUString (
@@ -191,7 +195,7 @@ bool Settings::setStringValue (const OUString& aKeyName, const OUString& aValue)
 
 bool Settings::setRemoteServerName (const OUString& aValue)
 {
-    return setStringValue (OUString::createFromAscii ("webdavURL"), aValue);
+    return setStringValue (remoteServerKey, aValue);
 }
 
 OUString Settings::localizedString (const char* englishString)
