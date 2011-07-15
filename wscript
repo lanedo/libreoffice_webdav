@@ -203,7 +203,7 @@ def mkdir (folder):
     if not os.path.exists (folder):
         os.mkdir (folder)
 
-def dist(a):
+def oxt(a):
 	cwd = os.getcwd () + '/'
 	mkdir (cwd + 'dist')
 	mkdir (cwd + 'dist/images')

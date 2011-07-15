@@ -14,4 +14,4 @@ You can either install system-wide
 
 Or create a webdavui.oxt package:
 
-5. ./waf dist
+5. ./waf oxt
