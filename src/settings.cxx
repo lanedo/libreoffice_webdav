@@ -71,6 +71,8 @@ namespace WebDAVUI {
 static const OUString settingsComponent (RTL_CONSTASCII_USTRINGPARAM ("com.lanedo.webdavui.ConfigurationData/Settings"));
 static const OUString remoteServerKey (RTL_CONSTASCII_USTRINGPARAM ("webdavURL"));
 
+static const OUString translationsComponent (RTL_CONSTASCII_USTRINGPARAM ("com.lanedo.webdavui.ConfigurationData/Translations"));
+
 
 Settings::Settings (const Reference< XComponentContext > &rxContext) : mxContext (rxContext)
 {
@@ -79,6 +81,7 @@ Settings::Settings (const Reference< XComponentContext > &rxContext) : mxContext
     Reference< XMultiServiceFactory > multiServiceFactory (
         mxContext->getServiceManager(), UNO_QUERY_THROW);
     loadSettings (multiServiceFactory);
+    loadTranslations ();
 }
 
 
@@ -123,7 +126,7 @@ OUString Settings::getStringValue (const OUString& aKeyName)
 
 OUString Settings::getRemoteServerName ()
 {
-    OUString remoteServerName (getStringValue (remoteServerName));
+    OUString remoteServerName (getStringValue (remoteServerKey));
     if (remoteServerName.getLength() == 0)
         remoteServerName = OUString::createFromAscii ("http://localhost/dav/");
     return remoteServerName;
@@ -152,6 +155,38 @@ bool Settings::loadSettings (Reference< XMultiServiceFactory > const & factory)
         aArgs[0] <<=  aPath;
 
         settingsAccess = Reference< XNameAccess > (mxCfgProvider->createInstanceWithArguments (kReadOnlyViewService, aArgs), UNO_QUERY);
+    }
+    catch (Exception & e)
+    {
+        printf ("Failed to instantiate XNameAccess: %s\n",
+                OUStringToOString (e.Message, RTL_TEXTENCODING_ASCII_US).getStr ());
+        return false;
+    }
+
+    return true;
+}
+
+bool Settings::loadTranslations ()
+{
+    const OUString kConfigurationProviderService (
+        RTL_CONSTASCII_USTRINGPARAM ("com.sun.star.configuration.ConfigurationProvider"));
+    const OUString kReadOnlyViewService (
+        RTL_CONSTASCII_USTRINGPARAM ("com.sun.star.configuration.ConfigurationAccess"));
+
+    try
+    {
+        mxCfgProvider = Reference< XMultiServiceFactory > (
+            mxMCF->createInstanceWithContext (kConfigurationProviderService, mxContext), UNO_QUERY);
+        OSL_ENSURE (xCfgProvider.is (), "Failed to create ConfigurationProvider");
+        if (!mxCfgProvider.is())
+            return false;
+
+        css::beans::NamedValue aPath (OUString (RTL_CONSTASCII_USTRINGPARAM ("nodepath")),
+                                      makeAny (translationsComponent) );
+        Sequence< Any > aArgs (1);
+        aArgs[0] <<=  aPath;
+
+        translationAccess = Reference< XNameAccess > (mxCfgProvider->createInstanceWithArguments (kReadOnlyViewService, aArgs), UNO_QUERY);
     }
     catch (Exception & e)
     {
@@ -199,9 +234,11 @@ bool Settings::setRemoteServerName (const OUString& aValue)
     return setStringValue (remoteServerKey, aValue);
 }
 
-OUString Settings::localizedString (const char* englishString)
+OUString Settings::localizedString (OUString key)
 {
-    return OUString::createFromAscii (englishString);
+    OUString aValue;
+    getStringValueByReference (translationAccess, key, aValue);
+    return aValue;
 }
 
 }

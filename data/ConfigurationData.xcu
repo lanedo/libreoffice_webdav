@@ -15,5 +15,8 @@
         <prop oor:name="windowTitleSave">
             <value xml:lang="en-US">Save a File To the Cloud</value>
         </prop>
+        <prop oor:name="contentListFailure">
+            <value xml:lang="en-US">Failed to list documents</value>
+        </prop>
     </node>
 </oor:component-data>

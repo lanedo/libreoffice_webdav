@@ -51,6 +51,13 @@ using rtl::OUString;
 
 namespace WebDAVUI {
 
+namespace LocalizedStrings {
+    const OUString windowTitleOpen (RTL_CONSTASCII_USTRINGPARAM ("windowTitleOpen"));
+    const OUString windowTitleSave (RTL_CONSTASCII_USTRINGPARAM ("windowTitleSave"));
+    const OUString contentListFailure (RTL_CONSTASCII_USTRINGPARAM ("contentListFailure"));
+}
+
+
 class Settings
 {
 private:
@@ -58,8 +65,10 @@ private:
     Reference< XMultiComponentFactory > mxMCF;
     Reference< XMultiServiceFactory > mxCfgProvider;
     Reference< XNameAccess > settingsAccess;
+    Reference< XNameAccess > translationAccess;
 
     bool loadSettings (Reference< XMultiServiceFactory > const & factory);
+    bool loadTranslations ();
     bool getStringValueByReference (Reference< css::container::XNameAccess >& xAccess,
                                     const OUString& aKeyName, OUString& aValue);
 
@@ -73,7 +82,8 @@ public:
     bool setRemoteServerName (const OUString& aValue);
 
     Reference< XInterface > createDialog (const OUString& dialogName);
-    OUString localizedString (const char* englishString);
+    OUString localizedString (const char *foo);
+    OUString localizedString (OUString key);
 };
 
 }

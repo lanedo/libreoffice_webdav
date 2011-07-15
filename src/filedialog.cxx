@@ -221,11 +221,11 @@ void FileDialog::createDialog (void)
 
     if (isSaveDialog ())
     {
-        realDialog->setTitle (mSettings->localizedString ("Save a File To the Cloud"));
+        realDialog->setTitle (mSettings->localizedString (LocalizedStrings::windowTitleSave));
     }
     else
     {
-        realDialog->setTitle (mSettings->localizedString ("Open a File From the Cloud"));
+        realDialog->setTitle (mSettings->localizedString (LocalizedStrings::windowTitleOpen));
     }
 
     /* Put the dialog in a window */
@@ -488,7 +488,7 @@ void FileDialog::listFiles (void)
     {
         if (! (fileAccess->exists (url) && fileAccess->isFolder (url)))
         {
-            items->insertItemText (0, mSettings->localizedString ("Failed to list documents"));
+            items->insertItemText (0, mSettings->localizedString (LocalizedStrings::contentListFailure));
             return;
         }
         Sequence< rtl::OUString > entries = fileAccess->getFolderContents (url, false);
@@ -518,7 +518,7 @@ void FileDialog::listFiles (void)
     }
     catch ( ... ) /* FIXME: Need proper exception handling here */
     {
-        items->insertItemText (0, mSettings->localizedString ("Failed to list documents"));
+        items->insertItemText (0, mSettings->localizedString (LocalizedStrings::contentListFailure));
     }
 }
 
