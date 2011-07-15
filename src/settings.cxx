@@ -80,7 +80,7 @@ Settings::Settings (const Reference< XComponentContext > &rxContext) : mxContext
     mxMCF = mxContext->getServiceManager ();
     Reference< XMultiServiceFactory > multiServiceFactory (
         mxContext->getServiceManager(), UNO_QUERY_THROW);
-    loadSettings (multiServiceFactory);
+    loadSettings ();
     loadTranslations ();
 }
 
@@ -132,42 +132,10 @@ OUString Settings::getRemoteServerName ()
     return remoteServerName;
 }
 
-bool Settings::loadSettings (Reference< XMultiServiceFactory > const & factory)
+Reference< XNameAccess > Settings::createConfigurationView (const OUString &component)
 {
-    printf ("Settings::loadSettings\n");
-    OSL_ASSERT (factory.is());
-    const OUString kConfigurationProviderService (
-        RTL_CONSTASCII_USTRINGPARAM ("com.sun.star.configuration.ConfigurationProvider"));
-    const OUString kReadOnlyViewService (
-        RTL_CONSTASCII_USTRINGPARAM ("com.sun.star.configuration.ConfigurationAccess"));
+    Reference< XNameAccess > nameAccess;
 
-    try
-    {
-        mxCfgProvider = Reference< XMultiServiceFactory > (
-            factory->createInstance (kConfigurationProviderService), UNO_QUERY);
-        OSL_ENSURE (xCfgProvider.is (), "Failed to create ConfigurationProvider");
-        if (!mxCfgProvider.is())
-            return false;
-
-        css::beans::NamedValue aPath (OUString (RTL_CONSTASCII_USTRINGPARAM ("nodepath")),
-                                      makeAny (settingsComponent) );
-        Sequence< Any > aArgs (1);
-        aArgs[0] <<=  aPath;
-
-        settingsAccess = Reference< XNameAccess > (mxCfgProvider->createInstanceWithArguments (kReadOnlyViewService, aArgs), UNO_QUERY);
-    }
-    catch (Exception & e)
-    {
-        printf ("Failed to instantiate XNameAccess: %s\n",
-                OUStringToOString (e.Message, RTL_TEXTENCODING_ASCII_US).getStr ());
-        return false;
-    }
-
-    return true;
-}
-
-bool Settings::loadTranslations ()
-{
     const OUString kConfigurationProviderService (
         RTL_CONSTASCII_USTRINGPARAM ("com.sun.star.configuration.ConfigurationProvider"));
     const OUString kReadOnlyViewService (
@@ -179,23 +147,35 @@ bool Settings::loadTranslations ()
             mxMCF->createInstanceWithContext (kConfigurationProviderService, mxContext), UNO_QUERY);
         OSL_ENSURE (xCfgProvider.is (), "Failed to create ConfigurationProvider");
         if (!mxCfgProvider.is())
-            return false;
+            return NULL;
 
         css::beans::NamedValue aPath (OUString (RTL_CONSTASCII_USTRINGPARAM ("nodepath")),
-                                      makeAny (translationsComponent) );
+                                      makeAny (component) );
         Sequence< Any > aArgs (1);
         aArgs[0] <<=  aPath;
 
-        translationAccess = Reference< XNameAccess > (mxCfgProvider->createInstanceWithArguments (kReadOnlyViewService, aArgs), UNO_QUERY);
+        nameAccess = Reference< XNameAccess > (mxCfgProvider->createInstanceWithArguments (kReadOnlyViewService, aArgs), UNO_QUERY);
     }
     catch (Exception & e)
     {
         printf ("Failed to instantiate XNameAccess: %s\n",
                 OUStringToOString (e.Message, RTL_TEXTENCODING_ASCII_US).getStr ());
-        return false;
+        return NULL;
     }
 
-    return true;
+    return nameAccess;
+}
+
+bool Settings::loadSettings ()
+{
+    settingsAccess = createConfigurationView (settingsComponent);
+    return settingsAccess.is ();
+}
+
+bool Settings::loadTranslations ()
+{
+    translationAccess = createConfigurationView (translationsComponent);
+    return translationAccess.is ();
 }
 
 bool Settings::setStringValue (const OUString& aKeyName, const OUString& aValue)

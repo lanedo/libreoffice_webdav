@@ -67,8 +67,10 @@ private:
     Reference< XNameAccess > settingsAccess;
     Reference< XNameAccess > translationAccess;
 
-    bool loadSettings (Reference< XMultiServiceFactory > const & factory);
+    Reference< XNameAccess > createConfigurationView (const OUString &component);
+    bool loadSettings ();
     bool loadTranslations ();
+
     bool getStringValueByReference (Reference< css::container::XNameAccess >& xAccess,
                                     const OUString& aKeyName, OUString& aValue);
 
