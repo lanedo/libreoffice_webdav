@@ -9,6 +9,9 @@ import sys
 APPNAME='webdavui'
 VERSION='0.1.0'
 
+data_file_patterns = ['data/*.xcu', 'data/*.xcs', 'data/*.txt', 'data/*.xdl', 'data/*.default', 'data/*.properties']
+image_file_patterns = 'data/images/*.png'
+
 if Options.platform in ('cygwin', 'win32'):
     default_lo_prefix = 'C:/Apps/LibreOffice3.4'
     default_ure_prefix = 'C:/Apps/LibreOffice3.4/URE'
@@ -194,10 +197,10 @@ def build(bld):
 	    PLATFORM=lo_platform,
 	    COMPONENT=env['cxxshlib_PATTERN'] % target)
 
-	for pattern in ['data/*.xcu', 'data/*.txt', 'data/*.xdl', 'data/*.default', 'data/*.properties']:
+	for pattern in data_file_patterns:
 		bld.install_files('%s/share/extensions/%s' % \
 		(Options.options.LO_PREFIX, target), bld.path.ant_glob(pattern))
-	bld.install_files('%s/share/extensions/%s/images' % (Options.options.LO_PREFIX, target), bld.path.ant_glob('data/images/*.png'))
+	bld.install_files('%s/share/extensions/%s/images' % (Options.options.LO_PREFIX, target), bld.path.ant_glob(image_file_patterns))
 
 def mkdir (folder):
     if not os.path.exists (folder):
@@ -207,10 +210,10 @@ def oxt(a):
 	cwd = os.getcwd () + '/'
 	mkdir (cwd + 'dist')
 	mkdir (cwd + 'dist/images')
-	for pattern in ['data/*.xcu', 'data/*.xcs', 'data/*.txt', 'data/*.xdl', 'data/*.default', 'data/*.properties']:
+	for pattern in data_file_patterns:
 		for filename in glob.iglob (pattern):
 			shutil.copy2 (filename, cwd + 'dist')
-	for filename in glob.iglob ('data/images/*.png'):
+	for filename in glob.iglob (image_file_patterns):
 		shutil.copy2 (filename, cwd + 'dist/images')
 
 	shutil.copy2 (cwd + 'description.xml', cwd + 'dist')
