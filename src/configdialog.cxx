@@ -181,7 +181,7 @@ void ConfigDialog::createDialog (void)
     dialog = mSettings->createDialog (OUString::createFromAscii ("ConfigDialog"));
     Reference< XDialog > realDialog (dialog, UNO_QUERY);
 
-    realDialog->setTitle (mSettings->localizedString ("Configure the Cloud"));
+    realDialog->setTitle (mSettings->localizedString (LocalizedStrings::windowTitleConfig));
 
     /* Put the dialog in a window */
     Reference< XControl > control(dialog, UNO_QUERY);

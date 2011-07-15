@@ -54,6 +54,7 @@ namespace WebDAVUI {
 namespace LocalizedStrings {
     const OUString windowTitleOpen (RTL_CONSTASCII_USTRINGPARAM ("windowTitleOpen"));
     const OUString windowTitleSave (RTL_CONSTASCII_USTRINGPARAM ("windowTitleSave"));
+    const OUString windowTitleConfig (RTL_CONSTASCII_USTRINGPARAM ("windowTitleConfig"));
     const OUString contentListFailure (RTL_CONSTASCII_USTRINGPARAM ("contentListFailure"));
 }
 

@@ -17,6 +17,10 @@
             <value xml:lang="en-US">Save a File To the Cloud</value>
             <value xml:lang="fr">Enregistrer le cloud</value>
         </prop>
+        <prop oor:name="windowTitleConfig">
+            <value xml:lang="en-US">Configure the Cloud</value>
+            <value xml:lang="fr">Configurer le cloud</value>
+        </prop>
         <prop oor:name="contentListFailure">
             <value xml:lang="en-US">Failed to list documents</value>
             <value xml:lang="fr">Erreur avec la liste</value>

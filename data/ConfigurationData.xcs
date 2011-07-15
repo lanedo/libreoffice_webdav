@@ -12,6 +12,7 @@
         <group oor:name="Translations">
             <prop oor:name="windowTitleOpen" oor:type="xs:string" oor:localized="true"/>
             <prop oor:name="windowTitleSave" oor:type="xs:string" oor:localized="true"/>
+            <prop oor:name="windowTitleConfig" oor:type="xs:string" oor:localized="true"/>
             <prop oor:name="contentListFailure" oor:type="xs:string" oor:localized="true"/>
         </group>
     </component>
