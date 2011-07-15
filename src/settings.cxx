@@ -72,8 +72,18 @@ static const OUString settingsComponent (RTL_CONSTASCII_USTRINGPARAM ("com.laned
 static const OUString remoteServerKey (RTL_CONSTASCII_USTRINGPARAM ("webdavURL"));
 
 
+Settings::Settings (const Reference< XComponentContext > &rxContext) : mxContext (rxContext)
+{
+    printf ("Settings::Settings\n");
+    mxMCF = mxContext->getServiceManager ();
+    Reference< XMultiServiceFactory > multiServiceFactory (
+        mxContext->getServiceManager(), UNO_QUERY_THROW);
+    loadSettings (multiServiceFactory);
+}
 
-Reference< XInterface > Settings::createDialog (const OUString& dialogName) {
+
+Reference< XInterface > Settings::createDialog (const OUString& dialogName)
+{
     Reference< XPackageInformationProvider> infoProvider =
         PackageInformationProvider::get (mxContext);
     OUString dialogFile (OUString::createFromAscii ("/") + dialogName + OUString::createFromAscii (".xdl"));
@@ -91,15 +101,6 @@ Reference< XInterface > Settings::createDialog (const OUString& dialogName) {
             OUString::createFromAscii("com.sun.star.awt.DialogProvider2"), mxContext);
     Reference< XDialogProvider2 > dialogProvider2 (dialogProvider, UNO_QUERY);
     return dialogProvider2->createDialog (dialogUrl);
-}
-
-Settings::Settings (const Reference< XComponentContext > &rxContext) : mxContext (rxContext)
-{
-    printf ("Settings::Settings\n");
-    mxMCF = mxContext->getServiceManager ();
-    Reference< XMultiServiceFactory > multiServiceFactory (
-        mxContext->getServiceManager(), UNO_QUERY_THROW);
-    loadSettings (multiServiceFactory);
 }
 
 bool Settings::getStringValueByReference (Reference<XNameAccess>& xAccess,
