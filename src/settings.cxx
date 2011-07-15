@@ -110,14 +110,13 @@ bool Settings::getStringValueByReference (Reference<XNameAccess>& xAccess,
 OUString Settings::getStringValue (const OUString& aKeyName)
 {
     OUString aValue;
-    Reference<XNameAccess > xChildAccess(mxIface, UNO_QUERY_THROW);
-    getStringValueByReference (xChildAccess, aKeyName, aValue);
+    getStringValueByReference (settingsAccess, aKeyName, aValue);
     return aValue;
 }
 
 OUString Settings::getRemoveServerName ()
 {
-    OUString remoteServerName (getStringValue (OUString::createFromAscii ("ooInetHTTPProxyName")));
+    OUString remoteServerName (getStringValue (OUString::createFromAscii ("webdavURL")));
     if (remoteServerName.getLength() == 0)
         remoteServerName = OUString::createFromAscii ("http://localhost/dav/");
     return remoteServerName;
@@ -131,8 +130,7 @@ bool Settings::loadSettings (Reference< XMultiServiceFactory > const & factory)
         RTL_CONSTASCII_USTRINGPARAM ("com.sun.star.configuration.ConfigurationProvider"));
     const OUString kReadOnlyViewService (
         RTL_CONSTASCII_USTRINGPARAM ("com.sun.star.configuration.ConfigurationAccess"));
-    const OUString kComponent (RTL_CONSTASCII_USTRINGPARAM("org.openoffice.Inet/Settings"));
-    const OUString kServerDefinition (RTL_CONSTASCII_USTRINGPARAM ("ooInetProxyType"));
+    const OUString kComponent (RTL_CONSTASCII_USTRINGPARAM("com.lanedo.webdavui.ConfigurationData/Settings"));
 
     try
     {
@@ -146,9 +144,8 @@ bool Settings::loadSettings (Reference< XMultiServiceFactory > const & factory)
                                       makeAny (kComponent) );
         Sequence< Any > aArgs (1);
         aArgs[0] <<=  aPath;
-        mxIface = mxCfgProvider->createInstanceWithArguments (kReadOnlyViewService, aArgs);
-        Reference<XNameAccess > xAccess (mxIface, UNO_QUERY_THROW);
-        xAccess->getByName (kServerDefinition) >>= mxIface;
+
+        settingsAccess = Reference< XNameAccess > (mxCfgProvider->createInstanceWithArguments (kReadOnlyViewService, aArgs), UNO_QUERY);
     }
     catch (Exception & e)
     {
@@ -168,7 +165,7 @@ bool Settings::setStringValue (const OUString& aKeyName, const OUString& aValue)
 
     try
     {
-        OUString aConfigRoot (RTL_CONSTASCII_USTRINGPARAM ("org.openoffice.Inet/Settings"));
+        OUString aConfigRoot (RTL_CONSTASCII_USTRINGPARAM ("com.lanedo.webdavui.ConfigurationData/Settings"));
         PropertyValue aProperty;
         aProperty.Name  = OUString (RTL_CONSTASCII_USTRINGPARAM ("nodepath"));
         aProperty.Value = makeAny (aConfigRoot);
@@ -194,7 +191,7 @@ bool Settings::setStringValue (const OUString& aKeyName, const OUString& aValue)
 
 bool Settings::setRemoteServerName (const OUString& aValue)
 {
-    return setStringValue (OUString::createFromAscii ("ooInetHTTPProxyName"), aValue);
+    return setStringValue (OUString::createFromAscii ("webdavURL"), aValue);
 }
 
 OUString Settings::localizedString (const char* englishString)

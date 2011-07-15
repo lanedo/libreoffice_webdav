@@ -46,6 +46,7 @@
 namespace css = com::sun::star;
 using namespace css::uno;
 using namespace css::lang;
+using namespace css::container;
 using rtl::OUString;
 
 namespace WebDAVUI {
@@ -56,7 +57,7 @@ private:
     Reference< XComponentContext > mxContext;
     Reference< XMultiComponentFactory > mxMCF;
     Reference< XMultiServiceFactory > mxCfgProvider;
-    Reference< XInterface > mxIface;
+    Reference< XNameAccess > settingsAccess;
 
     bool loadSettings (Reference< XMultiServiceFactory > const & factory);
     bool getStringValueByReference (Reference< css::container::XNameAccess >& xAccess,
