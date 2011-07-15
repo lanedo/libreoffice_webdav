@@ -207,7 +207,7 @@ def oxt(a):
 	cwd = os.getcwd () + '/'
 	mkdir (cwd + 'dist')
 	mkdir (cwd + 'dist/images')
-	for pattern in ['data/*.xcu', 'data/*.txt', 'data/*.xdl', 'data/*.default', 'data/*.properties']:
+	for pattern in ['data/*.xcu', 'data/*.xcs', 'data/*.txt', 'data/*.xdl', 'data/*.default', 'data/*.properties']:
 		for filename in glob.iglob (pattern):
 			shutil.copy2 (filename, cwd + 'dist')
 	for filename in glob.iglob ('data/images/*.png'):
