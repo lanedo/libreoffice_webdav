@@ -5,6 +5,10 @@
                        manifest:full-path="Addons.xcu"/>
   <manifest:file-entry manifest:media-type="application/vnd.sun.star.configuration-data"
                        manifest:full-path="ProtocolHandler.xcu"/>
+  <manifest:file-entry manifest:media-type="application/vnd.sun.star.configuration-schema"
+                       manifest:full-path="ConfigurationData.xcs"/>
+  <manifest:file-entry manifest:media-type="application/vnd.sun.star.configuration-data"
+                       manifest:full-path="ConfigurationData.xcu"/>
   <manifest:file-entry manifest:media-type="application/vnd.sun.star.uno-component;type=native;platform=@PLATFORM@"
                        manifest:full-path="@PLATFORM@/@COMPONENT@"/>
   <manifest:file-entry manifest:media-type="application/vnd.sun.star.package-bundle-description;locale=en"
