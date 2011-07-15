@@ -8,7 +8,7 @@
            <value>http://localhost/dav/</value>
         </prop>
     </node>
-    <node oor:name="Tranaslations">
+    <node oor:name="Translations">
         <prop oor:name="windowTitleOpen">
             <value xml:lang="en-US">Open a File From the Cloud</value>
         </prop>
