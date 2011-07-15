@@ -4,6 +4,7 @@ import platform
 import shutil
 import os
 import glob
+import sys
 
 APPNAME='webdavui'
 VERSION='0.1.0'
@@ -214,10 +215,17 @@ def dist(a):
 
 	shutil.copy2 (cwd + 'description.xml', cwd + 'dist')
 	mkdir (cwd + 'dist/META-INF')
+	if not os.path.exists (cwd + 'build/manifest.xml'):
+		print 'Run ./waf build first!'
+		sys.exit (1)
 	shutil.copy2 (cwd + 'build/manifest.xml', cwd + 'dist/META-INF')
 	mkdir (cwd + 'dist/' + lo_platform)
 	for filename in glob.iglob ('build/webdavui.uno.*'):
 		shutil.copy2 (filename , cwd + 'dist/' + lo_platform)
-	shutil.make_archive (cwd + 'webdavui', 'zip', cwd + 'dist')
-	shutil.move (cwd + 'webdavui.zip', cwd + 'webdavui.oxt')
+	try:
+		shutil.make_archive (cwd + 'webdavui', 'zip', cwd + 'dist')
+		shutil.move (cwd + 'webdavui.zip', cwd + 'webdavui.oxt')
+	except:
+		# Lame Unix-only < Python 2.7 fallback
+		os.system ('rm -f webdavui.oxt && zip -r ../webdavui.oxt .')
 
