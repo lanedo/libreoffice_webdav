@@ -15,5 +15,8 @@
             <prop oor:name="windowTitleConfig" oor:type="xs:string" oor:localized="true"/>
             <prop oor:name="contentListFailure" oor:type="xs:string" oor:localized="true"/>
         </group>
+        <group oor:name="Images">
+            <prop oor:name="logoImage" oor:type="xs:string"/>
+        </group>
     </component>
 </oor:component-schema>

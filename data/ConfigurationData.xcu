@@ -26,4 +26,9 @@
             <value xml:lang="fr">Erreur avec la liste des documents</value>
         </prop>
     </node>
+    <node oor:name="Images">
+        <prop oor:name="logoImage">
+            <value>%origin%/images/webdav-logo.png</value>
+        </prop>
+    </node>
 </oor:component-data>

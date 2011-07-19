@@ -58,6 +58,9 @@ namespace LocalizedStrings {
     const OUString contentListFailure (RTL_CONSTASCII_USTRINGPARAM ("contentListFailure"));
 }
 
+namespace ImageKeys {
+    const OUString imageURLLogo (RTL_CONSTASCII_USTRINGPARAM ("logoImage"));
+}
 
 class Settings
 {
@@ -67,10 +70,12 @@ private:
     Reference< XMultiServiceFactory > mxCfgProvider;
     Reference< XNameAccess > settingsAccess;
     Reference< XNameAccess > translationAccess;
+    Reference< XNameAccess > imagesAccess;
 
     Reference< XNameAccess > createConfigurationView (const OUString &component);
     bool loadSettings ();
     bool loadTranslations ();
+    bool loadImages ();
 
     bool getStringValueByReference (Reference< css::container::XNameAccess >& xAccess,
                                     const OUString& aKeyName, OUString& aValue);
@@ -87,6 +92,8 @@ public:
     Reference< XInterface > createDialog (const OUString& dialogName);
     OUString localizedString (const char *foo);
     OUString localizedString (OUString key);
+
+    OUString getImageURL (const OUString& aKeyName);
 };
 
 }

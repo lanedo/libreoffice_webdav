@@ -73,6 +73,8 @@ static const OUString remoteServerKey (RTL_CONSTASCII_USTRINGPARAM ("webdavURL")
 
 static const OUString translationsComponent (RTL_CONSTASCII_USTRINGPARAM ("com.lanedo.webdavui.ConfigurationData/Translations"));
 
+static const OUString imagesComponent (RTL_CONSTASCII_USTRINGPARAM ("com.lanedo.webdavui.ConfigurationData/Images"));
+
 
 Settings::Settings (const Reference< XComponentContext > &rxContext) : mxContext (rxContext)
 {
@@ -82,6 +84,7 @@ Settings::Settings (const Reference< XComponentContext > &rxContext) : mxContext
         mxContext->getServiceManager(), UNO_QUERY_THROW);
     loadSettings ();
     loadTranslations ();
+    loadImages ();
 }
 
 
@@ -178,6 +181,12 @@ bool Settings::loadTranslations ()
     return translationAccess.is ();
 }
 
+bool Settings::loadImages ()
+{
+    imagesAccess = createConfigurationView (imagesComponent);
+    return imagesAccess.is ();
+}
+
 bool Settings::setStringValue (const OUString& aKeyName, const OUString& aValue)
 {
     printf ("Settings::setStringValue\n");
@@ -218,6 +227,13 @@ OUString Settings::localizedString (OUString key)
 {
     OUString aValue;
     getStringValueByReference (translationAccess, key, aValue);
+    return aValue;
+}
+
+OUString Settings::getImageURL (const OUString& aKeyName)
+{
+    OUString aValue;
+    getStringValueByReference (imagesAccess, aKeyName, aValue);
     return aValue;
 }
 
