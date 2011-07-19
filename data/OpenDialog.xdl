@@ -1,19 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE dlg:window PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "dialog.dtd">
-<dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:id="OpenDialog" dlg:left="135" dlg:top="27" dlg:width="216" dlg:height="398" dlg:closeable="true" dlg:moveable="true">
+<dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:id="OpenDialog" dlg:left="135" dlg:top="27" dlg:width="220" dlg:height="400" dlg:closeable="true" dlg:moveable="true">
+ <dlg:styles>
+  <dlg:style dlg:style-id="0" dlg:border="none"/>
+ </dlg:styles>
  <dlg:bulletinboard>
-  <dlg:img dlg:style-id="0" dlg:id="LogoImage" dlg:tab-index="1" dlg:left="10" dlg:top="10" dlg:width="100" dlg:height="20" dlg:scale-image="false"/>
-  <dlg:text dlg:id="TypeLabel" dlg:tab-index="2" dlg:left="7" dlg:top="220" dlg:width="39" dlg:height="15" dlg:value="&amp;4.OpenDialog.TypeLabel.Label"/>
-  <dlg:combobox dlg:id="TypeEntry" dlg:tab-index="4" dlg:left="45" dlg:top="210" dlg:width="84" dlg:height="12" dlg:spin="true"/>
-  <dlg:combobox dlg:id="FileEntry" dlg:tab-index="2" dlg:left="43" dlg:top="180" dlg:width="89" dlg:height="17"/>
-  <dlg:button dlg:id="CancelButton" dlg:tab-index="3" dlg:left="150" dlg:top="210" dlg:width="55" dlg:height="17" dlg:value="&amp;1.OpenDialog.CancelButton.Label"/>
-  <dlg:button dlg:id="OpenButton" dlg:tab-index="0" dlg:left="150" dlg:top="180" dlg:width="54" dlg:height="19" dlg:value="&amp;2.OpenDialog.OpenButton.Label"/>
-  <dlg:button dlg:id="SaveButton" dlg:tab-index="0" dlg:left="150" dlg:top="180" dlg:width="54" dlg:height="19" dlg:value="&amp;0.OpenDialog.SaveButton.Label"/>
-  <dlg:checkbox dlg:id="ReadOnlyCheckBox" dlg:tab-index="4" dlg:left="6" dlg:top="240" dlg:width="49" dlg:height="11" dlg:value="&amp;3.OpenDialog.ReadonlyButton.Label" dlg:checked="false"/>
-  <dlg:text dlg:id="Location" dlg:tab-index="5" dlg:left="7" dlg:top="70" dlg:width="98" dlg:height="15" dlg:value="Label3"/>
-  <dlg:textfield dlg:id="LocationEntry" dlg:tab-index="6" dlg:left="6" dlg:top="40" dlg:width="115" dlg:height="14"/>
-  <dlg:button dlg:id="OpenLocationButton" dlg:tab-index="7" dlg:left="124" dlg:top="40" dlg:width="86" dlg:height="14" dlg:value="List contents of URL"/>
-  <dlg:menulist dlg:id="FileList" dlg:tab-index="8" dlg:left="6" dlg:top="90" dlg:width="200" dlg:height="80"/>
-  <dlg:fixedline dlg:id="FixedLine1" dlg:tab-index="9" dlg:left="6" dlg:top="60" dlg:width="200" dlg:height="1"/>
+  <dlg:img dlg:style-id="0" dlg:id="LogoImage" dlg:tab-index="1" dlg:left="10" dlg:top="10" dlg:width="200" dlg:height="40" dlg:scale-image="false"/>
+  <dlg:text dlg:id="TypeLabel" dlg:tab-index="2" dlg:left="7" dlg:top="240" dlg:width="39" dlg:height="15" dlg:value="&amp;4.OpenDialog.TypeLabel.Label"/>
+  <dlg:combobox dlg:id="TypeEntry" dlg:tab-index="4" dlg:left="45" dlg:top="230" dlg:width="84" dlg:height="12" dlg:spin="true"/>
+  <dlg:combobox dlg:id="FileEntry" dlg:tab-index="2" dlg:left="43" dlg:top="200" dlg:width="89" dlg:height="17"/>
+  <dlg:button dlg:id="CancelButton" dlg:tab-index="3" dlg:left="150" dlg:top="230" dlg:width="55" dlg:height="17" dlg:value="&amp;1.OpenDialog.CancelButton.Label"/>
+  <dlg:button dlg:id="OpenButton" dlg:tab-index="0" dlg:left="150" dlg:top="200" dlg:width="54" dlg:height="19" dlg:value="&amp;2.OpenDialog.OpenButton.Label"/>
+  <dlg:button dlg:id="SaveButton" dlg:tab-index="0" dlg:left="150" dlg:top="200" dlg:width="54" dlg:height="19" dlg:value="&amp;0.OpenDialog.SaveButton.Label"/>
+  <dlg:checkbox dlg:id="ReadOnlyCheckBox" dlg:tab-index="4" dlg:left="6" dlg:top="260" dlg:width="49" dlg:height="11" dlg:value="&amp;3.OpenDialog.ReadonlyButton.Label" dlg:checked="false"/>
+  <dlg:text dlg:id="Location" dlg:tab-index="5" dlg:left="7" dlg:top="90" dlg:width="98" dlg:height="15" dlg:value="Label3"/>
+  <dlg:textfield dlg:id="LocationEntry" dlg:tab-index="6" dlg:left="6" dlg:top="60" dlg:width="115" dlg:height="14"/>
+  <dlg:button dlg:id="OpenLocationButton" dlg:tab-index="7" dlg:left="124" dlg:top="60" dlg:width="86" dlg:height="14" dlg:value="List contents of URL"/>
+  <dlg:menulist dlg:id="FileList" dlg:tab-index="8" dlg:left="6" dlg:top="110" dlg:width="200" dlg:height="80"/>
+  <dlg:fixedline dlg:id="FixedLine1" dlg:tab-index="9" dlg:left="6" dlg:top="80" dlg:width="200" dlg:height="1"/>
  </dlg:bulletinboard>
 </dlg:window>
