@@ -24,8 +24,8 @@
   </dependencies>
 
   <icon>
-    <default xlink:href="images/webdav-logo.png" />
-    <high-contrast xlink:href="images/wabdav-logo-hc.png" />
+    <default xlink:href="images/webdav-icon.png" />
+    <high-contrast xlink:href="images/wabdav-icon-hc.png" />
   </icon>
 
 </description>
