@@ -332,37 +332,6 @@ void FileDialog::createDialog (void)
     entries[0] = OUString::createFromAscii ("(content listing will appear here)");
 
     listProps->setPropertyValue(OUString::createFromAscii("StringItemList"), makeAny (entries));
-
-
-    /* The grid control */
-    gridModel =
-      mxMCF->createInstanceWithContext(OUString::createFromAscii("com.sun.star.awt.grid.UnoControlGridModel"),
-                                       mxContext);
-
-    if (!gridModel.is())
-      {
-        puts("EEEEEEEEEEEEEEK");
-        return;
-      }
-
-    Reference< XControlModel > model = control->getModel();
-    Reference< XNameContainer > nameContainer (model, UNO_QUERY);
-
-     if (!nameContainer.is())
-      {
-        puts("EEEEEEEEEEEEEEK name container");
-        return;
-      }
-
-     nameContainer->insertByName (OUString::createFromAscii ("FileGrid"),
-                                  makeAny (gridModel));
-
-     Reference< XControl > gridControl =
-       controlContainer->getControl (OUString::createFromAscii ("FileGrid"));
-     Reference< XWindow > gridWindow (gridControl, UNO_QUERY);
-
-     gridWindow->setPosSize (7, 480, 400, 200, POSSIZE);
-     gridWindow->setVisible (true);
 }
 
 sal_Bool FileDialog::isSaveDialog (void)
