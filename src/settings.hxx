@@ -73,9 +73,6 @@ private:
     Reference< XNameAccess > imagesAccess;
 
     Reference< XNameAccess > createConfigurationView (const OUString &component);
-    bool loadSettings ();
-    bool loadTranslations ();
-    bool loadImages ();
 
     bool getStringValueByReference (Reference< css::container::XNameAccess >& xAccess,
                                     const OUString& aKeyName, OUString& aValue);

@@ -82,9 +82,10 @@ Settings::Settings (const Reference< XComponentContext > &rxContext) : mxContext
     mxMCF = mxContext->getServiceManager ();
     Reference< XMultiServiceFactory > multiServiceFactory (
         mxContext->getServiceManager(), UNO_QUERY_THROW);
-    loadSettings ();
-    loadTranslations ();
-    loadImages ();
+
+    settingsAccess = createConfigurationView (settingsComponent);
+    translationAccess = createConfigurationView (translationsComponent);
+    imagesAccess = createConfigurationView (imagesComponent);
 }
 
 
@@ -167,24 +168,6 @@ Reference< XNameAccess > Settings::createConfigurationView (const OUString &comp
     }
 
     return nameAccess;
-}
-
-bool Settings::loadSettings ()
-{
-    settingsAccess = createConfigurationView (settingsComponent);
-    return settingsAccess.is ();
-}
-
-bool Settings::loadTranslations ()
-{
-    translationAccess = createConfigurationView (translationsComponent);
-    return translationAccess.is ();
-}
-
-bool Settings::loadImages ()
-{
-    imagesAccess = createConfigurationView (imagesComponent);
-    return imagesAccess.is ();
 }
 
 bool Settings::setStringValue (const OUString& aKeyName, const OUString& aValue)
