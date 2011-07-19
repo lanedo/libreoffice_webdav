@@ -192,6 +192,16 @@ void ConfigDialog::createDialog (void)
     OUString remoteServer (mSettings->getRemoteServerName ());
 
     Reference< XControlContainer > controlContainer (dialog, UNO_QUERY);
+
+    /* Get the logo image */
+    Reference< XControl > logoImage =
+        controlContainer->getControl (OUString::createFromAscii ("LogoImage"));
+    Reference< XControlModel > logoImageModel = logoImage->getModel ();
+    Reference< XPropertySet > imageProps (logoImageModel, UNO_QUERY);
+    imageProps->setPropertyValue (OUString::createFromAscii ("ImageURL"),
+                                  makeAny (mSettings->getImageURL (ImageKeys::imageURLLogo)));
+
+    /* Get the location entry */
     Reference< XControl > entryControl =
         controlContainer->getControl (OUString::createFromAscii ("LocationEntry"));
     locationEntryModel = entryControl->getModel ();
