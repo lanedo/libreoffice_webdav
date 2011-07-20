@@ -161,21 +161,19 @@ def cppumaker (bld):
 	return target
 
 def build(bld):
-	includes = [default_include_prefix]
-	
-	includes.append (cppumaker (bld))
+	includes = [default_include_prefix, cppumaker (bld)]
 
-	print includes
-	
+	target = 'webdavui'
 	env = bld.env.copy()
 	pattern = env['cxxshlib_PATTERN']
 	env['cxxshlib_PATTERN']	= '%s.uno' + env['cxxshlib_PATTERN'].split("%s")[-1]
-	env.append_value('LINKFLAGS', '-Wl,--version-script=%s/data/component.uno.map,-z origin' % bld.path.abspath())
-	env.append_value('CXXFLAGS', '-Wall')
-	if bld.env['CC_NAME'] == 'gcc':
-		env.append_value('CXXFLAGS', '-g')
-
-	target = 'webdavui'
+	if bld.env['CC_NAME'] == 'msvc':
+		env.append_value('CXXFLAGS', '/EHa -DCPPU_ENV=msci'.split(' ')) #  -DWIN32 -DWNT -D_DLL
+		env.append_value('LINKFLAGS', '/DEF:%s/data/component.uno.def' % bld.path.abspath())
+	else:
+		env.append_value('CXXFLAGS', '-g -Wall -DCPPU_ENV=gcc3'.split(' '))
+		env.append_value('LINKFLAGS', \
+			'-Wl,--version-script=%s/data/component.uno.map,-z origin' % bld.path.abspath())
 
 	bld.shlib(source=['src/component.cxx',
 			  'src/addon.cxx',
@@ -185,7 +183,7 @@ def build(bld):
 	          target=target,
 	          uselib=['SALLIB', 'CPPULIB', 'CPPUHELPERLIB' ],
 	          includes=includes,
-	          defines=['UNX', 'SAL_UNX', 'CPPU_ENV=gcc3'],
+	          defines=['UNX', 'SAL_UNX'],
 	          install_path='%s/share/extensions/%s/%s' % (Options.options.LO_PREFIX, target, lo_platform),
 	          env=env,
 	          chmod=Utils.O644)
