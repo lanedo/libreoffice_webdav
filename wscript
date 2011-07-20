@@ -20,7 +20,7 @@ if Options.platform in ('cygwin', 'win32'):
     uno_sal = 'isal'
     uno_cppu = 'icppu'
     uno_cppuhelpergcc3 = 'icppuhelper'
-    lo_platform = 'Win32'
+    lo_platform = 'Windows'
 else:
     default_lo_prefix = '/usr/lib/libreoffice'
     default_ure_prefix = '/usr/lib/ure/share'
