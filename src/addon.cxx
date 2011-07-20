@@ -47,7 +47,7 @@
 #include <com/sun/star/lang/XMultiComponentFactory.hpp>
 #include <com/sun/star/uno/XComponentContext.hpp>
 
-#include <cstdio> // TEMPORARY: for puts
+#include <cstdio>
 
 using rtl::OUString;
 using namespace css::uno;
@@ -69,7 +69,7 @@ using css::util::URL;
 void SAL_CALL Addon::initialize( const Sequence< Any >& aArguments )
     throw (Exception, RuntimeException)
 {
-    puts ("Addon class initialized");
+    printf ("Addon::initialize\n");
 
     Reference < XFrame > xFrame;
     if ( aArguments.getLength() )
@@ -89,6 +89,8 @@ Reference< XDispatch > SAL_CALL Addon::queryDispatch( const URL&      aURL,
                                                       sal_Int32       nSearchFlags )
     throw (RuntimeException)
 {
+    printf ("Addon::queryDispatch %s\n",
+            OUStringToOString (aURL.Protocol, RTL_TEXTENCODING_UTF8).getStr ());
     Reference < XDispatch > xRet;
 
     if ( aURL.Protocol.compareToAscii("com.lanedo.webdavui:") == 0 )
@@ -107,25 +109,23 @@ void SAL_CALL Addon::dispatch( const URL&                        aURL,
                                const Sequence < PropertyValue >& lArgs )
     throw (RuntimeException)
 {
-    puts ("dispatch!");
+    printf ("Addon::dispatch %s\n",
+            OUStringToOString (aURL.Path, RTL_TEXTENCODING_UTF8).getStr ());
 
     mSettings = new WebDAVUI::Settings (mxContext);
 
     if ( aURL.Path.compareToAscii( "configure" ) == 0 )
     {
-        puts ("configure selected");
         WebDAVUI::ConfigDialog *dialog = new WebDAVUI::ConfigDialog (mxContext, mxFrame, mSettings);
         dialog->show ();
     }
     else if ( aURL.Path.compareToAscii( "open" ) == 0 )
     {
-        puts ("open selected");
         WebDAVUI::FileDialog *dialog = new WebDAVUI::FileDialog (mxContext, mxFrame, mSettings, sal_False);
         dialog->show ();
     }
     else if ( aURL.Path.compareToAscii( "save" ) == 0 )
     {
-        puts ("save selected");
         WebDAVUI::FileDialog *dialog = new WebDAVUI::FileDialog (mxContext, mxFrame, mSettings, sal_True);
         dialog->show ();
     }
@@ -139,6 +139,7 @@ void SAL_CALL Addon::dispatch( const URL&                        aURL,
 Sequence < Reference< XDispatch > > SAL_CALL Addon::queryDispatches( const Sequence < DispatchDescriptor >& seqDescripts )
     throw (RuntimeException)
 {
+    printf ("Addon::queryDispatches\n");
     sal_Int32 nCount = seqDescripts.getLength();
     Sequence < Reference < XDispatch > > lDispatcher( nCount );
 
@@ -162,22 +163,19 @@ void SAL_CALL Addon::addStatusListener( const Reference< XStatusListener >& xCon
     OUString label;
     sal_Bool sensitive = false;
 
-    puts ("addStatusListener!");
+    printf ("Addon::addStatusListener %s\n",
+            OUStringToOString (aURL.Path, RTL_TEXTENCODING_UTF8).getStr ());
 
     if ( aURL.Path.compareToAscii( "configure" ) == 0 )
     {
-        puts ("addStatusListener(configure)");
         sensitive = true;
     }
     else if ( aURL.Path.compareToAscii( "open" ) == 0 )
     {
-        puts ("addStatusListener(open)");
         sensitive = true;
     }
     else if ( aURL.Path.compareToAscii( "save" ) == 0 )
     {
-        puts ("addStatusListener(save)");
-
         if ( mxFrame.is() &&
              mxFrame->getController().is() &&
              mxFrame->getController()->getModel().is() )
@@ -214,19 +212,21 @@ void SAL_CALL Addon::removeStatusListener( const Reference< XStatusListener >& x
 OUString SAL_CALL Addon_getImplementationName()
     throw (RuntimeException)
 {
+    printf ("Addon_getImplementationName\n");
     return OUString ( RTL_CONSTASCII_USTRINGPARAM ( IMPLEMENTATION_NAME ) );
 }
 
 sal_Bool SAL_CALL Addon_supportsService( const OUString& ServiceName )
     throw (RuntimeException)
 {
+    printf ("Addon_supportsService\n");
     return ServiceName.equalsAsciiL( RTL_CONSTASCII_STRINGPARAM ( SERVICE_NAME ) );
 }
 
 Sequence< OUString > SAL_CALL Addon_getSupportedServiceNames()
     throw (RuntimeException)
 {
-    puts ("In Addon_getSupportedServiceNames()");
+    printf ("Addon_getSupportedServiceNames\n");
 
     Sequence < OUString > aRet(1);
     OUString* pArray = aRet.getArray();
@@ -239,7 +239,7 @@ Sequence< OUString > SAL_CALL Addon_getSupportedServiceNames()
 Reference< XInterface > SAL_CALL Addon_createInstance( const Reference< XComponentContext > & rContext)
     throw (Exception)
 {
-    puts ("In Addon_createInstance");
+    printf ("Addon_createInstance\n");
     return (cppu::OWeakObject*) new Addon( rContext );
 }
 

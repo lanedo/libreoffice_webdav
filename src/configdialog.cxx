@@ -64,7 +64,7 @@
 #include <com/sun/star/lang/XComponent.hpp>
 #include <com/sun/star/ucb/XSimpleFileAccess.hpp>
 
-#include <cstdio> // TEMPORARY: for puts
+#include <cstdio>
 
 using rtl::OUString;
 using namespace css::awt;
@@ -92,7 +92,7 @@ public:
     // XEventListener
     virtual void SAL_CALL disposing (const css::lang::EventObject &aEventObj) throw (css::uno::RuntimeException)
     {
-        puts ("dispose action listener");
+        printf ("ConfigDialogActionListener::disposing\n");
     }
 
     // XActionListener
@@ -132,7 +132,7 @@ public:
     // XEventListener
     virtual void SAL_CALL disposing (const css::lang::EventObject &aEventObj) throw (css::uno::RuntimeException)
     {
-        puts ("dispose key listener");
+        printf ("ConfigDialogKeyListener::disposing\n");
     }
 
     // XKeyListener
@@ -146,12 +146,12 @@ public:
         OUString controlName;
         aValue >>= controlName;
 
-        puts ("key pressed");
+        printf ("ConfigDialogKeyListener::keyPressed\n");
     }
 
     virtual void SAL_CALL keyReleased (const css::awt::KeyEvent &rEvent) throw (css::uno::RuntimeException)
     {
-        puts ("key released");
+        printf ("ConfigDialogKeyListener::keyReleased\n");
     }
 };
 
@@ -164,7 +164,7 @@ ConfigDialog::ConfigDialog( const Reference< css::uno::XComponentContext > &rxCo
                                                                                          mxFrame ( rxFrame ),
                                                                                          mSettings ( rSettings)
 {
-    puts ("dialog ctor");
+    printf ("ConfigDialog::ConfigDialog\n");
 
     mxMCF = mxContext->getServiceManager ();
 

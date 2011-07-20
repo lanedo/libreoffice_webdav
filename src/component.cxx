@@ -63,6 +63,7 @@ using namespace css::registry;
  */
 extern "C" void SAL_CALL component_getImplementationEnvironment(const sal_Char ** ppEnvTypeName, uno_Environment ** ppEnv)
 {
+    printf ("component_getImplementationEnvironment\n");
     *ppEnvTypeName = CPPU_CURRENT_LANGUAGE_BINDING_NAME;
 }
 
@@ -80,6 +81,8 @@ extern "C" void SAL_CALL component_getImplementationEnvironment(const sal_Char *
 extern "C" sal_Bool SAL_CALL component_writeInfo(void * pServiceManager,
                                                  void * pRegistryKey)
  {
+    printf ("component_writeInfo\n");
+
  	if (pRegistryKey)
  	{
  		try
@@ -120,6 +123,7 @@ extern "C" void * SAL_CALL component_getFactory(const sal_Char * pImplName,
     if ( !pServiceManager || !pImplName )
         return 0;
 
+    printf ("component_getFactory %s\n", IMPLEMENTATION_NAME);
     if (rtl_str_compare( pImplName, IMPLEMENTATION_NAME ) == 0)
     {
         Reference< XSingleComponentFactory > xFactory =
@@ -131,8 +135,7 @@ extern "C" void * SAL_CALL component_getFactory(const sal_Char * pImplName,
 
         if (xFactory.is())
         {
-            puts (IMPLEMENTATION_NAME);
-
+            printf ("component_getFactory xFactory.is()\n");
             xFactory->acquire();
             return xFactory.get();
         }

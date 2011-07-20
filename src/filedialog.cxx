@@ -65,7 +65,7 @@
 #include <com/sun/star/lang/XComponent.hpp>
 #include <com/sun/star/ucb/XSimpleFileAccess.hpp>
 
-#include <cstdio> // TEMPORARY: for puts
+#include <cstdio>
 
 using rtl::OUString;
 using namespace css::awt;
@@ -94,7 +94,7 @@ public:
     // XEventListener
     virtual void SAL_CALL disposing (const css::lang::EventObject &aEventObj) throw (css::uno::RuntimeException)
     {
-        puts ("dispose action listener");
+        printf ("FileDialogActionListener::disposing\n");
     }
 
     // XActionListener
@@ -148,7 +148,7 @@ public:
     // XEventListener
     virtual void SAL_CALL disposing (const css::lang::EventObject &aEventObj) throw (css::uno::RuntimeException)
     {
-        puts ("dispose key listener");
+        printf ("FileDialogKeyListener::disposing");
     }
 
     // XKeyListener
@@ -187,7 +187,7 @@ public:
 
     virtual void SAL_CALL keyReleased (const css::awt::KeyEvent &rEvent) throw (css::uno::RuntimeException)
     {
-        puts ("key released");
+        printf ("FileDialogKeyListener::keyReleased\n");
     }
 };
 
@@ -202,7 +202,7 @@ FileDialog::FileDialog( const Reference< css::uno::XComponentContext > &rxContex
                                                                                   mSettings ( rSettings),
                                                                                   isSave ( isSave)
 {
-    puts ("dialog ctor");
+    printf ("FileDialog::FileDialog\n");
 
     mxMCF = mxContext->getServiceManager ();
 
@@ -455,7 +455,7 @@ void FileDialog::listFiles (void)
 
     if (!fileAccess.is ())
     {
-        puts ("Could not create SimpleFileAccess object");
+        printf ("Could not create SimpleFileAccess object\n");
         return;
     }
 
