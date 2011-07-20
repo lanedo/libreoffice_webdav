@@ -117,7 +117,8 @@ extern "C" SAL_DLLPUBLIC_EXPORT void * SAL_CALL component_getFactory(const sal_C
                                                                      void *           pServiceManager,
                                                                      void *           pRegistryKey)
 {
-    void * pRet = 0;
+    if ( !pServiceManager || !pImplName )
+        return 0;
 
     if (rtl_str_compare( pImplName, IMPLEMENTATION_NAME ) == 0)
     {
@@ -133,11 +134,11 @@ extern "C" SAL_DLLPUBLIC_EXPORT void * SAL_CALL component_getFactory(const sal_C
             puts (IMPLEMENTATION_NAME);
 
             xFactory->acquire();
-            pRet = xFactory.get();
+            return xFactory.get();
         }
     }
 
-    return pRet;
+    return 0;
 }
 
 /* vim:set shiftwidth=4 softtabstop=4 expandtab: */
