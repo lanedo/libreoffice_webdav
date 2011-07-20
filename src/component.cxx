@@ -61,7 +61,7 @@ using namespace css::registry;
 /**
  * Gives the environment this component belongs to.
  */
-extern "C" SAL_DLLPUBLIC_EXPORT void SAL_CALL component_getImplementationEnvironment(const sal_Char ** ppEnvTypeName, uno_Environment ** ppEnv)
+extern "C" void SAL_CALL component_getImplementationEnvironment(const sal_Char ** ppEnvTypeName, uno_Environment ** ppEnv)
 {
     *ppEnvTypeName = CPPU_CURRENT_LANGUAGE_BINDING_NAME;
 }
@@ -77,8 +77,8 @@ extern "C" SAL_DLLPUBLIC_EXPORT void SAL_CALL component_getImplementationEnviron
 // was changed to passive component registration. For more details see
 // http://wiki.services.openoffice.org/wiki/Passive_Component_Registration
 //
- extern "C" SAL_DLLPUBLIC_EXPORT sal_Bool SAL_CALL component_writeInfo(void * pServiceManager,
-                                                                       void * pRegistryKey)
+extern "C" sal_Bool SAL_CALL component_writeInfo(void * pServiceManager,
+                                                 void * pRegistryKey)
  {
  	if (pRegistryKey)
  	{
@@ -113,9 +113,9 @@ extern "C" SAL_DLLPUBLIC_EXPORT void SAL_CALL component_getImplementationEnviron
  * @param pRegistryKey    the registry key for this component, need for persistent data
  * @return a component factory
  */
-extern "C" SAL_DLLPUBLIC_EXPORT void * SAL_CALL component_getFactory(const sal_Char * pImplName,
-                                                                     void *           pServiceManager,
-                                                                     void *           pRegistryKey)
+extern "C" void * SAL_CALL component_getFactory(const sal_Char * pImplName,
+                                                void *           pServiceManager,
+                                                void *           pRegistryKey)
 {
     if ( !pServiceManager || !pImplName )
         return 0;

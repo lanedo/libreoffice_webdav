@@ -115,7 +115,7 @@ public:
         throw (css::uno::RuntimeException);
 };
 
-rtl::OUString Addon_getImplementationName()
+rtl::OUString SAL_CALL Addon_getImplementationName()
     throw ( css::uno::RuntimeException );
 
 sal_Bool SAL_CALL Addon_supportsService( const rtl::OUString& ServiceName )

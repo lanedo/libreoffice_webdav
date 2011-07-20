@@ -211,7 +211,7 @@ void SAL_CALL Addon::removeStatusListener( const Reference< XStatusListener >& x
 //#### Helper functions for the implementation of UNO component interfaces #########################
 //##################################################################################################
 
-OUString Addon_getImplementationName()
+OUString SAL_CALL Addon_getImplementationName()
     throw (RuntimeException)
 {
     return OUString ( RTL_CONSTASCII_USTRINGPARAM ( IMPLEMENTATION_NAME ) );
