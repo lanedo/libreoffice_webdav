@@ -222,7 +222,13 @@ def oxt(a):
 	shutil.copy2 (cwd + 'build/manifest.xml', cwd + 'dist/META-INF')
 	mkdir (cwd + 'dist/' + lo_platform)
 	for filename in glob.iglob ('build/webdavui.uno.*'):
+		if filename[-9:] == '.manifest':
+			continue
 		shutil.copy2 (filename , cwd + 'dist/' + lo_platform)
+		if lo_platform == 'Windows':
+			manifesto = 'mt -nologo -manifest %s.manifest "-outputresource:%s;2"' \
+			% (cwd + 'build/webdavui.uno.dll', cwd + 'dist/Windows/webdavui.uno.dll')
+			os.system (manifesto)
 	try:
 		shutil.make_archive (cwd + 'webdavui', 'zip', cwd + 'dist')
 		shutil.move (cwd + 'webdavui.zip', cwd + 'webdavui.oxt')
