@@ -15,3 +15,31 @@ You can either install system-wide
 Or create a webdavui.oxt package:
 
 5. ./waf oxt
+
+*** Build on Windows ***
+
+Install LibreOffice and SDK to a location WITHOUT spaces, such as C:\Apps\LibreOffice3.4
+
+To build on Windows, setup Cygwin like this*:
+
+setup.exe -P autoconf,automake,bison,cabextract,flex,gcc-g++,git,gnupg,gperf,libxm2-devel,libpng12-devel,make,mintty,openssh,openssl,patch,perl,pkg-config,readline,rsync,unzip,vim,wget,zip¹
+
+Also install Visual C++ 2008 Express.
+
+Copy /usr/include/libreoffice/sal/typesizes.h to C:\Apps\LibreOffice3.4\Basis\sdk\include .
+
+** Continue in a native command prompt **
+
+Install Python 2.7.
+
+Run this every time you start working:
+
+C:\Apps\LibreOffice3.4\Basis\sdk\setsdkenv_windows.bat
+
+C:\Python27\python waf configure
+C:\Python27\python waf build
+C:\Python27\python waf oxt
+
+Warning: Don't use Samba and don't use virtual drive letters!
+
+¹ http://wiki.documentfoundation.org/Development/Windows_Build_Dependencies
