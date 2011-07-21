@@ -56,6 +56,9 @@ namespace LocalizedStrings {
     const OUString windowTitleSave (RTL_CONSTASCII_USTRINGPARAM ("windowTitleSave"));
     const OUString windowTitleConfig (RTL_CONSTASCII_USTRINGPARAM ("windowTitleConfig"));
     const OUString contentListFailure (RTL_CONSTASCII_USTRINGPARAM ("contentListFailure"));
+    const OUString windowTitleError (RTL_CONSTASCII_USTRINGPARAM ("windowTitleError"));
+    const OUString emptyFilename (RTL_CONSTASCII_USTRINGPARAM ("emptyFilename"));
+    const OUString existingFilename (RTL_CONSTASCII_USTRINGPARAM ("existingFilename"));
 }
 
 namespace ImageKeys {

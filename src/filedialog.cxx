@@ -51,6 +51,8 @@
 #include <com/sun/star/awt/XDialogProvider2.hpp>
 #include <com/sun/star/awt/XWindowPeer.hpp>
 #include <com/sun/star/awt/XMessageBox.hpp>
+#include <com/sun/star/awt/MessageBoxButtons.hpp>
+#include <com/sun/star/awt/XMessageBoxFactory.hpp>
 #include <com/sun/star/awt/XItemList.hpp>
 #include <com/sun/star/awt/XListBox.hpp>
 #include <com/sun/star/beans/PropertyValue.hpp>
@@ -377,40 +379,40 @@ void FileDialog::closeDialog (void)
     xDialog->endExecute();
 }
 
-bool FileDialog::showMessageBox (OUString errorMessage, bool confirm)
+short FileDialog::showMessageBox (OUString errorMessage, bool confirm)
 {
     if (!(mxFrame.is () && mxToolkit.is ()))
-        return false;
+        return 0;
 
-    // describe window properties.
-    WindowDescriptor                aDescriptor;
-    aDescriptor.Type              = WindowClass_MODALTOP;
+    Reference< XMessageBoxFactory > xMessageBoxFactory( mxToolkit, UNO_QUERY );
+    Rectangle aRectangle;
+    OUString aType;
+    long aButtons;
+    OUString aTitle = mSettings->localizedString (LocalizedStrings::windowTitleError);
     if (confirm)
-        aDescriptor.WindowServiceName = OUString (RTL_CONSTASCII_USTRINGPARAM ("querybox"));
-    else
-        aDescriptor.WindowServiceName = OUString (RTL_CONSTASCII_USTRINGPARAM ("infobox"));
-    aDescriptor.ParentIndex       = -1;
-    aDescriptor.Parent            = Reference< XWindowPeer > (
-        mxFrame->getContainerWindow (), UNO_QUERY);
-    aDescriptor.Bounds            = Rectangle (0, 0, 300, 200);
-    aDescriptor.WindowAttributes  = WindowAttribute::BORDER
-                                  | WindowAttribute::MOVEABLE |WindowAttribute::CLOSEABLE;
-
-    Reference< XWindowPeer > xPeer = mxToolkit->createWindow (aDescriptor);
-
-    if (xPeer.is ())
     {
-        Reference< XMessageBox > xMsgBox (xPeer, UNO_QUERY);
-        if (xMsgBox.is ())
-        {
-            xMsgBox->setCaptionText (
-                mSettings->localizedString (LocalizedStrings::windowTitleError));
-            xMsgBox->setMessageText (errorMessage);
-            xMsgBox->execute ();
-        }
+        aType = OUString (RTL_CONSTASCII_USTRINGPARAM ("querybox"));
+        aButtons = MessageBoxButtons::BUTTONS_OK_CANCEL;
+    }
+    else
+    {
+        aType = OUString (RTL_CONSTASCII_USTRINGPARAM ("infobox"));
+        aButtons = MessageBoxButtons::BUTTONS_OK;
     }
 
-    return false;
+    Reference< XWindow > xContainerWindow (mxFrame->getContainerWindow ());
+    Reference< XWindowPeer > xWindowPeer (xContainerWindow, UNO_QUERY_THROW);
+    Reference< XMessageBox > xMessageBox = xMessageBoxFactory->createMessageBox (
+        xWindowPeer, aRectangle, aType, aButtons, aTitle, errorMessage);
+
+    if (xMessageBox.is ())
+    {
+        short returnValue = xMessageBox->execute ();
+        /* 0 = Cancel, 1 = OK */
+        return returnValue;
+    }
+
+    return 0;
 }
 
 void FileDialog::openOrSaveSelectedDocument (void)
@@ -440,11 +442,12 @@ void FileDialog::openOrSaveSelectedDocument (void)
         printf ("Saving document: %s\n",
                 OUStringToOString (sURL, RTL_TEXTENCODING_UTF8).getStr ());
 
-        OUString errorMessage = OUString::createFromAscii ("");
-        bool confirm = false;
         if (sURL.equals (mSettings->getRemoteServerName () + OUString::createFromAscii ("/")))
-            errorMessage = mSettings->localizedString (LocalizedStrings::emptyFilename);
-        else
+        {
+            showMessageBox (mSettings->localizedString (LocalizedStrings::emptyFilename), false);
+            return;
+        }
+
         {
             const Reference< XItemList > items(fileListModel, UNO_QUERY_THROW );
             sal_Int32 i = 0;
@@ -465,17 +468,14 @@ void FileDialog::openOrSaveSelectedDocument (void)
                     OUStringToOString (sItemURL, RTL_TEXTENCODING_UTF8).getStr ());
                 if (sItemURL.equals (sURL))
                 {
-                    errorMessage = mSettings->localizedString (
-                        LocalizedStrings::existingFilename);
-                    confirm = true;
+                    short returnValue = showMessageBox (mSettings->localizedString (
+                        LocalizedStrings::existingFilename), true);
+                    /* 0 = Cancel, 1 = OK */
+                    if (returnValue == 0)
+                        return;
                     break;
                 }
             }
-        }
-        if (errorMessage.getLength () != 0)
-        {
-            if (!showMessageBox (errorMessage, confirm))
-                return;
         }
 
         Reference< XController > xController = mxFrame->getController ();
