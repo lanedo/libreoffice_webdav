@@ -377,6 +377,42 @@ void FileDialog::closeDialog (void)
     xDialog->endExecute();
 }
 
+bool FileDialog::showMessageBox (OUString errorMessage, bool confirm)
+{
+    if (!(mxFrame.is () && mxToolkit.is ()))
+        return false;
+
+    // describe window properties.
+    WindowDescriptor                aDescriptor;
+    aDescriptor.Type              = WindowClass_MODALTOP;
+    if (confirm)
+        aDescriptor.WindowServiceName = OUString (RTL_CONSTASCII_USTRINGPARAM ("querybox"));
+    else
+        aDescriptor.WindowServiceName = OUString (RTL_CONSTASCII_USTRINGPARAM ("infobox"));
+    aDescriptor.ParentIndex       = -1;
+    aDescriptor.Parent            = Reference< XWindowPeer > (
+        mxFrame->getContainerWindow (), UNO_QUERY);
+    aDescriptor.Bounds            = Rectangle (0, 0, 300, 200);
+    aDescriptor.WindowAttributes  = WindowAttribute::BORDER
+                                  | WindowAttribute::MOVEABLE |WindowAttribute::CLOSEABLE;
+
+    Reference< XWindowPeer > xPeer = mxToolkit->createWindow (aDescriptor);
+
+    if (xPeer.is ())
+    {
+        Reference< XMessageBox > xMsgBox (xPeer, UNO_QUERY);
+        if (xMsgBox.is ())
+        {
+            xMsgBox->setCaptionText (
+                mSettings->localizedString (LocalizedStrings::windowTitleError));
+            xMsgBox->setMessageText (errorMessage);
+            xMsgBox->execute ();
+        }
+    }
+
+    return false;
+}
+
 void FileDialog::openOrSaveSelectedDocument (void)
 {
     if ( ! (mxFrame.is() && mxToolkit.is()) )
@@ -405,8 +441,9 @@ void FileDialog::openOrSaveSelectedDocument (void)
                 OUStringToOString (sURL, RTL_TEXTENCODING_UTF8).getStr ());
 
         OUString errorMessage = OUString::createFromAscii ("");
+        bool confirm = false;
         if (sURL.equals (mSettings->getRemoteServerName () + OUString::createFromAscii ("/")))
-            errorMessage = mSettings->localizedString (LocalizedStrings::contentListFailure);
+            errorMessage = mSettings->localizedString (LocalizedStrings::emptyFilename);
         else
         {
             const Reference< XItemList > items(fileListModel, UNO_QUERY_THROW );
@@ -429,16 +466,16 @@ void FileDialog::openOrSaveSelectedDocument (void)
                 if (sItemURL.equals (sURL))
                 {
                     errorMessage = mSettings->localizedString (
-                        LocalizedStrings::contentListFailure);
+                        LocalizedStrings::existingFilename);
+                    confirm = true;
                     break;
                 }
             }
         }
         if (errorMessage.getLength () != 0)
         {
-            printf ("Error: %s\n",
-                OUStringToOString (errorMessage, RTL_TEXTENCODING_UTF8).getStr ());
-            return;
+            if (!showMessageBox (errorMessage, confirm))
+                return;
         }
 
         Reference< XController > xController = mxFrame->getController ();

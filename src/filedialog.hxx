@@ -65,6 +65,7 @@ private:
     sal_Bool isSave;
 
     void createDialog (void);
+    bool showMessageBox (OUString errorMessage, bool confirm);
 
 public:
     FileDialog( const css::uno::Reference< css::uno::XComponentContext > &rxContext,
