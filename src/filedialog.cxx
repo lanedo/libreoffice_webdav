@@ -380,6 +380,65 @@ void FileDialog::openOrSaveSelectedDocument (void)
     if ( ! (mxFrame.is() && mxToolkit.is()) )
         return;
 
+    Reference< XComponentLoader > xLoader(mxFrame, UNO_QUERY);
+    Sequence< PropertyValue > lProperties (1);
+    /* Set interaction handler */
+    Reference< css::task::XInteractionHandler > interactionHandler =
+        Reference< css::task::XInteractionHandler > (
+            mxMCF->createInstanceWithContext (
+            OUString::createFromAscii ("com.sun.star.task.InteractionHandler"),
+            mxContext), UNO_QUERY);
+    lProperties[0].Name = OUString::createFromAscii ("InteractionHandler");
+    lProperties[0].Value = makeAny (interactionHandler);
+
+    if (isSaveDialog ())
+    {
+        Reference< XPropertySet > entryProps (fileEntryModel, UNO_QUERY);
+        Any aValue = entryProps->getPropertyValue (OUString::createFromAscii ("Text"));
+        OUString sURL;
+        aValue >>= sURL;
+        sURL = mSettings->getRemoteServerName () + OUString::createFromAscii ("/") + sURL;
+
+        printf ("Saving document: %s\n",
+                OUStringToOString (sURL, RTL_TEXTENCODING_UTF8).getStr ());
+
+        OUString errorMessage = OUString::createFromAscii ("");
+        if (sURL.equals (mSettings->getRemoteServerName () + OUString::createFromAscii ("/")))
+            errorMessage = mSettings->localizedString (LocalizedStrings::contentListFailure);
+        else
+        {
+            /* FIXME Overwriting a file? */
+        }
+        if (errorMessage.getLength () != 0)
+        {
+            printf ("Error: %s\n",
+                OUStringToOString (errorMessage, RTL_TEXTENCODING_UTF8).getStr ());
+            return;
+        }
+
+        Reference< XController > xController = mxFrame->getController ();
+        if (!xController.is ())
+            return;
+        Reference< XModel > xModel (xController->getModel ());
+        Reference< XStorable > xStorable(xModel, UNO_QUERY);
+        if (!xStorable.is ())
+            return;
+
+        try
+        {
+            xStorable->storeAsURL(sURL, lProperties);
+        }
+        catch (Exception & e)
+        {
+            printf ("Failed to save: %s\n",
+                    OUStringToOString (e.Message, RTL_TEXTENCODING_ASCII_US).getStr ());
+        }
+
+        /* Close dialog when done */
+        closeDialog ();
+        return;
+    }
+
     Reference< XPropertySet > entryProps (fileListModel, UNO_QUERY);
     Any aValue = entryProps->getPropertyValue (OUString::createFromAscii ("SelectedItems"));
     Sequence< short > selectedItems;
@@ -396,40 +455,17 @@ void FileDialog::openOrSaveSelectedDocument (void)
         if ( sURL.getLength() == 0 )
             return;
 
-        Reference< XComponentLoader > xLoader(mxFrame, UNO_QUERY);
-        Sequence< PropertyValue > lProperties (1);
-
-        /* Set interaction handler */
-        Reference< css::task::XInteractionHandler > interactionHandler =
-            Reference< css::task::XInteractionHandler > (
-                    mxMCF->createInstanceWithContext (OUString::createFromAscii ("com.sun.star.task.InteractionHandler"),
-                                                      mxContext), UNO_QUERY);
-        lProperties[0].Name = OUString::createFromAscii ("InteractionHandler");
-        lProperties[0].Value = makeAny (interactionHandler);
-
-        if (isSaveDialog ())
-        {
-            printf ("Saving document: %s\n",
-                    OUStringToOString (sURL, RTL_TEXTENCODING_UTF8).getStr ());
-
-            Reference< XController > xController = mxFrame->getController();
-            if ( !xController.is() )
-                return;
-            Reference< XModel > xModel (xController->getModel());
-            Reference< XStorable > xStorable( xModel, UNO_QUERY );
-            if (!xStorable.is())
-                return;
-
-            xStorable->storeAsURL(sURL, lProperties);
-            /* Saving multiple documents makes no sense */
-            break;
-        }
-        else
+        try
         {
             printf ("Opening document: %s\n",
                     OUStringToOString (sURL, RTL_TEXTENCODING_UTF8).getStr ());
             Reference< XComponent > xDocument (xLoader->loadComponentFromURL(
                 sURL, mxFrame->getName(), FrameSearchFlag::CHILDREN, lProperties));
+        }
+        catch (Exception & e)
+        {
+            printf ("Failed to open: %s\n",
+                    OUStringToOString (e.Message, RTL_TEXTENCODING_ASCII_US).getStr ());
         }
     }
 
