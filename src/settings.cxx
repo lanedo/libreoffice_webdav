@@ -114,7 +114,16 @@ bool Settings::getStringValueByReference (Reference<XNameAccess>& xAccess,
     const OUString& aKeyName, OUString& aValue)
 {
     OSL_ASSERT(xAccess.is());
-    xAccess->getByName(aKeyName) >>= aValue;
+    try
+    {
+        xAccess->getByName(aKeyName) >>= aValue;
+    }
+    catch (...)
+    {
+        printf ("Settings::getStringValueByReference Invalid key name %s \n",
+            OUStringToOString (aKeyName, RTL_TEXTENCODING_ASCII_US).getStr ());
+        aValue = aKeyName;
+    }
     printf ("Settings::getStringValueByReference %s → '%s'\n",
         OUStringToOString( aKeyName, RTL_TEXTENCODING_ASCII_US ).getStr(),
         OUStringToOString( aValue, RTL_TEXTENCODING_ASCII_US ).getStr());
