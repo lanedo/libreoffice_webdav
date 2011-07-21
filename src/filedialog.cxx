@@ -508,11 +508,6 @@ void FileDialog::listFiles (void)
     /* Now try to access the folder */
     try
     {
-        if (! (fileAccess->exists (url) && fileAccess->isFolder (url)))
-        {
-            items->insertItemText (0, mSettings->localizedString (LocalizedStrings::contentListFailure));
-            return;
-        }
         Sequence< rtl::OUString > entries = fileAccess->getFolderContents (url, false);
         const OUString *stringArray = entries.getConstArray ();
         sal_Int32 n = entries.getLength ();
