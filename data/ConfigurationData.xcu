@@ -25,6 +25,18 @@
             <value xml:lang="en-US">Failed to list documents</value>
             <value xml:lang="fr">Erreur avec la liste des documents</value>
         </prop>
+        <prop oor:name="windowTitleError">
+            <value xml:lang="en-US">Error</value>
+            <value xml:lang="fr">Erreur</value>
+        </prop>
+        <prop oor:name="emptyFilename">
+            <value xml:lang="en-US">Please choose a filename from the list or enter a new filename.</value>
+            <value xml:lang="fr">Choisissez un nom de fichier de la liste ou tapez un nouveau nom de fichier.</value>
+        </prop>
+        <prop oor:name="existingFilename">
+            <value xml:lang="en-US">A file with this name already exists. Do you want to overwrite it?</value>
+            <value xml:lang="fr">Un fichier avec cette nom déjá existe. Voulez-vous le remplacer?</value>
+        </prop>
     </node>
     <node oor:name="Images">
         <prop oor:name="logoImage">

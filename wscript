@@ -95,6 +95,8 @@ def cppumaker (bld):
 				"com.sun.star.awt.XMenuBar",
 				"com.sun.star.awt.XMenuExtended",
 				"com.sun.star.awt.XMessageBox",
+				"com.sun.star.awt.MessageBoxButtons",
+				"com.sun.star.awt.XMessageBoxFactory",
 				"com.sun.star.awt.XListBox",
 				"com.sun.star.awt.XPopupMenu",
 				"com.sun.star.awt.XPopupMenuExtended",
