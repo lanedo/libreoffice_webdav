@@ -263,7 +263,7 @@ void FileDialog::createDialog (void)
     Reference< XControl > roCheckBox =
         controlContainer->getControl (OUString::createFromAscii ("ReadOnlyCheckBox"));
     Reference< XWindow > roCheckBoxWindow (roCheckBox, UNO_QUERY);
-    roCheckBoxWindow->setVisible (!isSaveDialog ());
+    roCheckBoxWindow->setVisible (false); //!isSaveDialog ();
 
     /* Create event listeners */
     Reference< XActionListener > actionListener =
