@@ -258,13 +258,12 @@ void FileDialog::createDialog (void)
         saveButton->getModel ();
     Reference< XWindow > saveButtonWindow (saveButton, UNO_QUERY);
     saveButtonWindow->setVisible (isSaveDialog ());
-    
+
     /* Read-only checkbox */
     Reference< XControl > roCheckBox =
         controlContainer->getControl (OUString::createFromAscii ("ReadOnlyCheckBox"));
     Reference< XWindow > roCheckBoxWindow (roCheckBox, UNO_QUERY);
     roCheckBoxWindow->setVisible (!isSaveDialog ());
-        
 
     /* Create event listeners */
     Reference< XActionListener > actionListener =
@@ -294,6 +293,9 @@ void FileDialog::createDialog (void)
 
     Reference< XControl > entryControl =
         controlContainer->getControl (OUString::createFromAscii ("FileEntry"));
+    Reference< XWindow > entryControlWindow (entryControl, UNO_QUERY);
+    entryControlWindow->setVisible (isSaveDialog ());
+
     fileEntryModel = entryControl->getModel ();
     Reference< XPropertySet > entryProps (fileEntryModel, UNO_QUERY);
     if (isSaveDialog ())
