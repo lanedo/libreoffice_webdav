@@ -407,7 +407,30 @@ void FileDialog::openOrSaveSelectedDocument (void)
             errorMessage = mSettings->localizedString (LocalizedStrings::contentListFailure);
         else
         {
-            /* FIXME Overwriting a file? */
+            const Reference< XItemList > items(fileListModel, UNO_QUERY_THROW );
+            sal_Int32 i = 0;
+            while (true)
+            {
+                OUString sItemURL;
+                try {
+                    Any aItemURL = items->getItemData(i);
+                    aItemURL >>= sItemURL;
+                    i++;
+                }
+                catch (...)
+                {
+                    /* No items left raises an exception */
+                    break;
+                }
+                printf ("Existing... %s\n",
+                    OUStringToOString (sItemURL, RTL_TEXTENCODING_UTF8).getStr ());
+                if (sItemURL.equals (sURL))
+                {
+                    errorMessage = mSettings->localizedString (
+                        LocalizedStrings::contentListFailure);
+                    break;
+                }
+            }
         }
         if (errorMessage.getLength () != 0)
         {
