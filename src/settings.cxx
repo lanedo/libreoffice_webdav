@@ -214,6 +214,11 @@ bool Settings::setRemoteServerName (const OUString& aValue)
 {
     OUString stripped = aValue.trim ();
 
+    if (stripped.lastIndexOfAsciiL ("/", 1) != stripped.getLength () - 1)
+    {
+        stripped += OUString (RTL_CONSTASCII_USTRINGPARAM ("/"));
+    }
+
     return setStringValue (remoteServerKey, stripped);
 }
 
