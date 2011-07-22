@@ -491,12 +491,12 @@ void FileDialog::openOrSaveSelectedDocument (void)
         Any aValue = entryProps->getPropertyValue (OUString::createFromAscii ("Text"));
         OUString sURL;
         aValue >>= sURL;
-        sURL = mSettings->getRemoteServerName () + OUString::createFromAscii ("/") + sURL;
+        sURL = mSettings->getRemoteServerName () + sURL;
 
         printf ("Saving document: %s\n",
                 OUStringToOString (sURL, RTL_TEXTENCODING_UTF8).getStr ());
 
-        if (sURL.equals (mSettings->getRemoteServerName () + OUString::createFromAscii ("/")))
+        if (sURL.equals (mSettings->getRemoteServerName ()))
         {
             showMessageBox (mSettings->localizedString (LocalizedStrings::emptyFilename), false);
             return;
