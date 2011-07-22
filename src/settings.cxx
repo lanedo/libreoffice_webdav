@@ -212,7 +212,9 @@ bool Settings::setStringValue (const OUString& aKeyName, const OUString& aValue)
 
 bool Settings::setRemoteServerName (const OUString& aValue)
 {
-    return setStringValue (remoteServerKey, aValue);
+    OUString stripped = aValue.trim ();
+
+    return setStringValue (remoteServerKey, stripped);
 }
 
 OUString Settings::localizedString (OUString key)
