@@ -398,6 +398,17 @@ void FileDialog::createDialog (void)
     Reference< XWindow > entryWindow (entryControl, UNO_QUERY);
     entryWindow->addKeyListener (keyListener);
 
+    /* hide the file type combo */
+    Reference< XControl > typeLabelControl =
+        controlContainer->getControl (OUString::createFromAscii ("TypeLabel"));
+    Reference< XWindow > typeLabelWindow (typeLabelControl, UNO_QUERY);
+    typeLabelWindow->setVisible (false);
+
+    Reference< XControl > typeEntryControl =
+        controlContainer->getControl (OUString::createFromAscii ("TypeEntry"));
+    Reference< XWindow > typeEntryWindow (typeEntryControl, UNO_QUERY);
+    typeEntryWindow->setVisible (false);
+
     /* Connect the list box to an action listener */
     Reference< XListBox > listBox (listControl, UNO_QUERY);
     listBox->addActionListener (actionListener);
