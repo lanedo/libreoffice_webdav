@@ -258,6 +258,7 @@ FileDialog::FileDialog( const Reference< css::uno::XComponentContext > &rxContex
                                             "com.sun.star.awt.Toolkit" )), mxContext), UNO_QUERY );
 
     createDialog ();
+    listFiles ();
 }
 
 void FileDialog::createDialog (void)
