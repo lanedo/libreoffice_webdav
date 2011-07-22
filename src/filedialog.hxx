@@ -78,6 +78,7 @@ public:
     void closeDialog (void);
     void openOrSaveSelectedDocument (void);
     void listFiles (void);
+    void setFilename (OUString filename);
 };
 
 }

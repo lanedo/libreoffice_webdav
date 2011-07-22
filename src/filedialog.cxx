@@ -168,7 +168,14 @@ public:
 
         if (controlName.equalsAscii ("FileList"))
         {
-            printf ("Selected item: %ld\n", rEvent.Selected);
+            Reference< XListBox > listBox (control, UNO_QUERY);
+            OUString itemString = listBox->getItem (rEvent.Selected);
+
+            printf ("Selected item: %ld (%s)\n",
+                    rEvent.Selected,
+                    OUStringToOString (itemString, RTL_TEXTENCODING_UTF8).getStr ());
+
+            owner->setFilename (itemString);
         }
     }
 };
@@ -641,5 +648,11 @@ void FileDialog::listFiles (void)
     }
 }
 
+void FileDialog::setFilename (OUString filename)
+{
+    Reference< XPropertySet > entryProps (fileEntryModel, UNO_QUERY);
+    entryProps->setPropertyValue (OUString::createFromAscii ("Text"),
+                                  makeAny (filename));
 }
 
+}
