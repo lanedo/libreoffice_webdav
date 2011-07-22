@@ -2,7 +2,7 @@
 /*************************************************************************
  *
  *  Copyright (C) 2011
- *  Michael Natterer <michael.natterer@lanedo.com>
+ *  Michael Natterer <mitch@lanedo.com>
  *  Kristian Rietveld <kris@lanedo.com>
  *  Christian Dywan <christian@lanedo.com>
  *  Lionel Dricot <lionel.dricot@lanedo.com>
@@ -20,7 +20,7 @@
  *  You should have received a copy of the GNU Lesser General
  *  Public License along with this library; if not, write to the
  *  Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
- *  Boston, MA 02110-1301 USA 
+ *  Boston, MA 02110-1301 USA
  *
  *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  *  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -267,4 +267,3 @@ void ConfigDialog::closeDialog (void)
 }
 
 }
-
