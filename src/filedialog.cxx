@@ -276,10 +276,10 @@ void FileDialog::createDialog (void)
     }
 
     /* Put the dialog in a window */
-    Reference< XControl > control(dialog, UNO_QUERY);
-    Reference< XWindow > window(control, UNO_QUERY);
-    window->setVisible(true);
-    control->createPeer(mxToolkit,NULL);
+    Reference< XControl > control (dialog, UNO_QUERY);
+    Reference< XWindow > window (control, UNO_QUERY);
+    window->setVisible (true);
+    control->createPeer (mxToolkit, NULL);
 
     /* The dialog is an XControlContainer */
     Reference< XControlContainer > controlContainer (dialog, UNO_QUERY);
@@ -295,14 +295,13 @@ void FileDialog::createDialog (void)
     /* Get the open/save button */
     Reference< XControl > openButton =
         controlContainer->getControl (OUString::createFromAscii ("OpenButton"));
-    Reference< XControlModel > openButtonModel =
-        openButton->getModel ();
+    Reference< XControlModel > openButtonModel = openButton->getModel ();
     Reference< XWindow > openButtonWindow (openButton, UNO_QUERY);
     openButtonWindow->setVisible (!isSaveDialog ());
+
     Reference< XControl > saveButton =
         controlContainer->getControl (OUString::createFromAscii ("SaveButton"));
-    Reference< XControlModel > saveButtonModel =
-        saveButton->getModel ();
+    Reference< XControlModel > saveButtonModel = saveButton->getModel ();
     Reference< XWindow > saveButtonWindow (saveButton, UNO_QUERY);
     saveButtonWindow->setVisible (isSaveDialog ());
 
@@ -354,18 +353,19 @@ void FileDialog::createDialog (void)
     if (isSaveDialog ())
     {
         Reference< XController > xController = mxFrame->getController();
-        if ( !xController.is() )
+        if (!xController.is())
             return;
-        Reference< XModel > xModel (xController->getModel());
-        Reference< XStorable > xStorable( xModel, UNO_QUERY );
-        if (!xStorable.is())
+        Reference< XModel > xModel (xController->getModel ());
+        Reference< XStorable > xStorable (xModel, UNO_QUERY);
+        if (!xStorable.is ())
             return;
 
         if (xStorable->hasLocation ())
         {
             OUString fileName (xStorable->getLocation().copy (
                 xStorable->getLocation().lastIndexOf (OUString::createFromAscii ("/")) + 1));
-            entryProps->setPropertyValue(OUString::createFromAscii("Text"), makeAny (fileName));
+            entryProps->setPropertyValue (OUString::createFromAscii ("Text"),
+                                          makeAny (fileName));
         }
     }
 
@@ -381,7 +381,8 @@ void FileDialog::createDialog (void)
         controlContainer->getControl (OUString::createFromAscii ("LocationEntry"));
     locationEntryModel = entryControl->getModel ();
     entryProps = Reference< XPropertySet> (locationEntryModel, UNO_QUERY);
-    entryProps->setPropertyValue(OUString::createFromAscii("Text"), makeAny (remoteServer));
+    entryProps->setPropertyValue (OUString::createFromAscii ("Text"),
+                                  makeAny (remoteServer));
 
     /* hide the location entry */
     Reference< XWindow > locationEntryWindow (entryControl, UNO_QUERY);
@@ -391,24 +392,18 @@ void FileDialog::createDialog (void)
         controlContainer->getControl (OUString::createFromAscii ("Location"));
     Reference< XInterface > locationLabelModel (labelControl->getModel ());
     Reference< XPropertySet > labelProps (locationLabelModel, UNO_QUERY);
-    labelProps->setPropertyValue(OUString::createFromAscii("Label"), makeAny (remoteServer));
+    labelProps->setPropertyValue (OUString::createFromAscii ("Label"),
+                                  makeAny (remoteServer));
 
     Reference< XWindow > entryWindow (entryControl, UNO_QUERY);
     entryWindow->addKeyListener (keyListener);
 
     /* Connect the list box to an action listener */
-    Reference< XListBox > listBox(listControl, UNO_QUERY);
+    Reference< XListBox > listBox (listControl, UNO_QUERY);
     listBox->addActionListener (actionListener);
     listBox->addItemListener (itemListener);
     Reference< XWindow > listWindow (listControl, UNO_QUERY);
     listWindow->addKeyListener (keyListener);
-
-    /* Put a placeholder item in the list box */
-    Reference< XPropertySet > listProps (fileListModel, UNO_QUERY);
-    Sequence < OUString > entries (1);
-    entries[0] = OUString::createFromAscii ("(content listing will appear here)");
-
-    listProps->setPropertyValue(OUString::createFromAscii("StringItemList"), makeAny (entries));
 }
 
 sal_Bool FileDialog::isSaveDialog (void)
