@@ -169,13 +169,20 @@ public:
         if (controlName.equalsAscii ("FileList"))
         {
             Reference< XListBox > listBox (control, UNO_QUERY);
-            OUString itemString = listBox->getItem (rEvent.Selected);
 
-            printf ("Selected item: %ld (%s)\n",
-                    rEvent.Selected,
-                    OUStringToOString (itemString, RTL_TEXTENCODING_UTF8).getStr ());
+            printf ("Selected item: %ld\n", rEvent.Selected);
 
-            owner->setFilename (itemString);
+            if (rEvent.Selected >= 0 &&
+                rEvent.Selected < listBox->getItemCount ())
+            {
+                OUString itemString = listBox->getItem (rEvent.Selected);
+
+                printf ("Selected item: %ld (%s)\n",
+                        rEvent.Selected,
+                        OUStringToOString (itemString, RTL_TEXTENCODING_UTF8).getStr ());
+
+                owner->setFilename (itemString);
+            }
         }
     }
 };
