@@ -331,8 +331,11 @@ void FileDialog::createDialog (void)
     Reference< XInterface > buttonObject =
         controlContainer->getControl (OUString::createFromAscii ("OpenLocationButton"));
     Reference< XButton > buttonControl (buttonObject, UNO_QUERY);
-
     buttonControl->addActionListener (actionListener);
+
+    /* hide the open location button */
+    Reference< XWindow > locationButtonWindow (buttonControl, UNO_QUERY);
+    locationButtonWindow->setVisible (false);
 
     /* Connect cancel button to action listener */
     Reference< XInterface > cancelObject =
@@ -379,6 +382,10 @@ void FileDialog::createDialog (void)
     locationEntryModel = entryControl->getModel ();
     entryProps = Reference< XPropertySet> (locationEntryModel, UNO_QUERY);
     entryProps->setPropertyValue(OUString::createFromAscii("Text"), makeAny (remoteServer));
+
+    /* hide the location entry */
+    Reference< XWindow > locationEntryWindow (entryControl, UNO_QUERY);
+    locationEntryWindow->setVisible (false);
 
     Reference< XControl > labelControl =
         controlContainer->getControl (OUString::createFromAscii ("Location"));

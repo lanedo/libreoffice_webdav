@@ -10,8 +10,8 @@
   <dlg:textfield dlg:id="LocationEntry"      dlg:tab-index="1" dlg:left="10"  dlg:top="60" dlg:width="120" dlg:height="15"/>
   <dlg:button    dlg:id="OpenLocationButton" dlg:tab-index="2" dlg:left="140" dlg:top="60" dlg:width="70"  dlg:height="15" dlg:value="List contents of URL"/>
 
-  <dlg:text     dlg:id="Location" dlg:tab-index="3" dlg:left="10" dlg:top="88"  dlg:width="200" dlg:height="15" dlg:value="Label3"/>
-  <dlg:menulist dlg:id="FileList" dlg:tab-index="4" dlg:left="10" dlg:top="100" dlg:width="200" dlg:height="135"/>
+  <dlg:text     dlg:id="Location" dlg:tab-index="3" dlg:left="10" dlg:top="58" dlg:width="200" dlg:height="15" dlg:value="Label3"/>
+  <dlg:menulist dlg:id="FileList" dlg:tab-index="4" dlg:left="10" dlg:top="70" dlg:width="200" dlg:height="165"/>
 
   <dlg:combobox dlg:id="FileEntry"        dlg:tab-index="5" dlg:left="10" dlg:top="240" dlg:width="200" dlg:height="15"/>
   <dlg:checkbox dlg:id="ReadOnlyCheckBox" dlg:tab-index="6" dlg:left="10" dlg:top="240" dlg:width="200" dlg:height="15" dlg:value="&amp;3.OpenDialog.ReadonlyButton.Label" dlg:checked="false"/>
