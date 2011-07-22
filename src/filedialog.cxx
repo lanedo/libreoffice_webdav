@@ -404,6 +404,9 @@ void FileDialog::createDialog (void)
     listBox->addItemListener (itemListener);
     Reference< XWindow > listWindow (listControl, UNO_QUERY);
     listWindow->addKeyListener (keyListener);
+
+    /* Finally, set the focus to the file list */
+    listWindow->setFocus ();
 }
 
 sal_Bool FileDialog::isSaveDialog (void)
