@@ -219,7 +219,8 @@ public:
                 owner->listFiles ();
             }
         }
-        else if (controlName.equalsAscii ("FileList"))
+        else if (controlName.equalsAscii ("FileList") ||
+                 controlName.equalsAscii ("FileEntry"))
         {
             short aKey = rEvent.KeyCode;
 
