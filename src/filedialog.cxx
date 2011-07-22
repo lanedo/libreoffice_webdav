@@ -137,6 +137,42 @@ public:
     }
 };
 
+/* Item listener */
+class FileDialogItemListener : public ::cppu::WeakImplHelper1< css::awt::XItemListener >
+{
+private:
+    FileDialog * const owner;
+
+public:
+    FileDialogItemListener (FileDialog * const _owner)
+       : owner (_owner) { }
+
+    // XEventListener
+    virtual void SAL_CALL disposing (const css::lang::EventObject &aEventObj) throw (css::uno::RuntimeException)
+    {
+        printf ("FileDialogActionListener::disposing\n");
+    }
+
+    // XItemListener
+    virtual void SAL_CALL itemStateChanged (const css::awt::ItemEvent &rEvent) throw (css::uno::RuntimeException)
+    {
+        /* Obtain the name of the control the event originated from */
+        Reference< XControl > control (rEvent.Source, UNO_QUERY);
+        Reference< XControlModel > controlModel = control->getModel ();
+        Reference< XPropertySet > controlProps (controlModel, UNO_QUERY);
+        css::uno::Any aValue = controlProps->getPropertyValue (OUString::createFromAscii ("Name"));
+        OUString controlName;
+        aValue >>= controlName;
+        printf ("FileDialog::itemStateChanged %s\n",
+                OUStringToOString (controlName, RTL_TEXTENCODING_UTF8).getStr ());
+
+        if (controlName.equalsAscii ("FileList"))
+        {
+            printf ("Selected item: %ld\n", rEvent.Selected);
+        }
+    }
+};
+
 /* Key listener */
 class FileDialogKeyListener : public ::cppu::WeakImplHelper1< css::awt::XKeyListener >
 {
@@ -271,6 +307,9 @@ void FileDialog::createDialog (void)
     Reference< XActionListener > actionListener =
         static_cast< XActionListener *> (new FileDialogActionListener (this));
 
+    Reference< XItemListener > itemListener =
+        static_cast< XItemListener *> (new FileDialogItemListener (this));
+
     Reference< XKeyListener > keyListener =
         static_cast< XKeyListener *> (new FileDialogKeyListener (this));
 
@@ -344,6 +383,7 @@ void FileDialog::createDialog (void)
     /* Connect the list box to an action listener */
     Reference< XListBox > listBox(listControl, UNO_QUERY);
     listBox->addActionListener (actionListener);
+    listBox->addItemListener (itemListener);
     Reference< XWindow > listWindow (listControl, UNO_QUERY);
     listWindow->addKeyListener (keyListener);
 
