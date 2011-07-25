@@ -7,7 +7,7 @@
  <dlg:bulletinboard>
   <dlg:img dlg:style-id="0" dlg:id="LogoImage" dlg:tab-index="0" dlg:left="10" dlg:top="10" dlg:width="200" dlg:height="40" dlg:scale-image="false"/>
 
-  <dlg:text      dlg:id="Location"      dlg:tab-index="1" dlg:left="10" dlg:top="60" dlg:width="200" dlg:height="15" dlg:value="Cloud server URL"/>
+  <dlg:text      dlg:id="Location"      dlg:tab-index="1" dlg:left="10" dlg:top="60" dlg:width="200" dlg:height="15" dlg:value="&amp;2.ConfigDialog.URL.Label"/>
   <dlg:textfield dlg:id="LocationEntry" dlg:tab-index="2" dlg:left="10" dlg:top="72" dlg:width="200" dlg:height="15"/>
 
   <dlg:button dlg:id="SaveButton"   dlg:tab-index="3" dlg:left="80"  dlg:top="100" dlg:width="60" dlg:height="20" dlg:value="&amp;0.ConfigDialog.SaveButton.Label"/>
