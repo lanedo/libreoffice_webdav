@@ -74,10 +74,7 @@ def configure(conf):
 	                                        mandatory=True)
 
 def cppumaker (bld):
-	"""
-	This helper generates the C++ headers for the IDL of the classes used.
-	These headers are stored inside the build/lo/include directory.
-	"""
+	"Generate the C++ headers for the IDL."
 	types = ["com.sun.star.awt.WindowAttribute",
 				"com.sun.star.awt.Key",
 				"com.sun.star.awt.KeyEvent",
@@ -209,6 +206,7 @@ def mkdir (folder):
         os.mkdir (folder)
 
 def oxt(a):
+	"Generate a self-contained OXT extension bundle."
 	cwd = os.getcwd () + '/'
 	mkdir (cwd + 'dist')
 	mkdir (cwd + 'dist/images')
