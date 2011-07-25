@@ -131,6 +131,7 @@ def cppumaker (bld):
 				"com.sun.star.frame.XPopupMenuController",
 				"com.sun.star.frame.XStatusListener",
 				"com.sun.star.frame.XStorable",
+				"com.sun.star.frame.XUntitledNumbers",
 				"com.sun.star.frame.status.Visibility",
 				"com.sun.star.lang.EventObject",
 				"com.sun.star.lang.XComponent",

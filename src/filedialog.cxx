@@ -64,6 +64,7 @@
 #include <com/sun/star/frame/XComponentLoader.hpp>
 #include <com/sun/star/frame/XController.hpp>
 #include <com/sun/star/frame/XStorable.hpp>
+#include <com/sun/star/frame/XUntitledNumbers.hpp>
 #include <com/sun/star/lang/XComponent.hpp>
 #include <com/sun/star/ucb/XSimpleFileAccess.hpp>
 
@@ -371,13 +372,21 @@ void FileDialog::createDialog (void)
         if (!xStorable.is ())
             return;
 
+        OUString fileName;
         if (xStorable->hasLocation ())
         {
-            OUString fileName (xStorable->getLocation().copy (
-                xStorable->getLocation().lastIndexOf (OUString::createFromAscii ("/")) + 1));
-            entryProps->setPropertyValue (OUString::createFromAscii ("Text"),
-                                          makeAny (fileName));
+            fileName = xStorable->getLocation().copy (
+                xStorable->getLocation().lastIndexOf (OUString::createFromAscii ("/")) + 1);
         }
+        else
+        {
+            Reference< css::frame::XUntitledNumbers > untitledNumbers (
+                mxMCF->createInstanceWithContext (
+                    OUString::createFromAscii ("com.sun.star.frame.Desktop"),
+                    mxContext), UNO_QUERY);
+            fileName = untitledNumbers->getUntitledPrefix ();
+        }
+        entryProps->setPropertyValue (OUString::createFromAscii ("Text"), makeAny (fileName));
     }
 
     /* Save references to the file list and location entry models */
