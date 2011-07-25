@@ -66,6 +66,7 @@
 #include <com/sun/star/frame/XStorable.hpp>
 #include <com/sun/star/frame/XUntitledNumbers.hpp>
 #include <com/sun/star/lang/XComponent.hpp>
+#include <com/sun/star/lang/XServiceInfo.hpp>
 #include <com/sun/star/ucb/XSimpleFileAccess.hpp>
 
 #ifdef DEBUG
@@ -273,6 +274,24 @@ FileDialog::FileDialog( const Reference< css::uno::XComponentContext > &rxContex
     listFiles ();
 }
 
+static OUString extensionForStorable (Reference< XStorable > document)
+{
+    Reference< XServiceInfo > xServiceInfo (document, UNO_QUERY_THROW);
+    if (xServiceInfo->supportsService (OUString::createFromAscii ("com.sun.star.text.TextDocument")))
+        return OUString::createFromAscii (".odt");
+    else if (xServiceInfo->supportsService (OUString::createFromAscii ("com.sun.star.drawing.DrawingDocument")))
+        return OUString::createFromAscii (".odg");
+    else if (xServiceInfo->supportsService (OUString::createFromAscii ("com.sun.star.formula.FormulaProperties")))
+        return OUString::createFromAscii (".odf");
+    else if (xServiceInfo->supportsService (OUString::createFromAscii ("com.sun.star.presentation.PresentationDocument")))
+        return OUString::createFromAscii (".odp");
+    else if (xServiceInfo->supportsService (OUString::createFromAscii ("com.sun.star.sheet.SpreadsheetDocument")))
+        return OUString::createFromAscii (".ods");
+    else if (xServiceInfo->supportsService (OUString::createFromAscii ("com.sun.star.text.WebDocument")))
+        return OUString::createFromAscii (".html");
+    return OUString::createFromAscii (".UNKNOWN");
+}
+
 void FileDialog::createDialog (void)
 {
     dialog = mSettings->createDialog (OUString::createFromAscii ("OpenDialog"));
@@ -384,7 +403,7 @@ void FileDialog::createDialog (void)
                 mxMCF->createInstanceWithContext (
                     OUString::createFromAscii ("com.sun.star.frame.Desktop"),
                     mxContext), UNO_QUERY);
-            fileName = untitledNumbers->getUntitledPrefix ();
+            fileName = untitledNumbers->getUntitledPrefix () + extensionForStorable (xStorable);
         }
         entryProps->setPropertyValue (OUString::createFromAscii ("Text"), makeAny (fileName));
     }
