@@ -21,6 +21,7 @@ if Options.platform in ('cygwin', 'win32'):
     uno_cppu = 'icppu'
     uno_cppuhelpergcc3 = 'icppuhelper'
     lo_platform = 'Windows'
+    lo_platform_defines = 'WIN32 WNT'
 else:
     default_lo_prefix = '/usr/lib/libreoffice'
     default_ure_prefix = '/usr/lib/ure/share'
@@ -33,6 +34,7 @@ else:
         lo_platform = 'Linux_x86_64'
     else:
         lo_platform = 'Linux_x86'
+    lo_platform_defines = 'UNX SAL_UNX'
 
 #-- OPTIONS --
 def options(opt):
@@ -185,7 +187,7 @@ def build(bld):
 	          target=target,
 	          uselib=['SALLIB', 'CPPULIB', 'CPPUHELPERLIB' ],
 	          includes=includes,
-	          defines=['UNX', 'SAL_UNX'],
+	          defines=lo_platform_defines.split (' '),
 	          install_path='%s/share/extensions/%s/%s' % (Options.options.LO_PREFIX, target, lo_platform),
 	          env=env,
 	          chmod=Utils.O644)
