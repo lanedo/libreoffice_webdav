@@ -653,17 +653,6 @@ void FileDialog::listFiles (void)
         OUString icon = OUString::createFromAscii ("file:///usr/share/icons/gnome/24x24/mimetypes/");
         for (sal_Int32 i = 0; i < n; i++)
         {
-            /* Skip file formats that are not from LibreOffice */
-            OUString extension (stringArray[i].copy (
-                stringArray[i].lastIndexOf (OUString::createFromAscii (".")) + 1));
-            if (! (extension.equalsAscii ("odf")
-                || extension.equalsAscii ("odg")
-                || extension.equalsAscii ("odm")
-                || extension.equalsAscii ("odp")
-                || extension.equalsAscii ("ods")
-                || extension.equalsAscii ("odt")))
-                continue;
-
             OUString fileName (stringArray[i].copy (
                 stringArray[i].lastIndexOf (OUString::createFromAscii ("/")) + 1));
             items->insertItem(0, fileName,
