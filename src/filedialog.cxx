@@ -650,13 +650,12 @@ void FileDialog::listFiles (void)
         const OUString *stringArray = entries.getConstArray ();
         sal_Int32 n = entries.getLength ();
 
-        OUString icon = OUString::createFromAscii ("file:///usr/share/icons/gnome/24x24/mimetypes/");
         for (sal_Int32 i = 0; i < n; i++)
         {
             OUString fileName (stringArray[i].copy (
                 stringArray[i].lastIndexOf (OUString::createFromAscii ("/")) + 1));
             items->insertItem(0, fileName,
-                icon + OUString::createFromAscii ("x-office-document.png"));
+                OUString::createFromAscii (""));
             items->setItemData(0, makeAny (stringArray[i]));
         }
     }
