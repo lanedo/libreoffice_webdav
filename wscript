@@ -7,7 +7,7 @@ import glob
 import sys
 
 APPNAME='webdavui'
-VERSION='0.1.0'
+VERSION='1.0.0'
 
 data_file_patterns = ['data/*.xcu', 'data/*.xcs', 'data/*.txt', 'data/*.xdl', 'data/*.default', 'data/*.properties']
 image_file_patterns = 'data/images/*.png'
