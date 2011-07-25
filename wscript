@@ -13,20 +13,19 @@ data_file_patterns = ['data/*.xcu', 'data/*.xcs', 'data/*.txt', 'data/*.xdl', 'd
 image_file_patterns = 'data/images/*.png'
 
 if Options.platform in ('cygwin', 'win32'):
-    default_lo_prefix = 'C:/Apps/LibreOffice3.4'
-    default_ure_prefix = 'C:/Apps/LibreOffice3.4/URE'
-    default_include_prefix = default_lo_prefix + '/Basis/sdk/include'
-    lo_basis3_3 = '/Basis'
+    lo_setsdkenv = 'C:/Apps/LibreOffice3.4/Basis/sdk/setsdkenv_windows.bat'
+    try:
+        default_include_prefix = '%s/include' % os.environ ('OO_SDK_HOME')
+    except:
+        default_include_prefix = 'C:/Apps/LibreOffice3.4/Basis/sdk/include'
     uno_sal = 'isal'
     uno_cppu = 'icppu'
     uno_cppuhelpergcc3 = 'icppuhelper'
     lo_platform = 'Windows'
     lo_platform_defines = 'WIN32 WNT'
 else:
-    default_lo_prefix = '/usr/lib/libreoffice'
-    default_ure_prefix = '/usr/lib/ure/share'
+    lo_setsdkenv = '/usr/lib/libreoffice/basis-link/sdk/setsdkenv_unix'
     default_include_prefix = '/usr/include/libreoffice'
-    lo_basis3_3 = '/basis3.3'
     uno_sal = 'uno_sal'
     uno_cppu = 'uno_cppu'
     uno_cppuhelpergcc3 = 'uno_cppuhelpergcc3'
@@ -39,39 +38,34 @@ else:
 #-- OPTIONS --
 def options(opt):
 	opt.load('compiler_cxx')
-	opt.add_option('--libreoffice-prefix',
-	               action='store',
-	               default=default_lo_prefix,
-	               dest="LO_PREFIX",
-	               help='Libreoffice prefix')
-   	opt.add_option('--ure-prefix',
-	               action='store',
-	               default=default_ure_prefix,
-	               dest="URE_PREFIX",
-	               help='Libreoffice prefix')
 
 #-- CONFIGURE TARGET --
 def configure(conf):
 	conf.load('compiler_cxx')
-	
-	uno_sdk_libpath = '%s%s/sdk/lib' % (Options.options.LO_PREFIX, lo_basis3_3)
-	print 'SDK: ' + uno_sdk_libpath
-	print 'URE: ' + Options.options.URE_PREFIX
+
+	try:
+		for envvar in ['OO_SDK_HOME  ', 'OFFICE_PROGRAM_PATH', 'OFFICE_BASE_PROGRAM_PATH']:
+			print '  %s:\t\t%s' % (envvar, os.environ[envvar.strip ()])
+	except Exception:
+		msg = sys.exc_info()[1] # Python 2/3 compatibility
+		print 'Variable %s not set!' % msg
+		print 'The LibreOffice SDK environment is not set!'
+		print 'You need to run %s or similar' % lo_setsdkenv
+		sys.exit (1)
+	uno_sdk_libpath = os.environ['OO_SDK_HOME'] + '/lib'
+	conf.env ['OFFICE_HOME'] = os.environ['OFFICE_BASE_PROGRAM_PATH'][:-8]
 
 	conf.check_cxx(lib=uno_sal, uselib_store='SALLIB', libpath=uno_sdk_libpath, mandatory=True)
 	conf.check_cxx(lib=uno_cppu, uselib_store='CPPULIB', libpath=uno_sdk_libpath, mandatory=True)
 	conf.check_cxx(lib=uno_cppuhelpergcc3, uselib_store='CPPUHELPERLIB', libpath=uno_sdk_libpath,  mandatory=True)
 
 	conf.find_program('cppumaker', var='CPPUMAKER', \
-	    path_list=[Options.options.LO_PREFIX + lo_basis3_3 + '/sdk/bin'], mandatory=True)
-
+	    path_list=[os.environ['OO_SDK_HOME'] + '/bin'], mandatory=True)
 	conf.env['TYPES_RDB'] = conf.find_file('types.rdb',
-	                                       path_list=[Options.options.URE_PREFIX + '/misc/'],
-	                                       mandatory=True)
-
+	    path_list=[os.environ['OO_SDK_URE_HOME'] + '/share/misc/', \
+	    os.environ['OO_SDK_URE_HOME'] + '/misc/'], mandatory=True)
 	conf.env['OFFAPI_RDB'] = conf.find_file('offapi.rdb',
-	                                        path_list=[Options.options.LO_PREFIX + lo_basis3_3 + '/program'],
-	                                        mandatory=True)
+	    path_list=[os.environ['OFFICE_BASE_PROGRAM_PATH']], mandatory=True)
 
 def cppumaker (bld):
 	"Generate the C++ headers for the IDL."
@@ -180,6 +174,7 @@ def build(bld):
 		env.append_value('LINKFLAGS', \
 			'-Wl,--version-script=%s/data/component.uno.map,-z origin' % bld.path.abspath())
 
+	office_home = bld.env['OFFICE_HOME']
 	bld.shlib(source=['src/component.cxx',
 			  'src/addon.cxx',
 			  'src/filedialog.cxx',
@@ -189,21 +184,23 @@ def build(bld):
 	          uselib=['SALLIB', 'CPPULIB', 'CPPUHELPERLIB' ],
 	          includes=includes,
 	          defines=lo_platform_defines.split (' '),
-	          install_path='%s/share/extensions/%s/%s' % (Options.options.LO_PREFIX, target, lo_platform),
+	          install_path='%s/share/extensions/%s/%s' % \
+	              (office_home, target, lo_platform),
 	          env=env,
 	          chmod=Utils.O644)
 
 	bld(features='subst',
 	    source='data/manifest.xml.in',
 	    target='manifest.xml',
-	    install_path='%s/share/extensions/%s/META-INF' % (Options.options.LO_PREFIX, target),
+	    install_path='%s/share/extensions/%s/META-INF' % (office_home, target),
 	    PLATFORM=lo_platform,
 	    COMPONENT=env['cxxshlib_PATTERN'] % target)
 
 	for pattern in data_file_patterns:
 		bld.install_files('%s/share/extensions/%s' % \
-		(Options.options.LO_PREFIX, target), bld.path.ant_glob(pattern))
-	bld.install_files('%s/share/extensions/%s/images' % (Options.options.LO_PREFIX, target), bld.path.ant_glob(image_file_patterns))
+		(office_home, target), bld.path.ant_glob(pattern))
+	bld.install_files('%s/share/extensions/%s/images' % \
+	    (office_home, target), bld.path.ant_glob(image_file_patterns))
 
 def mkdir (folder):
     if not os.path.exists (folder):
