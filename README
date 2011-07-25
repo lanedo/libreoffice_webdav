@@ -16,6 +16,8 @@ Or create a webdavui.oxt package:
 
 5. ./waf oxt
 
+Tip: Specify --debug in step 3 to enable verbose console output.
+
 *** Build on Windows ***
 
 Install LibreOffice and SDK to a location WITHOUT spaces, such as C:\Apps\LibreOffice3.4
@@ -39,6 +41,14 @@ C:\Apps\LibreOffice3.4\Basis\sdk\setsdkenv_windows.bat
 C:\Python27\python waf configure
 C:\Python27\python waf build
 C:\Python27\python waf oxt
+
+Debugging:
+
+Pass --debug to 'configure' to enable verbose console output.
+Open another command prompt.
+Run LibreOffice like so: C:\Apps\LibreOffice3.4\program\soffice.exe > debug.txt
+After closing LibreOffice or after a crash, you can see the output in the
+file debug.txt in the current folder.
 
 Warning: Don't use Samba and don't use virtual drive letters!
 
