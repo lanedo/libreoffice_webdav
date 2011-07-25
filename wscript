@@ -58,7 +58,7 @@ def configure(conf):
 		print 'You need to run %s or similar' % lo_setsdkenv
 		sys.exit (1)
 	uno_sdk_libpath = os.environ['OO_SDK_HOME'] + '/lib'
-	conf.env ['OFFICE_HOME'] = os.environ['OFFICE_BASE_PROGRAM_PATH'][:-8]
+	conf.env ['OFFICE_HOME'] = os.environ['OFFICE_PROGRAM_PATH'][:-8]
 
 	conf.check_cxx(lib=uno_sal, uselib_store='SALLIB', libpath=uno_sdk_libpath, mandatory=True)
 	conf.check_cxx(lib=uno_cppu, uselib_store='CPPULIB', libpath=uno_sdk_libpath, mandatory=True)
