@@ -38,7 +38,6 @@
 
 
 #include "settings.hxx"
-#include <cstdio>
 #include <osl/diagnose.h>
 #include <rtl/ustring.hxx>
 #include <cppuhelper/implbase1.hxx>
@@ -54,6 +53,12 @@
 #include <com/sun/star/frame/XController.hpp>
 #include <com/sun/star/lang/XComponent.hpp>
 #include <com/sun/star/util/XChangesBatch.hpp>
+
+#ifdef DEBUG
+    #include <cstdio>
+#else
+    #define printf(...)
+#endif
 
 using rtl::OUString;
 using namespace css::awt;

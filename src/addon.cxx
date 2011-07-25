@@ -47,7 +47,11 @@
 #include <com/sun/star/lang/XMultiComponentFactory.hpp>
 #include <com/sun/star/uno/XComponentContext.hpp>
 
-#include <cstdio>
+#ifdef DEBUG
+    #include <cstdio>
+#else
+    #define printf(...)
+#endif
 
 using rtl::OUString;
 using namespace css::uno;

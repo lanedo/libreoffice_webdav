@@ -38,10 +38,15 @@ else:
 #-- OPTIONS --
 def options(opt):
 	opt.load('compiler_cxx')
+	opt.get_option_group ('--check-cxx-compiler').add_option('-d', '--debug',
+		action = 'store_true', default = False,
+		help = 'Enable debugging and verbose output.', dest = 'enable_debug')
 
 #-- CONFIGURE TARGET --
 def configure(conf):
 	conf.load('compiler_cxx')
+	if Options.options.enable_debug:
+		conf.env.append_value ('CXXFLAGS', '-DDEBUG')
 
 	try:
 		for envvar in ['OO_SDK_HOME  ', 'OFFICE_PROGRAM_PATH', 'OFFICE_BASE_PROGRAM_PATH']:

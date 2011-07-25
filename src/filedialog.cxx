@@ -67,7 +67,11 @@
 #include <com/sun/star/lang/XComponent.hpp>
 #include <com/sun/star/ucb/XSimpleFileAccess.hpp>
 
-#include <cstdio>
+#ifdef DEBUG
+    #include <cstdio>
+#else
+    #define printf(...)
+#endif
 
 using rtl::OUString;
 using namespace css::awt;

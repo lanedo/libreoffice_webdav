@@ -36,7 +36,6 @@
  *
  *************************************************************************/
 
-#include <stdio.h>
 #include <rtl/ustring.hxx>
 #include <cppuhelper/queryinterface.hxx> // helper for queryInterface() impl
 #include <cppuhelper/factory.hxx> // helper for component factory
@@ -45,6 +44,12 @@
 
 // include our specific addon header to get access to functions and definitions
 #include "addon.hxx"
+
+#ifdef DEBUG
+    #include <cstdio>
+#else
+    #define printf(...)
+#endif
 
 using namespace rtl;
 using namespace osl;

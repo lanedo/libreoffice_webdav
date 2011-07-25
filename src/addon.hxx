@@ -45,7 +45,6 @@
 #include <com/sun/star/lang/XServiceInfo.hpp>
 #include <com/sun/star/uno/XComponentContext.hpp>
 #include <cppuhelper/implbase4.hxx>
-#include <cstdio>
 
 namespace css = com::sun::star;
 
@@ -80,7 +79,7 @@ private:
 
 public:
     Addon( const css::uno::Reference< css::uno::XComponentContext > &rxContext)
-        : mxContext( rxContext ) { printf ("Addon::Addon\n"); }
+        : mxContext( rxContext ) { }
 
     // XDispatchProvider
     virtual css::uno::Reference< css::frame::XDispatch >
