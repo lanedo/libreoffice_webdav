@@ -169,7 +169,11 @@ def build(bld):
 	pattern = env['cxxshlib_PATTERN']
 	env['cxxshlib_PATTERN']	= '%s.uno' + env['cxxshlib_PATTERN'].split("%s")[-1]
 	if bld.env['CC_NAME'] == 'msvc':
-		env.append_value('CXXFLAGS', '/EHa -DCPPU_ENV=msci'.split(' ')) #  -DWIN32 -DWNT -D_DLL
+		env.append_value('CXXFLAGS', (''
+			+ '-Zm500 -Zc:forScope,wchar_t- -wd4251 -wd4275 -wd4290 '
+			+ '-wd4675 -wd4786 -wd4800 -Zc:forScope -GR '
+			+ '/DEBUGTYPE:cv -MT /EHa -DCPPU_ENV=msci '
+			+ '').split (' '))
 		env.append_value('LINKFLAGS', '/DEF:%s/data/component.uno.def' % bld.path.abspath())
 	else:
 		env.append_value('CXXFLAGS', '-g -Wall -DCPPU_ENV=gcc3'.split(' '))
