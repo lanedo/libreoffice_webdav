@@ -40,6 +40,7 @@
 #define __WEBDAVDIALOG_HXX__
 
 #include "settings.hxx"
+#include <com/sun/star/awt/XControl.hpp>
 #include <com/sun/star/awt/XToolkit.hpp>
 #include <com/sun/star/awt/XItemListener.hpp>
 #include <com/sun/star/frame/XFrame.hpp>
@@ -61,6 +62,8 @@ private:
     css::uno::Reference< css::uno::XInterface > locationEntryModel;
     css::uno::Reference< css::uno::XInterface > fileListModel;
     css::uno::Reference< css::uno::XInterface > fileEntryModel;
+    css::uno::Reference< css::awt::XControl > openButton;
+    css::uno::Reference< css::awt::XControl > saveButton;
 
     sal_Bool isSave;
 

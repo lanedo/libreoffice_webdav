@@ -324,14 +324,12 @@ void FileDialog::createDialog (void)
                                   makeAny (mSettings->getImageURL (ImageKeys::imageURLLogo)));
 
     /* Get the open/save button */
-    Reference< XControl > openButton =
-        controlContainer->getControl (OUString::createFromAscii ("OpenButton"));
+    openButton = controlContainer->getControl (OUString::createFromAscii ("OpenButton"));
     Reference< XControlModel > openButtonModel = openButton->getModel ();
     Reference< XWindow > openButtonWindow (openButton, UNO_QUERY);
     openButtonWindow->setVisible (!isSaveDialog ());
 
-    Reference< XControl > saveButton =
-        controlContainer->getControl (OUString::createFromAscii ("SaveButton"));
+    saveButton = controlContainer->getControl (OUString::createFromAscii ("SaveButton"));
     Reference< XControlModel > saveButtonModel = saveButton->getModel ();
     Reference< XWindow > saveButtonWindow (saveButton, UNO_QUERY);
     saveButtonWindow->setVisible (isSaveDialog ());
@@ -670,6 +668,8 @@ void FileDialog::listFiles (void)
     fileAccess->setInteractionHandler (interactionHandler);
     const Reference< XItemList > items(fileListModel, UNO_QUERY_THROW );
     items->removeAllItems();
+    bool canOpen = false;
+    bool canSave = true;
 
     /* Now try to access the folder */
     try
@@ -686,11 +686,20 @@ void FileDialog::listFiles (void)
                 OUString::createFromAscii (""));
             items->setItemData(0, makeAny (stringArray[i]));
         }
+        canOpen = n > 0;
     }
     catch ( ... ) /* FIXME: Need proper exception handling here */
     {
         items->insertItemText (0, mSettings->localizedString (LocalizedStrings::contentListFailure));
+        canSave = false;
     }
+
+    Reference< XControlModel > openButtonModel = openButton->getModel ();
+    Reference< XWindow > openButtonWindow (openButton, UNO_QUERY);
+    openButtonWindow->setEnable (canOpen);
+    Reference< XControlModel > saveButtonModel = saveButton->getModel ();
+    Reference< XWindow > saveButtonWindow (saveButton, UNO_QUERY);
+    saveButtonWindow->setEnable (canSave);
 }
 
 void FileDialog::setFilename (OUString filename)
