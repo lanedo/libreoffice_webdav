@@ -47,27 +47,28 @@
 #include <com/sun/star/lang/XMultiComponentFactory.hpp>
 
 namespace css = com::sun::star;
+using namespace css::uno;
 
 namespace WebDAVUI {
 
 class ConfigDialog
 {
 private:
-    css::uno::Reference< css::uno::XComponentContext> mxContext;
-    css::uno::Reference< css::lang::XMultiComponentFactory > mxMCF;
-    css::uno::Reference< css::frame::XFrame > mxFrame;
-    css::uno::Reference< css::awt::XToolkit > mxToolkit;
+    Reference< XComponentContext> mxContext;
+    Reference< css::lang::XMultiComponentFactory > mxMCF;
+    Reference< css::frame::XFrame > mxFrame;
+    Reference< css::awt::XToolkit > mxToolkit;
     WebDAVUI::Settings* mSettings;
 
-    css::uno::Reference< css::uno::XInterface > dialog;
-    css::uno::Reference< css::uno::XInterface > locationEntryModel;
+    Reference< XInterface > dialog;
+    Reference< XInterface > locationEntryModel;
 
     void createDialog (void);
 
 public:
-    ConfigDialog( const css::uno::Reference< css::uno::XComponentContext > &rxContext,
-                  const css::uno::Reference< css::frame::XFrame >          &rxFrame,
-                  WebDAVUI::Settings*                                       rSettings);
+    ConfigDialog( const Reference< XComponentContext >  &rxContext,
+                  const Reference< css::frame::XFrame > &rxFrame,
+                  WebDAVUI::Settings*                    rSettings);
 
     void show (void);
     void saveChanges (void);

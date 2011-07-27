@@ -47,23 +47,24 @@
 #include <com/sun/star/lang/XMultiComponentFactory.hpp>
 
 namespace css = com::sun::star;
+using namespace css::uno;
 
 namespace WebDAVUI {
 
 class FileDialog
 {
 private:
-    css::uno::Reference< css::uno::XComponentContext> mxContext;
-    css::uno::Reference< css::lang::XMultiComponentFactory > mxMCF;
-    css::uno::Reference< css::frame::XFrame > mxFrame;
-    css::uno::Reference< css::awt::XToolkit > mxToolkit;
+    Reference< XComponentContext > mxContext;
+    Reference< css::lang::XMultiComponentFactory > mxMCF;
+    Reference< css::frame::XFrame > mxFrame;
+    Reference< css::awt::XToolkit > mxToolkit;
     WebDAVUI::Settings* mSettings;
-    css::uno::Reference< css::uno::XInterface > dialog;
-    css::uno::Reference< css::uno::XInterface > locationEntryModel;
-    css::uno::Reference< css::uno::XInterface > fileListModel;
-    css::uno::Reference< css::uno::XInterface > fileEntryModel;
-    css::uno::Reference< css::awt::XControl > openButton;
-    css::uno::Reference< css::awt::XControl > saveButton;
+    Reference< XInterface > dialog;
+    Reference< XInterface > locationEntryModel;
+    Reference< XInterface > fileListModel;
+    Reference< XInterface > fileEntryModel;
+    Reference< css::awt::XControl > openButton;
+    Reference< css::awt::XControl > saveButton;
 
     sal_Bool isSave;
 
@@ -71,10 +72,10 @@ private:
     short showMessageBox (OUString errorMessage, bool confirm);
 
 public:
-    FileDialog( const css::uno::Reference< css::uno::XComponentContext > &rxContext,
-                const css::uno::Reference< css::frame::XFrame >          &rxFrame,
-                WebDAVUI::Settings*                                       mSettings,
-                const sal_Bool                                            isSave);
+    FileDialog( const Reference< XComponentContext >  &rxContext,
+                const Reference< css::frame::XFrame > &rxFrame,
+                WebDAVUI::Settings*                    mSettings,
+                const sal_Bool                         isSave);
 
     sal_Bool isSaveDialog (void);
     void show (void);

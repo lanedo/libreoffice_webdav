@@ -47,6 +47,7 @@
 #include <cppuhelper/implbase4.hxx>
 
 namespace css = com::sun::star;
+using namespace css::uno;
 
 namespace com
 {
@@ -73,60 +74,60 @@ class Addon : public cppu::WeakImplHelper4
 >
 {
 private:
-    css::uno::Reference< css::uno::XComponentContext > mxContext;
-    css::uno::Reference< css::frame::XFrame > mxFrame;
+    Reference< XComponentContext > mxContext;
+    Reference< css::frame::XFrame > mxFrame;
     WebDAVUI::Settings* mSettings;
 
 public:
-    Addon( const css::uno::Reference< css::uno::XComponentContext > &rxContext)
+    Addon( const Reference< XComponentContext > &rxContext)
         : mxContext( rxContext ) { }
 
     // XDispatchProvider
-    virtual css::uno::Reference< css::frame::XDispatch >
+    virtual Reference< css::frame::XDispatch >
         SAL_CALL queryDispatch( const css::util::URL& aURL,
                                 const rtl::OUString&  sTargetFrameName,
                                 sal_Int32             nSearchFlags )
-        throw( css::uno::RuntimeException );
-    virtual css::uno::Sequence < css::uno::Reference< css::frame::XDispatch > >
-        SAL_CALL queryDispatches( const css::uno::Sequence < css::frame::DispatchDescriptor >& seqDescriptor )
-        throw( css::uno::RuntimeException );
+        throw( RuntimeException );
+    virtual Sequence < Reference< css::frame::XDispatch > >
+        SAL_CALL queryDispatches( const Sequence < css::frame::DispatchDescriptor >& seqDescriptor )
+        throw( RuntimeException );
 
     // XDispatch
-    virtual void SAL_CALL dispatch( const css::util::URL&                                  aURL,
-                                    const css::uno::Sequence< css::beans::PropertyValue >& lArgs )
-        throw (css::uno::RuntimeException);
-    virtual void SAL_CALL addStatusListener( const css::uno::Reference< css::frame::XStatusListener >& xControl,
-                                             const css::util::URL&                                     aURL )
-        throw (css::uno::RuntimeException);
-    virtual void SAL_CALL removeStatusListener( const css::uno::Reference< css::frame::XStatusListener >& xControl,
-                                                const css::util::URL&                                     aURL )
-        throw (css::uno::RuntimeException);
+    virtual void SAL_CALL dispatch( const css::util::URL&                        aURL,
+                                    const Sequence< css::beans::PropertyValue >& lArgs )
+        throw (RuntimeException);
+    virtual void SAL_CALL addStatusListener( const Reference< css::frame::XStatusListener >& xControl,
+                                             const css::util::URL&                           aURL )
+        throw (RuntimeException);
+    virtual void SAL_CALL removeStatusListener( const Reference< css::frame::XStatusListener >& xControl,
+                                                const css::util::URL&                           aURL )
+        throw (RuntimeException);
 
     // XInitialization
-    virtual void SAL_CALL initialize( const css::uno::Sequence< css::uno::Any >& aArguments )
-        throw (css::uno::Exception, css::uno::RuntimeException);
+    virtual void SAL_CALL initialize( const Sequence< Any >& aArguments )
+        throw (Exception, RuntimeException);
 
     // XServiceInfo
     virtual rtl::OUString SAL_CALL getImplementationName(  )
-        throw (css::uno::RuntimeException);
+        throw (RuntimeException);
     virtual sal_Bool SAL_CALL supportsService( const rtl::OUString& ServiceName )
-        throw (css::uno::RuntimeException);
-    virtual css::uno::Sequence< rtl::OUString > SAL_CALL getSupportedServiceNames(  )
-        throw (css::uno::RuntimeException);
+        throw (RuntimeException);
+    virtual Sequence< rtl::OUString > SAL_CALL getSupportedServiceNames(  )
+        throw (RuntimeException);
 };
 
 rtl::OUString SAL_CALL Addon_getImplementationName()
-    throw ( css::uno::RuntimeException );
+    throw ( RuntimeException );
 
 sal_Bool SAL_CALL Addon_supportsService( const rtl::OUString& ServiceName )
-    throw ( css::uno::RuntimeException );
+    throw ( RuntimeException );
 
-css::uno::Sequence< rtl::OUString > SAL_CALL Addon_getSupportedServiceNames(  )
-    throw ( css::uno::RuntimeException );
+Sequence< rtl::OUString > SAL_CALL Addon_getSupportedServiceNames(  )
+    throw ( RuntimeException );
 
-css::uno::Reference< css::uno::XInterface >
-SAL_CALL Addon_createInstance( const css::uno::Reference< css::uno::XComponentContext > & rSMgr)
-    throw ( css::uno::Exception );
+Reference< XInterface >
+SAL_CALL Addon_createInstance( const Reference< XComponentContext > & rSMgr)
+    throw ( Exception );
 
 #endif // _Addon_HXX
 
