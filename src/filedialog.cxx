@@ -372,6 +372,11 @@ void FileDialog::createDialog (void)
 
     cancelControl->addActionListener (actionListener);
 
+    Reference< XControl > labelControl =
+        controlContainer->getControl (OUString::createFromAscii ("FileEntryLabel"));
+    Reference< XWindow > labelControlWindow (labelControl, UNO_QUERY);
+    labelControlWindow->setVisible (isSaveDialog ());
+
     Reference< XControl > entryControl =
         controlContainer->getControl (OUString::createFromAscii ("FileEntry"));
     Reference< XWindow > entryControlWindow (entryControl, UNO_QUERY);
@@ -425,9 +430,9 @@ void FileDialog::createDialog (void)
     Reference< XWindow > locationEntryWindow (entryControl, UNO_QUERY);
     locationEntryWindow->setVisible (false);
 
-    Reference< XControl > labelControl =
+    Reference< XControl > locationLabelControl =
         controlContainer->getControl (OUString::createFromAscii ("Location"));
-    Reference< XInterface > locationLabelModel (labelControl->getModel ());
+    Reference< XInterface > locationLabelModel (locationLabelControl->getModel ());
     Reference< XPropertySet > labelProps (locationLabelModel, UNO_QUERY);
     labelProps->setPropertyValue (OUString::createFromAscii ("Label"),
                                   makeAny (remoteServer));

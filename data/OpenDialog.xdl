@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE dlg:window PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "dialog.dtd">
-<dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:id="OpenDialog" dlg:left="135" dlg:top="27" dlg:width="220" dlg:height="300" dlg:closeable="true" dlg:moveable="true">
+<dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:id="OpenDialog" dlg:left="135" dlg:top="27" dlg:width="220" dlg:height="320" dlg:closeable="true" dlg:moveable="true">
  <dlg:styles>
   <dlg:style dlg:style-id="0" dlg:border="none"/>
  </dlg:styles>
@@ -13,14 +13,15 @@
   <dlg:text     dlg:id="Location" dlg:tab-index="3" dlg:left="10" dlg:top="58" dlg:width="200" dlg:height="15" dlg:value="Label3"/>
   <dlg:menulist dlg:id="FileList" dlg:tab-index="4" dlg:left="10" dlg:top="70" dlg:width="200" dlg:height="165"/>
 
-  <dlg:combobox dlg:id="FileEntry"        dlg:tab-index="5" dlg:left="10" dlg:top="240" dlg:width="200" dlg:height="15"/>
-  <dlg:checkbox dlg:id="ReadOnlyCheckBox" dlg:tab-index="6" dlg:left="10" dlg:top="240" dlg:width="200" dlg:height="15" dlg:value="&amp;3.OpenDialog.ReadonlyButton.Label" dlg:checked="false"/>
+  <dlg:text     dlg:id="FileEntryLabel"   dlg:tab-index="5" dlg:left="10" dlg:top="248" dlg:width="200" dlg:height="15" dlg:value="&amp;5.OpenDialog.FileEntryLabel.Label"/>
+  <dlg:combobox dlg:id="FileEntry"        dlg:tab-index="6" dlg:left="10" dlg:top="260" dlg:width="200" dlg:height="15"/>
+  <dlg:checkbox dlg:id="ReadOnlyCheckBox" dlg:tab-index="7" dlg:left="10" dlg:top="260" dlg:width="200" dlg:height="15" dlg:value="&amp;3.OpenDialog.ReadonlyButton.Label" dlg:checked="false"/>
 
-  <dlg:text     dlg:id="TypeLabel" dlg:tab-index="7" dlg:left="10" dlg:top="260" dlg:width="40" dlg:height="15" dlg:value="&amp;4.OpenDialog.TypeLabel.Label"/>
-  <dlg:combobox dlg:id="TypeEntry" dlg:tab-index="8" dlg:left="45" dlg:top="260" dlg:width="80" dlg:height="15" dlg:spin="true"/>
+  <dlg:text     dlg:id="TypeLabel" dlg:tab-index="8" dlg:left="10" dlg:top="280" dlg:width="40" dlg:height="15" dlg:value="&amp;4.OpenDialog.TypeLabel.Label"/>
+  <dlg:combobox dlg:id="TypeEntry" dlg:tab-index="9" dlg:left="45" dlg:top="280" dlg:width="80" dlg:height="15" dlg:spin="true"/>
 
-  <dlg:button dlg:id="OpenButton"   dlg:tab-index="9"  dlg:left="80"  dlg:top="270" dlg:width="60" dlg:height="20" dlg:value="&amp;2.OpenDialog.OpenButton.Label"/>
-  <dlg:button dlg:id="SaveButton"   dlg:tab-index="10" dlg:left="80"  dlg:top="270" dlg:width="60" dlg:height="20" dlg:value="&amp;0.OpenDialog.SaveButton.Label"/>
-  <dlg:button dlg:id="CancelButton" dlg:tab-index="11" dlg:left="150" dlg:top="270" dlg:width="60" dlg:height="20" dlg:value="&amp;1.OpenDialog.CancelButton.Label"/>
+  <dlg:button dlg:id="OpenButton"   dlg:tab-index="10" dlg:left="80"  dlg:top="290" dlg:width="60" dlg:height="20" dlg:value="&amp;2.OpenDialog.OpenButton.Label"/>
+  <dlg:button dlg:id="SaveButton"   dlg:tab-index="11" dlg:left="80"  dlg:top="290" dlg:width="60" dlg:height="20" dlg:value="&amp;0.OpenDialog.SaveButton.Label"/>
+  <dlg:button dlg:id="CancelButton" dlg:tab-index="12" dlg:left="150" dlg:top="290" dlg:width="60" dlg:height="20" dlg:value="&amp;1.OpenDialog.CancelButton.Label"/>
  </dlg:bulletinboard>
 </dlg:window>
