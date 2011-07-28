@@ -416,6 +416,15 @@ void FileDialog::createDialog (void)
         controlContainer->getControl (OUString::createFromAscii ("FileList"));
     fileListModel = listControl->getModel ();
 
+    /* Make the file list higher in the open dialog */
+    if (!isSaveDialog ())
+    {
+        Reference< XWindow > listControlWindow (listControl, UNO_QUERY);
+
+        Rectangle rect = listControlWindow->getPosSize ();
+        listControlWindow->setPosSize (rect.X, rect.Y, rect.Width, rect.Height + 60, POSSIZE);
+    }
+
     OUString remoteServer (mSettings->getRemoteServerName ());
 
     /* Connect the entry to a key listener and get its model */
