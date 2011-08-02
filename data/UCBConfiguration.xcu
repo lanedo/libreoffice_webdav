@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<oor:component-data xmlns:oor="http://openoffice.org/2001/registry"
+                    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                    xmlns:install="http://openoffice.org/2004/installation"
+                    oor:name="Configuration"
+                    oor:package="org.openoffice.ucb">
+    <node oor:name="ContentProviders">
+        <node oor:name="Local" oor:op="modify">
+            <node oor:name="SecondaryKeys">
+                <node oor:name="Office" oor:op="modify">
+                    <node oor:name="ProviderData">
+                        <node oor:name="com.lanedo.comp.ExampleContentProvider" oor:op="replace">
+                            <prop oor:name="ServiceName">
+                                <value>com.lanedo.ExampleContentProvider</value>
+                            </prop>
+                            <prop oor:name="URLTemplate">
+                                <value>example</value>
+                            </prop>
+                            <prop oor:name="Arguments">
+                                <value/>
+                            </prop>
+                        </node>
+                    </node>
+                </node>
+            </node>
+        </node>
+    </node>
+</oor:component-data>

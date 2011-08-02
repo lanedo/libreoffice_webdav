@@ -4,6 +4,8 @@
                        manifest:full-path="Addons.xcu"/>
   <manifest:file-entry manifest:media-type="application/vnd.sun.star.configuration-data"
                        manifest:full-path="ProtocolHandler.xcu"/>
+  <manifest:file-entry manifest:media-type="application/vnd.sun.star.configuration-data"
+                       manifest:full-path="UCBConfiguration.xcu"/>
   <manifest:file-entry manifest:media-type="application/vnd.sun.star.configuration-schema"
                        manifest:full-path="ConfigurationData.xcs"/>
   <manifest:file-entry manifest:media-type="application/vnd.sun.star.configuration-data"

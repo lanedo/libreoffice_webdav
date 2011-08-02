@@ -44,6 +44,7 @@
 
 // include our specific addon header to get access to functions and definitions
 #include "addon.hxx"
+#include "exampleprovider.hxx"
 
 #ifdef DEBUG
     #include <cstdio>
@@ -87,30 +88,41 @@ extern "C" sal_Bool SAL_CALL component_writeInfo(void * pServiceManager,
                                                  void * pRegistryKey)
  {
     printf ("component_writeInfo\n");
+    if (pRegistryKey)
+    {
+        try
+        {
+            {
+                Reference< XRegistryKey > xNewKey (
+                    reinterpret_cast< XRegistryKey * >(pRegistryKey)->createKey (
+                    OUString (RTL_CONSTASCII_USTRINGPARAM (
+                              "/com.lanedo.comp.ExampleContentProvider/UNO/SERVICES"))));
+                const Sequence< OUString > & rSNL =
+                ExampleContentProvider::getSupportedServiceNames_Static ();
+                const OUString * pArray = rSNL.getConstArray ();
+                for (sal_Int32 nPos = rSNL.getLength (); nPos--; )
+                    xNewKey->createKey (pArray[nPos]);
+            }
 
- 	if (pRegistryKey)
- 	{
- 		try
- 		{
- 			Reference< XRegistryKey > xNewKey(
- 				reinterpret_cast< XRegistryKey * >( pRegistryKey )->createKey(
- 					OUString( RTL_CONSTASCII_USTRINGPARAM("/" IMPLEMENTATION_NAME "/UNO/SERVICES") ) ) );
+            {
+                Reference< XRegistryKey > xNewKey (
+                    reinterpret_cast< XRegistryKey * >( pRegistryKey )->createKey(
+                    OUString (RTL_CONSTASCII_USTRINGPARAM (
+                              "/com.lanedo.webdavui/UNO/SERVICES"))));
+                const Sequence< OUString > & rSNL = Addon_getSupportedServiceNames ();
+                const OUString * psArray = rSNL.getConstArray ();
+                for (sal_Int32 nPos = rSNL.getLength (); nPos--; )
+                    xNewKey->createKey (psArray[nPos]);
+            }
 
- 			const Sequence< OUString > & rSNL =
- 				Addon_getSupportedServiceNames();
- 			const OUString * pArray = rSNL.getConstArray();
- 			for ( sal_Int32 nPos = rSNL.getLength(); nPos--; )
- 				xNewKey->createKey( pArray[nPos] );
-
- 			return sal_True;
- 		}
- 		catch (InvalidRegistryException &)
- 		{
- 			OSL_ENSURE( sal_False, "### InvalidRegistryException!" );
- 		}
- 	}
-
- 	return sal_False;
+            return sal_True;
+        }
+        catch (InvalidRegistryException &)
+        {
+            OSL_ENSURE( sal_False, "### InvalidRegistryException!" );
+        }
+    }
+    return sal_False;
  }
 
 /**
@@ -128,16 +140,28 @@ extern "C" void * SAL_CALL component_getFactory(const sal_Char * pImplName,
     if ( !pServiceManager || !pImplName )
         return 0;
 
-    printf ("component_getFactory %s\n", IMPLEMENTATION_NAME);
-    if (rtl_str_compare( pImplName, IMPLEMENTATION_NAME ) == 0)
+    printf ("component_getFactory %s\n", pImplName);
+    OUString implName = OUString::createFromAscii (pImplName);
+    if (implName.equalsAscii ("com.lanedo.webdavui"))
     {
         Reference< XSingleComponentFactory > xFactory =
-            ::cppu::createSingleComponentFactory(
+            cppu::createSingleComponentFactory (
                 Addon_createInstance,
-                OUString::createFromAscii( IMPLEMENTATION_NAME ),
-                Addon_getSupportedServiceNames(),
-                NULL);
-
+                OUString::createFromAscii (pImplName),
+                Addon_getSupportedServiceNames (), NULL);
+        if (xFactory.is())
+        {
+            printf ("component_getFactory xFactory.is()\n");
+            xFactory->acquire();
+            return xFactory.get();
+        }
+    }
+    else if (implName.equalsAscii ("com.lanedo.comp.ExampleContentProvider"))
+    {
+        Reference< XSingleServiceFactory > xFactory( cppu::createSingleFactory(
+        reinterpret_cast< XMultiServiceFactory * >( pServiceManager ), implName,
+        ExampleContentProvider_create,
+        ExampleContentProvider::getSupportedServiceNames_Static() ) );
         if (xFactory.is())
         {
             printf ("component_getFactory xFactory.is()\n");

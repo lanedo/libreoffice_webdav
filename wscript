@@ -147,6 +147,9 @@ def cppumaker (bld):
 				"com.sun.star.lang.XSingleServiceFactory",
 				"com.sun.star.lang.XTypeProvider",
 				"com.sun.star.registry.XRegistryKey",
+				"com.sun.star.ucb.XContent",
+				"com.sun.star.ucb.XContentIdentifier",
+				"com.sun.star.ucb.XContentProvider",
 				"com.sun.star.ucb.XSimpleFileAccess",
 				"com.sun.star.uno.DeploymentException",
 				"com.sun.star.uno.XAggregation",
@@ -187,6 +190,7 @@ def build(bld):
 
 	office_home = bld.env['OFFICE_HOME']
 	bld.shlib(source=['src/component.cxx',
+			  'src/exampleprovider.cxx',
 			  'src/addon.cxx',
 			  'src/filedialog.cxx',
 			  'src/settings.cxx',
