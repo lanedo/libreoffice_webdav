@@ -29,11 +29,16 @@ else:
     uno_sal = 'uno_sal'
     uno_cppu = 'uno_cppu'
     uno_cppuhelpergcc3 = 'uno_cppuhelpergcc3'
-    if platform.architecture()[0][:-3] == '64':
-        lo_platform = 'Linux_x86_64'
+    lo_platform_defines = 'UNX'
+    if Options.platform == 'linux':
+        if platform.architecture()[0][:-3] == '64':
+            lo_platform = 'Linux_x86_64'
+        else:
+            lo_platform = 'Linux_x86'
+        lo_platform_defines += ' LINUX'
     else:
-        lo_platform = 'Linux_x86'
-    lo_platform_defines = 'UNX SAL_UNX'
+        print 'Error: Currently unsupported platform %s!'
+        sys.exit (1)
 
 #-- OPTIONS --
 def options(opt):
