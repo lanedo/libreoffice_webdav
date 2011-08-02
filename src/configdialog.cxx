@@ -150,7 +150,18 @@ public:
         OUString controlName;
         aValue >>= controlName;
 
-        printf ("ConfigDialogKeyListener::keyPressed\n");
+        printf ("ConfigDialogKeyListener::keyPressed: %s\n",
+                OUStringToOString (controlName, RTL_TEXTENCODING_UTF8).getStr ());
+
+        if (controlName.equalsAscii ("LocationEntry"))
+        {
+            short aKey = rEvent.KeyCode;
+
+            if (aKey == RETURN)
+            {
+                owner->saveChanges ();
+            }
+        }
     }
 
     virtual void SAL_CALL keyReleased (const css::awt::KeyEvent &rEvent) throw (css::uno::RuntimeException)
@@ -227,6 +238,8 @@ void ConfigDialog::createDialog (void)
 
     Reference< XKeyListener > keyListener =
         static_cast< XKeyListener *> (new ConfigDialogKeyListener (this));
+    Reference< XWindow > entryWindow (entryControl, UNO_QUERY);
+    entryWindow->addKeyListener (keyListener);
 
     Reference< XButton > saveButtonControl (saveButton, UNO_QUERY);
     saveButtonControl->addActionListener (actionListener);
