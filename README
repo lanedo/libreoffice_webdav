@@ -18,6 +18,11 @@ Or create a webdavui.oxt package:
 
 Tip: Specify --debug in step 3 to enable verbose console output.
 
+Due to caching of extensions, it can happen that LibreOffice doesn't fully pick
+up changes if you install a new version. There's a command to clear the caches:
+
+6. sudo -E ./waf clear_caches
+
 *** Build on Windows ***
 
 Install LibreOffice and SDK to a location WITHOUT spaces, such as C:\Apps\LibreOffice3.4
@@ -51,5 +56,10 @@ After closing LibreOffice or after a crash, you can see the output in the
 file debug.txt in the current folder.
 
 Warning: Don't use Samba and don't use virtual drive letters!
+
+Due to caching of extensions, it can happen that LibreOffice doesn't fully pick
+up changes if you install a new version. There's a command to clear the caches:
+
+C:\Python27\python waf clear_caches
 
 ¹ http://wiki.documentfoundation.org/Development/Windows_Build_Dependencies

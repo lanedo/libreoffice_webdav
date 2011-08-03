@@ -13,6 +13,11 @@ data_file_patterns = ['data/*.xcu', 'data/*.xcs', 'data/*.txt', 'data/*.xdl', 'd
 image_file_patterns = 'data/images/*.png'
 
 if Options.platform in ('cygwin', 'win32'):
+    try:
+        lo_user_prefix = '%s/AppData/Roaming/LibreOffice/3/user' % os.environ ['USERPROFILE']
+    except:
+        print 'No USERPROFILE set?!'
+        sys.exit (1)
     lo_setsdkenv = 'C:/Apps/LibreOffice3.4/Basis/sdk/setsdkenv_windows.bat'
     try:
         default_include_prefix = '%s/include' % os.environ ('OO_SDK_HOME')
@@ -24,6 +29,7 @@ if Options.platform in ('cygwin', 'win32'):
     lo_platform = 'Windows'
     lo_platform_defines = 'WIN32 WNT'
 else:
+    lo_user_prefix = "~/.libreoffice/3/user"
     lo_setsdkenv = '/usr/lib/libreoffice/basis-link/sdk/setsdkenv_unix'
     default_include_prefix = '/usr/include/libreoffice'
     uno_sal = 'uno_sal'
@@ -216,6 +222,30 @@ def build(bld):
 		(office_home, target), bld.path.ant_glob(pattern))
 	bld.install_files('%s/share/extensions/%s/images' % \
 	    (office_home, target), bld.path.ant_glob(image_file_patterns))
+
+def clear_caches(a):
+    "Clear LibreOffice/ UNO caches and the installed extension."
+    try:
+        office_home = os.environ['OFFICE_PROGRAM_PATH'][:-8]
+    except:
+        print 'You need to run %s or similar' % lo_setsdkenv
+        sys.exit (1)
+    for folder in [
+        '%s/share/extensions/%s' % (office_home, APPNAME),
+        '%s/extensions' % lo_user_prefix,
+        '%s/uno_packages' % lo_user_prefix,
+        ]:
+        rfolder = os.path.realpath (folder)
+        output = 'Deleting %s...' % rfolder
+        if not os.path.exists (rfolder):
+            print output + 'SKIPPED'
+            continue
+        try:
+            shutil.rmtree (rfolder)
+            print output + 'OK'
+        except Exception:
+            msg = sys.exc_info()[1] # Python 2/3 compatibility
+            print output + 'FAILED\n    %s' % msg
 
 def mkdir (folder):
     if not os.path.exists (folder):
