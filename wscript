@@ -20,7 +20,7 @@ if Options.platform in ('cygwin', 'win32'):
         sys.exit (1)
     lo_setsdkenv = 'C:/Apps/LibreOffice3.4/Basis/sdk/setsdkenv_windows.bat'
     try:
-        default_include_prefix = '%s/include' % os.environ ('OO_SDK_HOME')
+        default_include_prefix = '%s/include' % os.environ ['OO_SDK_HOME']
     except:
         default_include_prefix = 'C:/Apps/LibreOffice3.4/Basis/sdk/include'
     uno_sal = 'isal'
@@ -31,7 +31,10 @@ if Options.platform in ('cygwin', 'win32'):
 else:
     lo_user_prefix = "~/.libreoffice/3/user"
     lo_setsdkenv = '/usr/lib/libreoffice/basis-link/sdk/setsdkenv_unix'
-    default_include_prefix = '/usr/include/libreoffice'
+    try:
+        default_include_prefix = '%s/include' % os.environ ['OO_SDK_HOME']
+    except:
+        default_include_prefix = '/usr/include/libreoffice'
     uno_sal = 'uno_sal'
     uno_cppu = 'uno_cppu'
     uno_cppuhelpergcc3 = 'uno_cppuhelpergcc3'
@@ -82,6 +85,8 @@ def configure(conf):
 	    os.environ['OO_SDK_URE_HOME'] + '/misc/'], mandatory=True)
 	conf.env['OFFAPI_RDB'] = conf.find_file('offapi.rdb',
 	    path_list=[os.environ['OFFICE_BASE_PROGRAM_PATH']], mandatory=True)
+	print 'Include prefix: ', default_include_prefix
+	conf.check (header_name='sal/config.h', includes=[default_include_prefix])
 
 def cppumaker (bld):
 	"Generate the C++ headers for the IDL."
